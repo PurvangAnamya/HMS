@@ -1,0 +1,150 @@
+@model HMS.Models.PaymentsViewModel.ManagePaymentsViewModel
+
+
+<div>
+    <h5>Patient Name: @Model.PaymentsCRUDViewModel.PatientName,   Id: @Model.PaymentsCRUDViewModel.Id</h5>
+</div>
+
+
+<hr />
+<h4>Payment Details</h4>
+<div>
+    <div class="row" style="width:100%; margin:0 auto;">
+        <table class="CustomBlueTable" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Item Categories</th>
+                    <th>Date Of Service</th>
+                    <th>Quantity</th>
+                    <th>Unit Prize</th>
+                    <th>Charge Amount</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.listPaymentsDetailsCRUDViewModel)
+            {
+<tbody>
+
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.PaymentItemName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.CreatedDate)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Quantity)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.UnitPrize)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.TotalAmount)
+        </td>
+    </tr>
+
+</tbody>}
+        </table>
+    </div>
+</div>
+
+
+<hr />
+<div id="printableArea" class="row">
+    <div class="col-sm-6">
+        <h5>Payment Details</h5>
+        <table class="" style="width:100%" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Payment Type</th>
+                    <th>Amount</th>
+                    <th>Reference No</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            @foreach (var item in Model.listPaymentModeHistoryCRUDViewModel)
+            {
+<tbody>
+
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModeOfPayment)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Amount)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ReferenceNo)
+        </td>
+        <td>
+            @item.CreatedDate.ToString("dd MMMM yyyy")
+        </td>
+    </tr>
+</tbody>}
+        </table>
+    </div>
+
+    <div class="col-sm-6">
+        <div class="row" style="width:100%; margin:0 auto;">
+            <table class="ItemTranTable" border="1">
+                <tr>
+                    <th>Invoice No</th>
+                    <td>@Model.PaymentsCRUDViewModel.InvoiceNo</td>
+                </tr>
+                <tr>
+                    <th>Common Charge</th>
+                    <td>@Model.PaymentsCRUDViewModel.CommonCharge</td>
+                </tr>
+                <tr>
+                    <th>Discount(%)</th>
+                    <td>@Model.PaymentsCRUDViewModel.Discount</td>
+                </tr>
+                <tr>
+                    <th>Discount Amount</th>
+                    <td>@Model.PaymentsCRUDViewModel.DiscountAmount</td>
+                </tr>
+                <tr>
+                    <th>Tax(%)</th>
+                    <td>@Model.PaymentsCRUDViewModel.Tax</td>
+                </tr>
+                <tr>
+                    <th>Tax Amount</th>
+                    <td>@Model.PaymentsCRUDViewModel.TaxAmount</td>
+                </tr>
+                <tr>
+                    <th>Insurance Coverage(%)</th>
+                    <td>@Model.PaymentsCRUDViewModel.InsuranceCoverage</td>
+                </tr>
+                <tr>
+                    <th>Sub Total</th>
+                    <td>@Model.PaymentsCRUDViewModel.SubTotal</td>
+                </tr>
+                <tr>
+                    <th style="background-color:rebeccapurple; color:white">Grand Total</th>
+                    <td>@Model.PaymentsCRUDViewModel.GrandTotal</td>
+                </tr>
+                <tr>
+                    <th>Payment Status</th>
+                    <td>@Model.PaymentsCRUDViewModel.PaymentStatus</td>
+                </tr>
+                <tr>
+                    <th>Currency</th>
+                    <td>@Model.PaymentsCRUDViewModel.CurrencyName</td>
+                </tr>
+                <tr>
+                    <th>Created Date</th>
+                    <td>@Model.PaymentsCRUDViewModel.CreatedDate</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+</div>
+
+

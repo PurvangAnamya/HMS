@@ -1,0 +1,126 @@
+@model HMS.Models.MedicinesViewModel.MedicinesCRUDViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddEdit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="PaymentItemCode" />
+                <input type="hidden" asp-for="CreatedDate" />
+                <input type="hidden" asp-for="CreatedBy" />
+
+
+                <div class="row">
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label asp-for="MedicineCategoryId" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <select asp-for="MedicineCategoryId" asp-items="@ViewBag._LoadddlMedicineCategories" id="MedicineCategoryId" class="form-control">
+                                    <option disabled selected>--- SELECT ---</option>
+                                </select>
+                                <span asp-validation-for="MedicineCategoryId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Code" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="Code" class="form-control" />
+                                <span asp-validation-for="Code" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="MedicineName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="MedicineName" class="form-control" />
+                                <span asp-validation-for="MedicineName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ManufactureId" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <select asp-for="ManufactureId" asp-items="@ViewBag._LoadddlMedicineManufacture" id="ManufactureId" class="form-control">
+                                    <option disabled selected>--- SELECT ---</option>
+                                </select>
+                                <span asp-validation-for="ManufactureId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UnitId" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <select asp-for="UnitId" asp-items="@ViewBag._LoadddlUnit" id="UnitId" class="form-control">
+                                    <option disabled selected>--- SELECT ---</option>
+                                </select>
+                                <span asp-validation-for="UnitId" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Description" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <textarea asp-for="Description" class="form-control"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-sm-6">
+                        <div class="form-group row">
+                            <label asp-for="UnitPrice" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UnitPrice" onchange="CalculateSellPrice()" class="form-control" id="UnitPrice" type="number" />
+                                <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="SellPrice" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="SellPrice" class="form-control" id="SellPrice" type="number" />
+                                <span asp-validation-for="SellPrice" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="Quantity" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="Quantity" class="form-control" type="number" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="StockKeepingUnit" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="StockKeepingUnit" class="form-control" />
+                                <span asp-validation-for="StockKeepingUnit" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="ExpiryDate" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="ExpiryDate" class="form-control" />
+                                <span asp-validation-for="ExpiryDate" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input type="submit" value="Save" class="btn btn-info">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    var CalculateSellPrice = function () {
+        $('#SellPrice').val((parseFloat($('#UnitPrice').val()) * 1.33).toFixed(2));
+    }
+</script>

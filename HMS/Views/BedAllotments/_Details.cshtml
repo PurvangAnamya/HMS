@@ -1,0 +1,21 @@
+@model HMS.Models.BedAllotmentsViewModel.BedAllotmentsGridViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="ItemTranTable">
+            <tr><th>Id</th><td>@Model.Id</td></tr>
+            <tr><th>Patient Name</th><td>@Model.PatientName</td></tr>
+            <tr><th>Bed Category</th><td>@Model.BedCategoryName</td></tr>
+            <tr><th>Bed Id</th><td>@Model.BedId</td></tr>
+            <tr><th>Bed No</th><td>@Model.BedNo</td></tr>
+            <tr><th>Allotment Date</th><td>@Model.AllotmentDateDisplay</td></tr>
+            <tr><th>Discharge Date</th><td>@Model.DischargeDateDisplay</td></tr>
+            <tr><th>Released</th><td>@Model.ReleasedStatus</td></tr>
+            <tr><th>Note</th><td>@Model.Note</td></tr>
+            <tr><th>Created Date</th><td>@Model.CreatedDate</td></tr>
+            <tr><th>Modified Date</th><td>@Model.ModifiedDate</td></tr>
+            <tr><th>Created By</th><td>@Model.CreatedBy</td></tr>
+            <tr><th>Modified By</th><td>@Model.ModifiedBy</td></tr>
+        </table>
+    </div>
+</div>

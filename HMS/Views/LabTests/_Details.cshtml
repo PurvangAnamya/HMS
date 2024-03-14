@@ -1,0 +1,24 @@
+@model HMS.Models.LabTestConfigurationViewModel.ManageLabTestConfigurationViewModel
+<div class="row">
+    <div class="col-md-12">
+        <table class="ItemTranTable">
+            <tr><th>Id</th><td>@Model.LabTestsCRUDViewModel.Id</td></tr>
+            <tr><th>Payment Item Code</th><td>@Model.LabTestsCRUDViewModel.PaymentItemCode</td></tr>
+            <tr><th>Lab TestCategory</th><td>@Model.LabTestsCRUDViewModel.LabTestCategoryName</td></tr>
+            <tr><th>Lab Test Name</th><td>@Model.LabTestsCRUDViewModel.LabTestName</td></tr>
+            <tr><th>Unit</th><td>@Model.LabTestsCRUDViewModel.Unit</td></tr>
+            <tr><th>Unit Price</th><td>@Model.LabTestsCRUDViewModel.UnitPrice</td></tr>
+            <tr><th>Reference Range</th><td>@Model.LabTestsCRUDViewModel.ReferenceRange</td></tr>
+            <tr><th>Status</th><td>@Model.LabTestsCRUDViewModel.Status</td></tr>
+            <tr><th>Created Date</th><td>@Model.LabTestsCRUDViewModel.CreatedDate</td></tr>
+            <tr><th>Modified Date</th><td>@Model.LabTestsCRUDViewModel.ModifiedDate</td></tr>
+            <tr><th>Created By</th><td>@Model.LabTestsCRUDViewModel.CreatedBy</td></tr>
+            <tr><th>Modified By</th><td>@Model.LabTestsCRUDViewModel.ModifiedBy</td></tr>
+        </table>
+    </div>
+</div>
+
+<br />
+<h3>Test Configuration Details</h3>
+<hr />
+<partial name="~/Views/LabTestConfiguration/_listLabTestConfiguration.cshtml" />

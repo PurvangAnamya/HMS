@@ -1,0 +1,51 @@
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="fa fa-plus-square fa-2x" onclick="AddEdit(0)"></a>
+                </div>
+                <div class="col-md-6 pull-right">
+                    <h5 class="pull-right"><b>&nbsp;Patient Test List</b></h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body scroll panel-height">
+            <table id="tblPatientTest" class="ItemTranTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Patient</th>
+                        <th>Visit Id</th>
+                        <th>Test Date</th>
+                        <th>Delivery Date</th>
+                        <th>Payment Status</th>
+                        <th>Created Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+</style>
+
+<script src="~/js/PatientTest/PatientTest_CRUD.js"></script>
+<script src="~/js/PatientTest/PatientTest_Datatable.js"></script>
+

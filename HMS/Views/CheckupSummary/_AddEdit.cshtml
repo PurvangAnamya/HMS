@@ -1,0 +1,233 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupViewModel
+
+@{
+    ViewData["Title"] = "Create"; 
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="row">
+                <div class="col-5 col-sm-5">
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div hidden>
+                        <input asp-for="CheckupSummaryCRUDViewModel.Id" id="Id" />
+                        <input asp-for="CheckupSummaryCRUDViewModel.VisitId" id="VisitId" />
+                        <input asp-for="CheckupSummaryCRUDViewModel.PaymentId" id="PaymentId" />
+                        <input asp-for="CheckupSummaryCRUDViewModel.CreatedDate" id="CreatedDate" />
+                        <input asp-for="CheckupSummaryCRUDViewModel.CreatedBy" id="CreatedBy" />
+
+                        <input asp-for="PatientTestCRUDViewModel.Id" id="PatientTestId" />
+                    </div>
+
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.PatientId" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="CheckupSummaryCRUDViewModel.PatientId"
+                                asp-items="@ViewBag._LoadddlPatientName" id="PatientId" class="form-control"
+                                style="width:100%;">
+                                <option disabled selected>--- SELECT ---</option>
+                            </select>
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.PatientId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.PatientType"
+                            class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="CheckupSummaryCRUDViewModel.PatientType" id="PatientType"
+                                class="form-control" style="width:100%;">
+                                <option value="1">Out Patient</option>
+                                <option value="2">In Patient</option>
+                            </select>
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.PatientType"
+                                class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.DoctorId" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="CheckupSummaryCRUDViewModel.DoctorId"
+                                asp-items="@ViewBag._LoadddlDoctorName" id="DoctorId" class="form-control"
+                                style="width:100%;">
+                                <option disabled selected>--- SELECT ---</option>
+                            </select>
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.DoctorId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.CheckupDate"
+                            class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="CheckupSummaryCRUDViewModel.CheckupDate" id="CheckupDate"
+                                class="form-control" />
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.CheckupDate"
+                                class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.NextVisitDate"
+                            class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="CheckupSummaryCRUDViewModel.NextVisitDate" id="NextVisitDate"
+                                class="form-control" />
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.NextVisitDate"
+                                class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.Advice" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <textarea asp-for="CheckupSummaryCRUDViewModel.Advice" id="Advice"
+                                class="form-control"></textarea>
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.Advice" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="CheckupSummaryCRUDViewModel.Comments" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <textarea asp-for="CheckupSummaryCRUDViewModel.Comments" id="Comments"
+                                class="form-control"></textarea>
+                            <span asp-validation-for="CheckupSummaryCRUDViewModel.Comments" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+
+
+
+
+                <div class="col-7 col-sm-7">
+                    <div class="card card-primary card-outline card-tabs">
+                        <div class="card-header p-0 pt-1 border-bottom-0">
+                            <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
+                                <li class="nav-item">
+                                    <a class="nav-link" id="ChiefComplaint" data-toggle="pill" href="#divChiefComplaint"
+                                        role="tab" aria-controls="ChiefComplaint" aria-selected="false">Chief
+                                        Complaint</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link active" id="Treatment" data-toggle="pill" href="#divTreatment"
+                                        role="tab" aria-controls="Treatment" aria-selected="true">Treatment</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="Investigations" data-toggle="pill" href="#divInvestigations"
+                                        role="tab" aria-controls="Investigations"
+                                        aria-selected="false">Investigations</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" id="VitalSigns" data-toggle="pill" href="#divVitalSigns"
+                                        role="tab" aria-controls="VitalSigns" aria-selected="false">Vital Signs</a>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="card-body">
+                            <div class="tab-content" id="tabContent">
+                                <div class="tab-pane fade" id="divChiefComplaint" role="tabpanel"
+                                    aria-labelledby="divChiefComplaint">
+                                    <div class="form-group row">
+                                        <label asp-for="CheckupSummaryCRUDViewModel.Symptoms"
+                                            class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                            <textarea asp-for="CheckupSummaryCRUDViewModel.Symptoms" id="Symptoms"
+                                                class="form-control"></textarea>
+                                            <span asp-validation-for="CheckupSummaryCRUDViewModel.Symptoms"
+                                                class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label asp-for="CheckupSummaryCRUDViewModel.Diagnosis"
+                                            class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                            <textarea asp-for="CheckupSummaryCRUDViewModel.Diagnosis" id="Diagnosis"
+                                                class="form-control"></textarea>
+                                            <span asp-validation-for="CheckupSummaryCRUDViewModel.Diagnosis"
+                                                class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label asp-for="CheckupSummaryCRUDViewModel.VitalSigns"
+                                            class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                            <textarea asp-for="CheckupSummaryCRUDViewModel.VitalSigns" id="VitalSigns"
+                                                class="form-control"></textarea>
+                                            <span asp-validation-for="CheckupSummaryCRUDViewModel.VitalSigns"
+                                                class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label asp-for="CheckupSummaryCRUDViewModel.HPI"
+                                            class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                            <textarea asp-for="CheckupSummaryCRUDViewModel.HPI" id="HPI"
+                                                class="form-control"></textarea>
+                                            <span asp-validation-for="CheckupSummaryCRUDViewModel.HPI"
+                                                class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label asp-for="CheckupSummaryCRUDViewModel.PhysicalExamination"
+                                            class="col-sm-3 col-form-label"></label>
+                                        <div class="col-sm-9">
+                                            <textarea asp-for="CheckupSummaryCRUDViewModel.PhysicalExamination"
+                                                id="PhysicalExamination" class="form-control"></textarea>
+                                            <span asp-validation-for="CheckupSummaryCRUDViewModel.PhysicalExamination"
+                                                class="text-danger"></span>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="tab-pane fade show active" id="divTreatment" role="tabpanel"
+                                    aria-labelledby="divTreatment">
+                                    <div class="row">
+                                        <div class="col-6 col-sm-6">
+                                        </div>
+                                        <div class="col-6 col-sm-6">
+                                        </div>
+                                    </div>
+                                    <partial name="_AddMedicine" />
+                                </div>
+
+                                <div class="tab-pane fade" id="divInvestigations" role="tabpanel"
+                                    aria-labelledby="divInvestigations">
+                                    <partial name="_AddLabTests" />
+                                </div>
+
+                                <div class="tab-pane fade" id="divVitalSigns" role="tabpanel"
+                                    aria-labelledby="divVitalSigns">
+                                    <partial name="_VitalSigns" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-5 col-sm-5">
+                </div>
+                <div class="col-7 col-sm-7">
+                    <div class="form-group">
+                        <input type="button" id="btnSave" value="Save" onclick="SaveCheckup()" class="btn btn-info">
+                        <button type="button" id="btnClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#ddlMedicine").select2();
+        $("#PatientId").select2();
+        $("#DoctorId").select2();
+        $("#Medicine").select2();
+        $("#LabTestsId").select2();
+    });
+</script>

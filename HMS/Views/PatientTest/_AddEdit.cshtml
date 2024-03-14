@@ -1,0 +1,83 @@
+@model HMS.Models.PatientTestViewModel.ManagePatientTestViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            <div hidden>
+                <input asp-for="PatientTestCRUDViewModel.Id" id="Id" />
+                <input asp-for="PatientTestCRUDViewModel.CreatedDate" id="CreatedDate" />
+                <input asp-for="PatientTestCRUDViewModel.CreatedBy" id="CreatedBy" />
+            </div>
+            <div class="row">
+                <div class="col-6 col-sm-6">
+                    <div class="form-group row">
+                        <label asp-for="PatientTestCRUDViewModel.PatientId" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="PatientTestCRUDViewModel.PatientId"
+                                asp-items="@ViewBag._LoadddlPatientName" id="PatientId" class="form-control"
+                                style="width:100%;">
+                                <option disabled selected>--- SELECT ---</option>
+                            </select>
+                            <span asp-validation-for="PatientTestCRUDViewModel.PatientId" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PatientTestCRUDViewModel.PaymentStatus" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <select asp-for="PatientTestCRUDViewModel.PaymentStatus" id="PaymentStatus"
+                                class="form-control">
+                                <option disabled selected>--- SELECT ---</option>
+                                <option value="Paid">Paid</option>
+                                <option value="Unpaid">Unpaid</option>
+                            </select>
+                            <span asp-validation-for="PatientTestCRUDViewModel.PaymentStatus"
+                                class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-6 col-sm-6">
+                    <div class="form-group row">
+                        <label asp-for="PatientTestCRUDViewModel.TestDate" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="PatientTestCRUDViewModel.TestDate" class="form-control" type="date" />
+                            <span asp-validation-for="PatientTestCRUDViewModel.TestDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label asp-for="PatientTestCRUDViewModel.DeliveryDate" class="col-sm-3 col-form-label"></label>
+                        <div class="col-sm-9">
+                            <input asp-for="PatientTestCRUDViewModel.DeliveryDate" class="form-control" type="date" />
+                            <span asp-validation-for="PatientTestCRUDViewModel.DeliveryDate" class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <hr />
+            <partial name="_AddLabTests" />
+            <hr />
+            <div class="form-group row">
+                <label class="col-sm-9 col-form-label"></label>
+                <div class="col-sm-3 text-lg-right">
+                    <input type="button" id="btnAddPatientTest" value="Save" class="btn btn-info">
+                    <button type="button" id="btnClose" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#PatientId").select2();
+        $("#ConsultantId").select2();
+    });
+</script>

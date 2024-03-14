@@ -1,0 +1,22 @@
+@model HMS.Models.LabTestConfigurationViewModel.LabTestConfigurationCRUDViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="ItemTranTable">
+            <tr><th>Id</th><td>@Model.Id</td></tr>
+            <tr><th>LabTestsId</th><td>@Model.LabTestsId</td></tr>
+            <tr><th>Sorting</th><td>@Model.Sorting</td></tr>
+            <tr><th>Report Group</th><td>@Model.ReportGroup</td></tr>
+            <tr><th>Name Of Test</th><td>@Model.NameOfTest</td></tr>
+            <tr><th>Result</th><td>@Model.Result</td></tr>
+            <tr><th>Normal Value</th><td>@Model.NormalValue</td></tr>
+            <tr><th>Created Date</th><td>@Model.CreatedDate</td></tr>
+            <tr><th>Modified Date</th><td>@Model.ModifiedDate</td></tr>
+            <tr><th>Created By</th><td>@Model.CreatedBy</td></tr>
+            <tr><th>Modified By</th><td>@Model.ModifiedBy</td></tr>
+        </table>
+    </div>
+</div>
+
+<hr />
+<partial name="_listLabTestConfiguration" />

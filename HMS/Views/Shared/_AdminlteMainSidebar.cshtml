@@ -1,0 +1,572 @@
+﻿@model HMS.Models.DashboardViewModel.SharedUIDataViewModel
+
+<aside class="main-sidebar sidebar-dark-primary elevation-4">
+    <a href="@Url.Action("Index", "Dashboard")" class="brand-link">
+        <img src='~/images/HMS6.png' alt="AdminLTE Logo" class="brand-image img-circle elevation-3">
+        <span class="brand-text font-weight-light">@Model.ApplicationInfo.ShortName</span>
+    </a>
+
+    <div class="sidebar">
+        @if (Model.MainMenuViewModel.UserProfile)
+        {
+            <div class="user-panel mt-3 pb-3 mb-3 d-flex">
+                <div class="image">
+                    <img src="@Model.UserProfile.ProfilePicture" class="img-circle elevation-2" alt="User Image">
+                </div>
+                <div class="info">
+                    <a href="@Url.Action("Index", "UserProfile")" class="d-block">
+                        @Model.UserProfile.FirstName @Model.UserProfile.LastName
+                    </a>
+                </div>
+            </div>
+        }
+
+        <nav class="mt-2">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.ManageClinic)
+                    {
+                        <a href="#" class="nav-link active" style="background-color: #FF6E31">
+                            <i class="nav-icon fas fa-database"></i>
+                            <p>
+                                Manage Clinic
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.PatientInfo)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientInfo.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.PatientInfo.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.PatientAppointment)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientAppointment.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-compass"></i>
+                                    <p>@MainMenu.PatientAppointment.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.VitalSigns)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.VitalSigns.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-nurse"></i>
+                                    <p>@MainMenu.VitalSigns.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Checkup)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Checkup.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-stethoscope"></i>
+                                    <p>@MainMenu.Checkup.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.DoctorsInfo)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.DoctorsInfo.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-door-closed"></i>
+                                    <p>@MainMenu.DoctorsInfo.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.PatientPrescriptions)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientPrescriptions.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-hospital-user"></i>
+                                    <p>@MainMenu.PatientPrescriptions.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.ManagePayments)
+                    {
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-money-bill"></i>
+                            <p>
+                                Manage Expense
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.PatientPayments)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientPayments.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.PatientPayments.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Payments)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Payments.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.Payments.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Expenses)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Expenses.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.Expenses.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.ExpenseCategories)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.ExpenseCategories.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.ExpenseCategories.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.PaymentCategories)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PaymentCategories.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-bill"></i>
+                                    <p>@MainMenu.PaymentCategories.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.InsuranceCompanyInfo)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.InsuranceCompanyInfo.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-industry"></i>
+                                    <p>@MainMenu.InsuranceCompanyInfo.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.ManageMedicine)
+                    {
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-clinic-medical"></i>
+                            <p>
+                                Manage Medicine
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.MedicineLabel)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.MedicineLabel.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.MedicineLabel.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Medicines)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Medicines.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.Medicines.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.MedicineCategories)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.MedicineCategories.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-door-closed"></i>
+                                    <p>@MainMenu.MedicineCategories.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Unit)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Unit.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.Unit.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.MedicineManufacture)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.MedicineManufacture.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-nurse"></i>
+                                    <p>@MainMenu.MedicineManufacture.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.MedicineHistory)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.MedicineHistory.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-history"></i>
+                                    <p>@MainMenu.MedicineHistory.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.Bed)
+                    {
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-bed"></i>
+                            <p>
+                                Manage Bed
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.BedAllotments)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.BedAllotments.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.BedAllotments.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Payments)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientPaymentsInBed.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.PatientPaymentsInBed.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Payments)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PaymentsInBed.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-money-check"></i>
+                                    <p>@MainMenu.PaymentsInBed.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Bed)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Bed.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.Bed.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.BedCategories)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.BedCategories.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-clock"></i>
+                                    <p>@MainMenu.BedCategories.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.PatientTest)
+                    {
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-globe"></i>
+                            <p>
+                                Manage LAB
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.PatientTest)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PatientTest.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-globe"></i>
+                                    <p>@MainMenu.PatientTest.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.LabTests)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.LabTests.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-globe"></i>
+                                    <p>@MainMenu.LabTests.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.LabTestCategories)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.LabTestCategories.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-globe"></i>
+                                    <p>@MainMenu.LabTestCategories.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.Admin)
+                    {
+                        <a href="#" class="nav-link active">
+                            <i class="nav-icon fas fa-database"></i>
+                            <p>
+                                Report
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.Admin)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.ServicePaymentsReport.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-check"></i>
+                                    <p>@MainMenu.ServicePaymentsReport.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Admin)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PaymentsReport.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-check"></i>
+                                    <p>@MainMenu.PaymentsReport.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Admin)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.PaymentModeReport.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-check"></i>
+                                    <p>@MainMenu.PaymentModeReport.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Admin)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.ExpensesReport.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-circle"></i>
+                                    <p>@MainMenu.ExpensesReport.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+                <li class="nav-item has-treeview">
+                    @if (Model.MainMenuViewModel.Admin)
+                    {
+                        <a href="#" class="nav-link active" style="background-color: grey;">
+                            <i class="nav-icon fas fa-hospital-user"></i>
+                            <p>
+                                Manage User
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                    }
+                    <ul class="nav nav-treeview">
+                        @if (Model.MainMenuViewModel.UserManagement)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.UserManagement.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-user-shield"></i>
+                                    <p>All User</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Nurse)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Nurse.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-atom"></i>
+                                    <p>@MainMenu.Nurse.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Laboraties)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Laboraties.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-search"></i>
+                                    <p>@MainMenu.Laboraties.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Pharmacist)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Pharmacist.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-toolbox"></i>
+                                    <p>@MainMenu.Pharmacist.PageName</p>
+                                </a>
+                            </li>
+                        }
+                        @if (Model.MainMenuViewModel.Accountants)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.Accountants.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-folder-open"></i>
+                                    <p>@MainMenu.Accountants.PageName</p>
+                                </a>
+                            </li>
+                        }
+                    </ul>
+                </li>
+
+                @if (Model.MainMenuViewModel.ManageUserRoles)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link active" style="background-color: grey">
+                            <i class="nav-icon fas fa-user-clock"></i>
+                            <p>
+                                Manage User Role
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (Model.MainMenuViewModel.ManageUserRoles)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.ManageUserRoles.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-desktop"></i>
+                                        <p>@MainMenu.ManageUserRoles.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.SystemRole)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.SystemRole.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-toolbox"></i>
+                                        <p>@MainMenu.SystemRole.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+
+                @if (Model.MainMenuViewModel.Admin)
+                {
+                    <li class="nav-item has-treeview">
+                        <a href="#" class="nav-link active" style="background-color: grey">
+                            <i class="nav-icon fas fa-toolbox"></i>
+                            <p>
+                                Settings
+                                <i class="right fas fa-angle-left"></i>
+                            </p>
+                        </a>
+                        <ul class="nav nav-treeview">
+                            @if (Model.MainMenuViewModel.CompanyInfo)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.CompanyInfo.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-compass"></i>
+                                        <p>@MainMenu.CompanyInfo.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.Currency)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.Currency.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-compass"></i>
+                                        <p>@MainMenu.Currency.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.EmailSetting)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.EmailSetting.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-envelope"></i>
+                                        <p>@MainMenu.EmailSetting.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.IdentitySetting)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.IdentitySetting.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-user-secret"></i>
+                                        <p>@MainMenu.IdentitySetting.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.AuditLogs)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.AuditLogs.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-globe"></i>
+                                        <p>@MainMenu.AuditLogs.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.LoginHistory)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.LoginHistory.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-history"></i>
+                                        <p>@MainMenu.LoginHistory.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                            @if (Model.MainMenuViewModel.UserInfoFromBrowser)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.UserInfoFromBrowser.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-clock"></i>
+                                        <p>@MainMenu.UserInfoFromBrowser.PageName</p>
+                                    </a>
+                                </li>
+                            }
+                        </ul>
+                    </li>
+                }
+            </ul>
+        </nav>
+    </div>
+</aside>
+
+<script>
+    var url = window.location;
+    // for sidebar menu entirely but not cover treeview
+    $('ul.nav-sidebar a').filter(function () {
+        return this.href == url;
+    }).addClass('active');
+
+    // for treeview
+    $('ul.nav-treeview a').filter(function () {
+        return this.href == url;
+    }).parentsUntil(".nav-sidebar > .nav-treeview").addClass('menu-open').prev('a').addClass('active');
+</script>

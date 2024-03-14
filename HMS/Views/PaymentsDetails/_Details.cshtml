@@ -1,0 +1,17 @@
+@model HMS.Models.PaymentsDetailsViewModel.PaymentsDetailsCRUDViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="ItemTranTable">
+            <tr><th>Id</th><td>@Model.Id</td></tr>
+            <tr><th>PaymentsId</th><td>@Model.PaymentsId</td></tr>
+            <tr><th>PaymentCategoriesId</th><td>@Model.PaymentItemName</td></tr>
+            <tr><th>ChargeAmount</th><td>@Model.TotalAmount</td></tr>
+            <tr><th>CreatedDate</th><td>@Model.CreatedDate</td></tr>
+            <tr><th>ModifiedDate</th><td>@Model.ModifiedDate</td></tr>
+            <tr><th>CreatedBy</th><td>@Model.CreatedBy</td></tr>
+            <tr><th>ModifiedBy</th><td>@Model.ModifiedBy</td></tr>
+            <tr><th>Cancelled</th><td>@Model.Cancelled</td></tr>
+        </table>
+    </div>
+</div>

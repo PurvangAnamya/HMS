@@ -1,0 +1,140 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupViewModel
+
+<div class="col-sm-12">
+    <div class="panel-footer text-right">
+        <button class="btn btn-info" onclick="printDiv('printableArea')"><span class="fa fa-print"></span></button>
+    </div>
+</div>
+
+
+<div id="printableArea">
+    <div class="row">
+        <div class="col-sm-9">
+            <address style="margin-top:1px">
+                <strong>@Model.CompanyInfoCRUDViewModel.Name</strong>
+                <br>@Model.CompanyInfoCRUDViewModel.Address<br>
+                <abbr><b>Mobile: </b></abbr>@Model.CompanyInfoCRUDViewModel.Phone<br>
+                <abbr><b>Email: </b></abbr>@Model.CompanyInfoCRUDViewModel.Email<br>
+                <abbr><b>Website: </b></abbr>@Model.CompanyInfoCRUDViewModel.Website
+            </address>
+        </div>
+        <div class="col-sm-3">
+            <address style="margin-top:1px">
+                <abbr><b>Patient Name: </b></abbr>@Model.PatientInfoCRUDViewModel.FullName<br>
+                <abbr><b>Patient Type: </b></abbr>@Model.CheckupSummaryCRUDViewModel.PatientType<br>
+                <abbr><b>Patient Code: </b></abbr>@Model.PatientInfoCRUDViewModel.PatientCode<br>
+                <abbr><b>Blood Group: </b></abbr>@Model.PatientInfoCRUDViewModel.BloodGroup<br>
+                <abbr><b>Phone: </b></abbr>@Model.PatientInfoCRUDViewModel.Phone<br>
+                <abbr><b>Address: </b></abbr>@Model.PatientInfoCRUDViewModel.Address
+            </address>
+            <div class="m-b-15"><strong>Print Date </strong>: @DateTime.Today.ToString("dd MMMM yyyy")</div>
+        </div>
+    </div>
+
+
+    <br />
+    <h4><i class="nav-icon fas fa-walking"></i> Visit Id: @Model.CheckupSummaryCRUDViewModel.VisitId</h4>
+    <h4><i class="nav-icon fas fa-stethoscope"></i> Checkup Date: @Model.CheckupSummaryCRUDViewModel.CheckupDate</h4>
+    <hr />
+
+
+    <div class="col-sm-12">
+        <div class="row">
+            <sapn><b>Checkup Summary</b></sapn>
+            <hr />
+            <div class="row" style="width:100%; margin:0 auto;">
+                <table class="ItemTranTable">
+                    <tr><th>Id</th><td style="width:70%;">@Model.CheckupSummaryCRUDViewModel.Id</td></tr>
+                    <tr><th>Doctor Name</th><td>@Model.CheckupSummaryCRUDViewModel.DoctorName</td></tr>
+                    <tr><th>Symptoms</th><td>@Model.CheckupSummaryCRUDViewModel.Symptoms</td></tr>
+                    <tr><th>Diagnosis</th><td>@Model.CheckupSummaryCRUDViewModel.Diagnosis</td></tr>
+                    <tr><th>Vital Signs</th><td>@Model.CheckupSummaryCRUDViewModel.VitalSigns</td></tr>
+                    <tr><th>HPI</th><td>@Model.CheckupSummaryCRUDViewModel.HPI</td></tr>
+                    <tr><th>Physical Examination</th><td>@Model.CheckupSummaryCRUDViewModel.PhysicalExamination</td></tr>
+                    <tr><th>Advice</th><td>@Model.CheckupSummaryCRUDViewModel.Advice</td></tr>
+                    <tr><th>Comments</th><td>@Model.CheckupSummaryCRUDViewModel.Comments</td></tr>
+                    <tr><th>Next Visit Date</th><td>@Model.CheckupSummaryCRUDViewModel.NextVisitDate</td></tr>
+                </table>
+            </div>
+        </div>
+
+        <br />
+        <div class="row">
+            <sapn><b>Vital Signs</b></sapn>
+            <hr />
+            <div class="row" style="width:100%; margin:0 auto;">
+                <table class="ItemTranTable">
+                    <tr><th>BP Systolic</th><td style="width:70%;">@Model.CheckupSummaryCRUDViewModel.BPSystolic</td></tr>
+                    <tr><th>BP Diastolic</th><td>@Model.CheckupSummaryCRUDViewModel.BPDiastolic</td></tr>
+                    <tr><th>Respiration Rate</th><td>@Model.CheckupSummaryCRUDViewModel.RespirationRate</td></tr>
+                    <tr><th>Temperature(°F)</th><td>@Model.CheckupSummaryCRUDViewModel.Temperature</td></tr>
+                    <tr><th>Nursing Notes</th><td>@Model.CheckupSummaryCRUDViewModel.NursingNotes</td></tr>
+
+                </table>
+            </div>
+        </div>
+
+
+        <br />
+        <sapn><b>Checkup Medicine Details</b></sapn>
+        <hr />
+        <div class="row" style="width:100%; margin:0 auto;">
+            <table class="CustomBlueTable" border="1">
+                <thead>
+                    <tr>
+                        <th>SL</th>
+                        <th>Medicine Name</th>
+                        <th>No of Days</th>
+                        <th>When to Take</th>
+                        <th>Is Before Meal</th>
+                    </tr>
+                </thead>
+                @{ var SL = 0;
+                    foreach (var item in Model.listCheckupMedicineDetailsCRUDViewModel)
+                    {
+                        SL = SL + 1;
+        <tbody>
+
+            <tr>
+                <td>
+                    @SL
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MedicineName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NoofDays)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.WhentoTake)
+                </td>
+                <td>
+                    @if (item.IsBeforeMeal)
+                    {<span>Yes</span> }
+                    else
+                    { <span>No</span>}
+                </td>
+            </tr>
+
+        </tbody>
+ } }
+            </table>
+        </div>
+
+
+        <br />
+        <sapn><b>Patient Test Detail</b></sapn>
+        <hr />
+        @if (Model.listPatientTestDetailCRUDViewModel != null)
+        {
+<partial name="_PatientTestDetail" /> }
+else
+{
+
+<span>No Test Item</span>}
+
+    </div>
+</div>
+
+
+

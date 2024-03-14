@@ -1,0 +1,52 @@
+﻿@model HMS.Models.PaymentsViewModel.PaymentsReportViewModel
+
+@{
+    ViewData["Title"] = "Assigned To Summary Report";
+}
+
+<div class="row">
+    <div class="col-sm-5">
+        <img src="@Model.CompanyInfoCRUDViewModel.CompanyLogoImagePath" class="" alt="" style="margin-bottom:1px; width:30%;">
+    </div>
+    <div class="col-sm-6">
+        <h4><b>INVOICE</b></h4>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-12">
+        <span>From,</span>
+        <address style="margin-top:1px">
+            <strong>@Model.CompanyInfoCRUDViewModel.Name</strong>
+            <br>@Model.CompanyInfoCRUDViewModel.Address<br>
+            <abbr><b>Mobile: </b></abbr>@Model.CompanyInfoCRUDViewModel.Phone<br>
+            <abbr><b>Email: </b></abbr>@Model.CompanyInfoCRUDViewModel.Email<br>
+            <abbr><b>Website: </b></abbr>@Model.CompanyInfoCRUDViewModel.Website
+        </address>
+    </div>
+    <div class="col-sm-12">
+        <abbr><b>Invoice No: </b></abbr>@Model.PaymentsCRUDViewModel.InvoiceNo<br>
+        <abbr><b>Payment Status: </b></abbr>@Model.PaymentsCRUDViewModel.PaymentStatus<br>
+        <abbr><b>Currency: </b></abbr>@Model.PaymentsCRUDViewModel.CurrencyName<br>
+    </div>
+    <div class="col-sm-12">
+        <span>To,</span>
+        <address style="margin-top:1px">
+            <strong>@Model.PatientInfoCRUDViewModel.FirstName @Model.PatientInfoCRUDViewModel.LastName</strong><br>
+            <abbr><b>Patient Code: </b></abbr>@Model.PatientInfoCRUDViewModel.PatientCode<br>
+            <abbr><b>Blood Group: </b></abbr>@Model.PatientInfoCRUDViewModel.BloodGroup<br>
+            <abbr><b>Phone: </b></abbr>@Model.PatientInfoCRUDViewModel.Phone<br>
+            <abbr><b>Address: </b></abbr>@Model.PatientInfoCRUDViewModel.Address
+        </address>
+        <div class="m-b-15"><strong>Print Date </strong>: @DateTime.Today.ToString("dd MMMM yyyy")</div>
+    </div>
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px;
+        border-bottom: 0px solid transparent;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+</style>

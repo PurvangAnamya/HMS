@@ -1,0 +1,33 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupViewModel
+
+<partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+<div class="row">
+    <input type="hidden" id="CurrentURL" asp-for="CheckupSummaryCRUDViewModel.CurrentURL" />
+    <div class="col-sm-12">
+        <div class="panel-footer text-right">
+            <button class="btn btn-info" onclick="printDiv('printableArea')"><span class="fa fa-print"></span></button>
+            <button class="btn btn-info" onclick="DownloadCheckupReportPDF('@Model.CheckupSummaryCRUDViewModel.Id')"><span class="fa fa-download"></span></button>
+
+            <button class="btn btn-info" onclick="AddEdit('@Model.CheckupSummaryCRUDViewModel.Id')">Edit</button>
+            <button class="btn btn-dark" onclick="BacktoPreviousPage()">Back</button>
+        </div>
+
+        <partial name="~/Views/DownloadReport/_CheckupPrintableArea.cshtml" />
+    </div>
+</div>
+
+<script>
+    $("table").removeClass("CustomBlueTable");
+    var DownloadCheckupReportPDF = function (id) {
+        location.href = "/DownloadReport/DownloadCheckupReportPDF?id=" + id;
+    };
+
+    var AddEdit = function (id) {
+        localStorage.setItem('CurrentURL', window.location.pathname);
+        localStorage.setItem('CheckupId', @Model.CheckupSummaryCRUDViewModel.Id);
+
+        $('#titleExtraBigModal').html("Edit Checkup");
+        loadExtraBigModal("/CheckupSummary/AddEdit?id=" + id);
+    };
+</script>
+

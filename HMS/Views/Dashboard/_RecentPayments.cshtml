@@ -1,0 +1,47 @@
+﻿@model HMS.Models.DashboardViewModel.DashboardDataViewModel
+
+<hr />
+
+<div class="panel panel-hash">
+    <div class="panel-heading"><h4><b>Recent Payments</b></h4></div>
+    <div class="panel-body scroll panel-height">
+        <table class="CustomBlueTable">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Patient</th>
+                    <th>Discount(%)</th>
+                    <th>Tax(%)</th>
+                    <th>Sub Total</th>
+                    <th>Grand Total</th>
+                    <th>CreatedDate</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
+                    foreach (var item in Model.listPaymentsCRUDViewModel)
+                    {
+                        <tr>
+                            <td>@item.Id</td>
+                            <td>
+                                <a href='#' class='btn btn-link btn-xs' onclick=Details('@item.Id')>@item.PatientName</a>
+                            </td>
+                            <td>@item.Discount</td>
+                            <td>@item.Tax</td>
+                            <td>@item.SubTotal</td>
+                            <td>@item.GrandTotal</td>
+                            <td>@item.CreatedDate.ToString("dd MMMM yyyy")</td>
+                            <td>
+                                <a href='#' class='btn btn-link btn-xs' onclick=PrintPaymentInvoice('@item.Id')>INVOICE</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <br /><br />
+    </div>
+</div>
+<script src="~/js/Payments/Payments_CRUD.js"></script>

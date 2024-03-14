@@ -1,0 +1,39 @@
+@model HMS.Models.DoctorsInfoViewModel.DoctorsInfoCRUDViewModel
+
+<div class="row">
+    <div class="col-md-12">
+        <table class="ItemTranTable">
+            <tr><th>Id</th><td>@Model.Id</td></tr>
+            <tr>
+                <th>Profile Picture</th>
+                <td>
+                    <div class="user-panel mt-2 pb-2 mb-2 d-flex">
+                        <div class="image">
+                            <img src="@Model.ProfilePicture" class="img-circle elevation-2" alt="User Image">
+                        </div>
+                        <div class="info">
+                            <a href="#" class="d-block" onclick=ViewUserImage('@Model.ProfilePicture')>
+                                @Model.FirstName @Model.LastName
+                            </a>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            <tr><th>ApplicationUser Id</th><td>@Model.ApplicationUserId</td></tr>
+            <tr><th>First Name</th><td>@Model.FirstName</td></tr>
+            <tr><th>Last Name</th><td>@Model.LastName</td></tr>
+            <tr><th>Phone</th><td>@Model.PhoneNumber</td></tr>
+            <tr><th>Email</th><td>@Model.Email</td></tr>
+            <tr><th>Designation</th><td>@Model.DesignationDisplay</td></tr>
+            <tr><th>Doctors ID</th><td>@Model.DoctorsID</td></tr>
+            <tr><th>Doctor Fee</th><td>@Model.DoctorFee</td></tr>
+            <tr><th>Address</th><td>@Model.Address</td></tr>
+            <tr><th>Country</th><td>@Model.Country</td></tr>
+
+            <tr><th>Created Date</th><td>@Model.CreatedDate</td></tr>
+            <tr><th>Modified Date</th><td>@Model.ModifiedDate</td></tr>
+            <tr><th>Created By</th><td>@Model.CreatedBy</td></tr>
+            <tr><th>Modified By</th><td>@Model.ModifiedBy</td></tr>
+        </table>
+    </div>
+</div>

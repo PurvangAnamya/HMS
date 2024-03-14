@@ -1,0 +1,54 @@
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-6">
+                    <a class="fa fa-plus-square fa-2x" onclick="AddEdit(0)"></a>
+                </div>
+                <div class="col-md-6 pull-right">
+                    <h5 class="pull-right"><b>&nbsp;Patient Prescriptions List</b></h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body scroll panel-height">
+            <table id="tblCheckupSummary" class="ItemTranTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Visit Id</th>
+                        <th>Serial No</th>
+                        <th>Patient Name</th>
+                        <th>Doctor Name</th>
+                        <th>Symptoms</th>
+                        <th>Diagnosis</th>
+                        <th>Advice</th>
+                        <th>Checkup Date</th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+</style>
+
+<script src="~/js/PatientPres/PatientPres_Datatable.js"></script>
+

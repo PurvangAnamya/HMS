@@ -1,0 +1,45 @@
+﻿@model HMS.Models.MedicinesViewModel.MedicinesCRUDViewModel
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+
+        </div>
+    </div>
+</div>
+
+<form asp-action="UpdateQuantity">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="Id" />
+
+    <div class="row">
+        <div class="col-sm-6">
+            <partial name="_Details" />
+        </div>
+
+        <div class="col-sm-6">
+            <div class="form-group">
+                <label asp-for="AddNewQuantity" class="control-label"></label>
+                <input asp-for="AddNewQuantity" value="" class="form-control" type="number" min="0" />
+                <span asp-validation-for="AddNewQuantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateQntType" class="control-label"></label>
+                <input asp-for="UpdateQntType" value="" class="form-control" type="text" placeholder="New Stock" />
+                <span asp-validation-for="UpdateQntType" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="UpdateQntNote" class="control-label"></label>
+                <input asp-for="UpdateQntNote" value="" class="form-control" type="text" placeholder="New Stock Note" />
+                <span asp-validation-for="UpdateQntNote" class="text-danger"></span>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-info">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>

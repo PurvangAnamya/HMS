@@ -1,0 +1,97 @@
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-12">
+                    <h4 class="pull-left"><b>Service Payments Report</b></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="StartDate" class="form-control" placeholder="Select Start Date" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="EndDate" class="form-control" placeholder="Select Start Date" required>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label></label>
+                        <input type="button" class="form-control btn btn-danger" value="Submit"
+                               onclick="CustomRangeDataFilter()" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label></label>
+                        <input type="button" class="form-control btn btn-success" value="Reset"
+                               onclick="CustomRangeDataFilter()" />
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-12">
+                    <div class="form-group">
+                        <label>Showing Data on Date Range: @ViewBag.StartDate to @ViewBag.EndDate</label>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <label>Lab Total: @ViewBag.MedicineTotal</label>&nbsp;&nbsp;
+                    <label>Medicine Total: @ViewBag.LabTotal</label>&nbsp;&nbsp;
+                    <label>Common Total: @ViewBag.CommonTotal</label>&nbsp;&nbsp;
+                    <label>All Total: @ViewBag.AllTotal</label>
+                </div>
+            </div>
+        </div>
+        <div class="panel-body scroll panel-height">
+            <table id="tblServicePaymentReport" class="ItemTranTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Payment Item Code</th>
+                        <th>Service Name</th>
+                        <th>Quantity</th>
+                        <th>Unit Prize</th>
+                        <th>Total Amount</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+    </div>
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+</style>
+
+<script src="~/js/RptServicePayment/RptServicePayment_Datatable.js"></script>

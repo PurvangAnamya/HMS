@@ -1,0 +1,261 @@
+﻿
+<div class="row">
+    <div class="form-group col-sm-12">
+        <table id="tblAddLabTests" class="ItemsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Tests Id</th>
+                    <th>Test Name</th>
+                    <th>Result</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot id="tblAddLabTeststfoot">
+                <tr>
+                    <td>
+                        <input id="tblLabTestsId" value="1" type="number" style="width: 50px;" class="unstyled-button" hidden readonly />
+                    </td>
+                    <td>
+                        <select asp-items="@ViewBag._LoadddlLabTests" id="LabTestsId" class="form-control" style="width:400px;">
+                            <option disabled selected>--- SELECT ---</option>
+                        </select>
+                    </td>
+                    <td>
+                        <textarea id="Result" class="form-control"></textarea>
+                    </td>
+                    <td>
+                        <textarea id="Remarks" class="form-control"></textarea>
+                    </td>
+                    <td>
+                        <input type="button" id="btnAddLabTestsItem" onclick="AddItem();" value="Add Test" class="btn btn-success btn-xs" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+    var listPatientTestDetail = new Array();
+
+    var AddItem = function () {
+        if (!FieldValidation('#LabTestsId')) {
+            FieldValidationAlert('#LabTestsId', 'Lab Test Name is Required.', "warning");
+            return;
+        }
+
+        var _LabTestId = $("#LabTestsId").val();
+        for (var i = 0; i < listPatientTestDetail.length; i++) {
+            if (listPatientTestDetail[i].LabTestsId == parseFloat(_LabTestId) || listPatientTestDetail[i].Medicine == _LabTestId) {
+                FieldValidationAlert('#Medicine', 'Lab Test Item Already Added.', "warning");
+                return;
+            }
+        }
+
+
+        var LabTestsItems = {};
+        LabTestsItems.LabTestsId = $("#LabTestsId").val();
+        LabTestsItems.Result = $("#Result").val();
+        LabTestsItems.Remarks = $("#Remarks").val();
+
+        if (parseFloat($("#Id").val()) > 0) {
+            LabTestsItems.PatientTestId = $("#Id").val();
+            SavePatientTestDetailDB(LabTestsItems);
+        }
+        else {
+            listPatientTestDetail.push(LabTestsItems);
+            AddNewHLMLTableRow();
+        }
+
+        $("#LabTestsId").focus();
+        ClearInvoiceItemTableRowData();
+    };
+
+
+    var AddNewHLMLTableRow = function () {
+        var tBody = $("#tblAddLabTests > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#LabTestsId").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#LabTestsId option:selected").text());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#Result").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#Remarks").val());
+
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+    }
+
+
+
+    //Edit Option: Load Items
+    $(document).ready(function () {
+        if (parseFloat($("#Id").val()) > 0) {
+            var result = @Html.Raw(Json.Serialize(Model.listPatientTestDetailCRUDViewModel));
+            if (result != null) {
+                result.forEach(LoadTableRowFromDB);
+                listPatientTestDetail = result;
+                $('#PatientId').attr("disabled", true);
+            }
+        }
+    });
+
+    function LoadTableRowFromDB(item, index) {
+        var tBody = $("#tblAddLabTests > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.Id);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.LabTestsName);
+
+
+        var cell = $(row.insertCell(-1));
+        var txtResult = $("<textarea />");
+        txtResult.attr('class', 'form-control');
+        txtResult.attr('id', 'Result' + item.Id);
+        txtResult.val(item.Result);
+        cell.append(txtResult);
+
+        var cell = $(row.insertCell(-1));
+        var txtRemarks = $("<textarea />");
+        txtRemarks.attr('class', 'form-control');
+        txtRemarks.attr('id', 'Remarks' + item.Id);
+        txtRemarks.val(item.Remarks);
+        cell.append(txtRemarks);
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnUpdate = $("<input />");
+        btnUpdate.attr("type", "button");
+        btnUpdate.attr('class', 'btn btn-success btn-xs');
+        btnUpdate.attr("onclick", "UpdatePatientTestDetailDB(this);");
+        btnUpdate.val("Update");
+        cell.append(btnUpdate);
+
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+    }
+
+    var ClearInvoiceItemTableRowData = function () {
+        $("#LabTestsId").val("");
+        $("#Result").val("");
+        $("#Remarks").val("");
+    }
+
+    function Remove(button) {
+        Swal.fire({
+            title: 'Do you want to delete this item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+                RemoveHTMLTableRow(button);
+            }
+        });
+    }
+
+    function RemoveHTMLTableRow(button) {
+        var row = $(button).closest("TR");
+        var table = $("#tblAddLabTests")[0];
+        table.deleteRow(row[0].rowIndex);
+        var _LabTestsId = $("TD", row).eq(0).html();
+
+        if (parseFloat($("#Id").val()) > 0) {
+            var LabTestsItems = {};
+            LabTestsItems.Id = _LabTestsId;
+            LabTestsItems.PatientTestId = $("#Id").val();
+            DeletePatientTestDetailDB(LabTestsItems);
+            listPatientTestDetail = listPatientTestDetail.filter((item) => item.Id !== parseFloat(_LabTestsId));
+        }
+        else {
+            listPatientTestDetail = listPatientTestDetail.filter((item) => item.LabTestsId !== parseFloat(_LabTestsId));
+            toastr.success("Item removed successfully.");
+        }
+    }
+
+    function SavePatientTestDetailDB(LabTestsItems) {
+        var LabTestsName = $("#LabTestsId option:selected").text();
+
+        $.ajax({
+            type: "POST",
+            url: "/PatientTest/SavePatientTestDetail",
+            data: LabTestsItems,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("New patient test item has been created successfully. Lab Test ID: " + result.Id, 'Success');
+                listPatientTestDetail.push(result);
+                //AddEdit(result.PatientTestId);
+                var AddNewPatientTestDetail = new Array();
+                result.LabTestsName = LabTestsName;
+                AddNewPatientTestDetail.push(result);
+                AddNewPatientTestDetail.forEach(LoadTableRowFromDB);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function UpdatePatientTestDetailDB(button) {
+        var row = $(button).closest("TR");
+
+        var _TestDetailId = $("TD", row).eq(0).html();
+        var PatientTestDetail = {};
+        PatientTestDetail.Id = $("TD", row).eq(0).html();
+        PatientTestDetail.Result = $("#Result" + _TestDetailId).val();
+        PatientTestDetail.Remarks = $("#Remarks" + _TestDetailId).val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "/PatientTest/UpdatePatientTestDetailDB",
+            data: PatientTestDetail,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Update patient test item successfully. Lab Test ID: " + result.Id, 'Success');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function DeletePatientTestDetailDB(LabTestsItems) {
+        $.ajax({
+            type: "POST",
+            url: "/PatientTest/DeletePatientTestDetail",
+            data: LabTestsItems,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Patient Test Detail Item has been deleted successfully. Lab Test ID: " + result.Id, 'Success');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,60 @@
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-md-5">
+                </div>
+                <div class="col-md-7 pull-right">
+                    <h5 class="pull-right"><b>&nbsp;Medicine History List</b></h5>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel-body scroll panel-height">
+            <table id="tblMedicineHistory" class="ItemTranTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Medicine Id</th>
+                        <th>Medicine Name</th>
+
+                        <th>Unit Price</th>
+                        <th>Sell Price</th>
+                        <th>Old Unit Price</th>
+                        <th>Old Sell Price</th>
+
+                        <th>Old Quantity</th>
+                        <th>New Quantity</th>
+                        <th>Tran Quantity</th>
+
+                        <th>Action</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+
+    <partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+</div>
+
+<partial name="~/Views/UIComponents/_MediumModal.cshtml" />
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+</style>
+
+<script src="~/js/MedicineHistory/MedicineHistory_CRUD.js"></script>
+<script src="~/js/MedicineHistory/MedicineHistory_Datatable.js"></script>
+

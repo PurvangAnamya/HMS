@@ -1,0 +1,111 @@
+<div class="wrapper">
+    <div class="panel panel-hash">
+        <div class="panel-heading">
+            <div class="row">
+                <div class="col-sm-3">
+                    <h4 class="pull-left"><b>&nbsp;Payment Mode Report</b></h4>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>Start Date</label>
+                        <input type="date" id="StartDate" class="form-control" placeholder="Select Start Date" required>
+                    </div>
+                </div>
+                <div class="col-sm-3">
+                    <div class="form-group">
+                        <label>End Date</label>
+                        <input type="date" id="EndDate" class="form-control" placeholder="Select Start Date" required>
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label></label>
+                        <input type="button" class="form-control btn btn-danger" value="Submit"
+                               onclick="CustomRangeDataFilter()" />
+                    </div>
+                </div>
+                <div class="col-sm-2">
+                    <div class="form-group">
+                        <label></label>
+                        <input type="button" class="form-control btn btn-success" value="Reset"
+                               onclick="CustomRangeDataFilter()" />
+                    </div>
+                </div>
+
+                <div class="col-sm-2">
+                </div>
+                <div class="col-sm-12">
+                    @*<div class="row">
+                        <div class="col-sm-6">
+                            <div class="form-group">
+                                <label>Showing Data on Date Range: @ViewBag.StartDate to @ViewBag.EndDate</label>
+                            </div>
+                        </div>
+                        <div class="col-sm-6">
+                            <input type="checkbox" id="chkPiadOnly" />
+                            <label class="col-sm-3 col-form-label">Piad Only</label>
+
+                            <input type="checkbox" id="chkOutPatientOnly" />
+                            <label class="col-sm-4 col-form-label">Out Patient Only</label>
+                        </div>
+                    </div>*@                                   
+                </div>
+            </div>
+        </div>
+        <div class="panel-body scroll panel-height">
+            <table id="tblPaymentModeReport" class="ItemTranTable" style="width:100%">
+                <thead>
+                    <tr>
+                        <th>Id</th>
+                        <th>Patient Name</th>
+                        <th>Patient Type</th>
+                        <th>Insurance</th>
+                        <th>Payment Status</th>
+                        <th>Mode of Payment</th>
+                        <th>Amount</th>
+                        <th>Total Amount</th>
+                        <th>Total Paid Amount</th>
+                        <th>Total Due Amount</th>
+                        <th>Created Date</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+    </div>
+</div>
+
+<style>
+    .panel-heading {
+        padding: 0px 0px 0px 5px;
+    }
+
+    .panel-body {
+        padding: 5px;
+    }
+
+    .h4 {
+        margin-top: 1px;
+        margin-bottom: 1px;
+    }
+</style>
+
+
+<script src="~/js/RptPaymentMode/RptPaymentMode_Datatable.js"></script>

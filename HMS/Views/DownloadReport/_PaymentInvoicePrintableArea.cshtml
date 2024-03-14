@@ -1,0 +1,131 @@
+﻿@model HMS.Models.PaymentsViewModel.PaymentsReportViewModel
+
+
+<div>
+    <h5>Payment Item Details</h5>
+    <div>
+        <div class="row" style="width:100%; margin:0 auto;">
+            <table class="" style="width:100%" border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Item Categories</th>
+                        <th>Date Of Service</th>
+                        <th>Quantity</th>
+                        <th>Unit Prize</th>
+                        <th>Charge Amount</th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.listPaymentsDetailsCRUDViewModel)
+                {
+    <tbody>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentItemName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.UnitPrize)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmount)
+            </td>
+        </tr>
+    </tbody>}
+            </table>
+        </div>
+    </div>
+
+    <hr />
+    <div class="row">
+        <div class="col-sm-6">
+
+        </div>
+
+        <div class="col-sm-6">
+            <h5>Payment Details: Σ @Model.PaymentsCRUDViewModel.PaidAmount</h5>
+            <table class="" style="width:100%" border="1">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Payment Type</th>
+                        <th>Amount</th>
+                        <th>Reference No</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                @foreach (var item in Model.listPaymentModeHistoryCRUDViewModel)
+                {
+    <tbody>
+
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Id)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ModeOfPayment)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Amount)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ReferenceNo)
+            </td>
+            <td>
+                @item.CreatedDate.ToString("dd MMMM yyyy")
+            </td>
+        </tr>
+    </tbody>
+}
+            </table>
+            <hr />
+            <div class="row" style="width:100%; margin:0 auto;">
+                <table class="" style="width:100%" border="1">
+                    <tr>
+                        <th>Sub Total</th>
+                        <td>@Model.PaymentsCRUDViewModel.SubTotal</td>
+                    </tr>
+                    <tr>
+                        <th>Grand Total</th>
+                        <td>@Model.PaymentsCRUDViewModel.GrandTotal</td>
+                    </tr>
+                    <tr>
+                        <th>Insurance Amount</th>
+                        <td>@Model.PaymentsCRUDViewModel.InsuranceAmount</td>
+                    </tr>
+                    <tr>
+                        <th>Paid Amount</th>
+                        <td>@Model.PaymentsCRUDViewModel.PaidAmount</td>
+                    </tr>
+                    <tr>
+                        <th>Due Amount</th>
+                        <td>@Model.PaymentsCRUDViewModel.DueAmount</td>
+                    </tr>
+                    <tr>
+                        <th>Created Date</th>
+                        <td>@Model.PaymentsCRUDViewModel.CreatedDate</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <style>
+        table th {
+            padding-left: 5px;
+        }
+
+        table td {
+            padding-left: 5px;
+        }
+    </style>
+</div>

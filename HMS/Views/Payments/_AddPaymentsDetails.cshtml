@@ -1,0 +1,436 @@
+﻿
+<table id="tblPaymentsDetails" class="ItemsTable" border="1">
+    <thead>
+        <tr>
+            <th style="width: 150px;">Id</th>
+            <th>Payment Category</th>
+            <th style="width: 100px;">Quantity</th>
+            <th style="width: 150px;">Unit Prize</th>
+            <th style="width: 150px;">Total Amount</th>
+            <th style="width: 130px;">Action</th>
+        </tr>
+    </thead>
+    <tbody></tbody>
+    <tfoot id="tblAddLabTeststfoot">
+        <tr>
+            <td>
+                <input id="PaymentsDetailsId" value="1" type="number" class="unstyled-button" hidden readonly />
+            </td>
+            <td>
+                <select id="PaymentItemCode" asp-items="@ViewBag._LoadddlPaymentCategories" onchange="UpdateUnitPrize()" class="form-control" style="width: 100%;">
+                    <option disabled selected>--- SELECT ---</option>
+                </select>
+            </td>
+            <td>
+                <input id="Quantity" type="number" value="1" onchange="onchangeQuantity()" class="form-control" min="1" />
+            </td>
+            <td>
+                <input id="UnitPrize" type="number" onchange="onchangeUnitPrize()" onkeydown="onkeydownChargeAmount()" class="form-control" min="0" />
+            </td>
+            <td>
+                <input id="TotalAmount" type="number" style="width:70px;" class="unstyled-button" readonly />
+            </td>
+            <td>
+                <input type="button" id="btnPaymentsDetails" onclick="AddPaymentsDetailsHTMLRow();" value="Add Item" class="btn btn-info btn-xs" />
+            </td>
+        </tr>
+    </tfoot>
+</table>
+
+<script>
+    var listPaymentsDetails = new Array();
+    var onchangeQuantity = function () {
+        var _GetInputFields = GetInputFields();
+        $('#TotalAmount').val(_GetInputFields.Quantity * _GetInputFields.UnitPrize);
+
+    }
+    var onchangeUnitPrize = function () {
+        var _GetInputFields = GetInputFields();
+        $('#TotalAmount').val(_GetInputFields.Quantity * _GetInputFields.UnitPrize);
+
+    }
+
+    var onkeydownChargeAmount = function () {
+        if (event.keyCode == 13) {
+            event.preventDefault();
+            AddHTMLTableRow();
+        }
+    }
+
+    var AddPaymentsDetailsHTMLRow = function () {
+        AddHTMLTableRow();
+    }
+
+    var AddHTMLTableRow = function () {
+        onchangeQuantity();
+        onchangeUnitPrize();
+
+        var _PaymentItemCode = $("#PaymentItemCode").val();
+
+        //check MED stock
+        if (_PaymentItemCode.substring(0, 3) == "MED") {
+            var _PaymentItemCodeText = $("#PaymentItemCode option:selected").text();
+            var splitArray = _PaymentItemCodeText.split(":");
+            if (parseFloat(splitArray[2]) < parseFloat($("#Quantity").val())) {
+                FieldValidationAlert('#Quantity', 'Stock limit crosses the selected quantity, please check the quantity.', "warning");
+                return;
+            }
+        }
+
+
+        if (!FieldValidation('#PaymentItemCode')) {
+            FieldValidationAlert('#PaymentItemCode', 'Payment Categorie is Required.', "warning");
+            return;
+        }
+        var _Quantity = $("#Quantity").val();
+        if (_Quantity === "" || _Quantity === null || parseFloat(_Quantity) < 1) {
+            FieldValidationAlert('#Quantity', 'Quantity is Required', "warning");
+            return;
+        }
+
+        var _UnitPrize = $("#UnitPrize").val();
+        if (_UnitPrize === "" || _UnitPrize === null || parseFloat(_UnitPrize) < 1) {
+            FieldValidationAlert('#UnitPrize', 'Minimum amount is required for Unit Prize.', "warning");
+            return;
+        }
+
+        //for (var i = 0; i < listPaymentsDetails.length; i++) {
+        //    if (listPaymentsDetails[i].PaymentItemCode == _PaymentItemCode) {
+        //        FieldValidationAlert('#PaymentItemCode', 'Payment Categorie Item Already Added.', "warning");
+        //        return;
+        //    }
+        //}
+
+        var PaymentsDetailstems = {};
+        PaymentsDetailstems.PaymentItemCode = $("#PaymentItemCode").val();
+        PaymentsDetailstems.Quantity = $("#Quantity").val();
+        PaymentsDetailstems.UnitPrize = $("#UnitPrize").val();
+        PaymentsDetailstems.TotalAmount = $("#TotalAmount").val();
+
+
+        if (parseFloat($("#Id").val()) > 0) {
+            PaymentsDetailstems.PaymentsId = $("#Id").val();
+            SavePaymentsDetailsDB(PaymentsDetailstems);
+        }
+        else {
+            listPaymentsDetails.push(PaymentsDetailstems);
+            HLMLTableRow();
+        }
+
+        UpdateAllNumericField();
+        $("#PaymentItemCode").focus();
+        ClearInvoiceItemTableRowData();
+    }
+
+
+    var HLMLTableRow = function () {
+        var tBody = $("#tblPaymentsDetails > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#PaymentItemCode").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#PaymentItemCode option:selected").text());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#Quantity").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#UnitPrize").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#TotalAmount").val());
+
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "Remove(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+    }
+
+
+    //Edit Option: Load Items
+    $(document).ready(function () {
+        if (parseFloat($("#Id").val()) > 0) {
+            var result = @Html.Raw(Json.Serialize(Model.listPaymentsDetailsCRUDViewModel));
+            if (result != null) {
+                result.forEach(LoadTableRowFromDB);
+                listPaymentsDetails = result;
+                UpdateAllNumericField();
+            }
+
+            var _AddMode = document.getElementById("AddMode");
+            _AddMode.style.display = "none";
+            var _EditMode = document.getElementById("EditMode");
+            _EditMode.style.display = "block";
+
+            var _VisitIdEditMode = $("#VisitIdEditMode").val();
+            $("#lblVisitId").html("Visit Id: " + _VisitIdEditMode);
+
+            var _PatientNameEditMode = $("#PatientNameEditMode").val();
+            $("#lblPatientName").html("Patient Name:  " + _PatientNameEditMode);
+        }
+    });
+
+    function LoadTableRowFromDB(item, index) {
+        var tBody = $("#tblPaymentsDetails > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.Id);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.PaymentItemName);
+
+        var cell = $(row.insertCell(-1));
+        var txtQuantity = $("<input />");
+        txtQuantity.attr('class', 'form-control');
+        txtQuantity.attr('type', 'number');
+        txtQuantity.attr('min', '1');
+        txtQuantity.attr('id', 'Quantity' + item.Id);
+        txtQuantity.val(item.Quantity);
+        cell.append(txtQuantity);
+
+        var cell = $(row.insertCell(-1));
+        //cell.html(item.UnitPrize);
+        var txtUnitPrize = $("<input />");
+        txtUnitPrize.attr('class', 'form-control');
+        txtUnitPrize.attr('type', 'number');
+        txtUnitPrize.attr('min', '1');
+        txtUnitPrize.attr('id', 'UnitPrize' + item.Id);
+        txtUnitPrize.val(item.UnitPrize);
+        cell.append(txtUnitPrize);
+
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.TotalAmount);
+
+        //Add Button cell.
+        cell = $(row.insertCell(-1));
+        var btnUpdate = $("<input />");
+        btnUpdate.attr("type", "button");
+        btnUpdate.attr('class', 'btn btn-success btn-xs');
+        btnUpdate.attr("onclick", "UpdatePaymentsDetailsDB(this);");
+        btnUpdate.val("Update");
+        cell.append(btnUpdate);
+
+        var _UserRole = $("#UserRole").val();
+        console.log(_UserRole);
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "Remove(this);");
+        if(_UserRole!="Admin")
+        {
+            btnRemove.attr("disabled", "disabled");
+        }      
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+    }
+
+
+    var ClearInvoiceItemTableRowData = function () {
+        $("#PaymentsDetailsId").val("");
+        $('#PaymentItemCode').val(0).trigger('change');
+        $("#Quantity").val("1");
+        $("#UnitPrize").val("");
+        $("#TotalAmount").val("");
+    }
+
+    function Remove(button) {
+        Swal.fire({
+            title: 'Do you want to delete this item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+                RemoveHTMLTableRow(button);
+            }
+        });
+    }
+
+    function RemoveHTMLTableRow(button) {
+        var row = $(button).closest("TR");
+        var table = $("#tblPaymentsDetails")[0];
+        table.deleteRow(row[0].rowIndex);
+        var _ItemId = $("TD", row).eq(0).html();
+
+        if (parseFloat($("#Id").val()) > 0) {
+            var item = {};
+            item.Id = _ItemId;
+            item.PaymentsId = $("#Id").val();
+            DeletePaymentsDetailsDB(item);
+            listPaymentsDetails = listPaymentsDetails.filter((item) => item.Id !== parseFloat(_ItemId));
+        }
+        else {
+            listPaymentsDetails = listPaymentsDetails.filter((item) => item.PaymentItemCode !== _ItemId);
+            toastr.success("Item removed successfully.");
+        }
+
+        UpdateAllNumericField();
+    }
+
+
+
+
+
+
+    //All Numeric Control Calc
+    var UpdateAllNumericField= function () {
+        UpdateSubTotalAndGrandTotal();
+        UpdateCommonCharge();
+        UpdateDiscount();
+        UpdateTax();
+        UpdatePaidAmount();
+        UpdateInsuranceCoverage();
+    }
+
+    var UpdateSubTotalAndGrandTotal = function () {
+        $('#SubTotal').val(sumTotalAmount().toFixed(2));
+        $('#GrandTotal').val(sumTotalAmount().toFixed(2));
+    }
+
+    var UpdateCommonCharge = function () {
+        var _GetInputFields = GetInputFields();
+        var result = sumTotalAmount() + _GetInputFields.CommonCharge;
+        $('#SubTotal').val(result.toFixed(2));
+        $('#GrandTotal').val(result.toFixed(2));
+
+        UpdateDiscount();
+        UpdateTax();
+        UpdatePaidAmount();
+    }
+
+    var UpdateDiscount = function () {
+        var _GetInputFields = GetInputFields();
+        var _sumTotalAmount = sumTotalAmount() + _GetInputFields.CommonCharge;
+        var _DiscountPercentage = _GetInputFields.Discount / 100;
+        var result = _sumTotalAmount - (_sumTotalAmount * _DiscountPercentage);
+
+        $('#DiscountAmount').html((_sumTotalAmount * _DiscountPercentage).toFixed(2));
+        $('#GrandTotal').val(result.toFixed(2));
+
+        UpdatePaidAmount();
+    }
+
+    var UpdateTax = function () {
+        var _GetInputFields = GetInputFields();
+
+        var _sumTotalAmount = sumTotalAmount() + _GetInputFields.CommonCharge;
+        var _DiscountPercentage = _GetInputFields.Discount / 100;
+        _sumTotalAmount = _sumTotalAmount - (_sumTotalAmount * _DiscountPercentage);
+        var _TaxPercentage = _GetInputFields.Tax / 100;
+        var result = _sumTotalAmount + (_sumTotalAmount * _TaxPercentage);
+
+        $('#TaxAmount').html((_sumTotalAmount * _TaxPercentage).toFixed(2));
+        $('#GrandTotal').val(result.toFixed(2));
+
+        UpdatePaidAmount();
+    }
+
+    var UpdateInsuranceCoverage = function () {
+        var _GetInputFields = GetInputFields();
+        var _sumTotalAmount = sumTotalAmount() + _GetInputFields.CommonCharge;
+        var _InsuranceCoveragePercentage = _GetInputFields.InsuranceCoverage / 100;
+        var result = _sumTotalAmount - (_sumTotalAmount * _InsuranceCoveragePercentage);
+
+        $('#InsuranceAmount').html((_sumTotalAmount * _InsuranceCoveragePercentage).toFixed(2));
+        $('#GrandTotal').val(result.toFixed(2));
+
+        UpdatePaidAmount();
+    }
+
+    var sumTotalAmount = function () {
+        var _sumTotalAmount = 0;
+        for (let i = 0; i < listPaymentsDetails.length; i++) {
+            _sumTotalAmount = parseFloat(_sumTotalAmount) + parseFloat(listPaymentsDetails[i].TotalAmount);
+        }
+        $('#SumPaymentItem').text(_sumTotalAmount);
+        return _sumTotalAmount;
+    }
+
+    var UpdatePaidAmount = function () {
+        var _GetInputFields = GetInputFields();
+
+        if (_GetInputFields.PaidAmount > _GetInputFields.GrandTotal) {
+            $('#DueAmount').val(0);
+            $('#ChangedAmount').val((_GetInputFields.PaidAmount - _GetInputFields.GrandTotal).toFixed(2));
+        }
+        else {
+            $('#DueAmount').val((_GetInputFields.GrandTotal - _GetInputFields.PaidAmount).toFixed(2));
+            $('#ChangedAmount').val(0);
+        }
+    }
+
+    var UpdateUnitPrize = function () {
+        var _PaymentItemCode = $("#PaymentItemCode option:selected").text();
+        var splitArray = _PaymentItemCode.split(":");
+        var _UnitPrize = parseFloat(splitArray[1]);
+        $("#UnitPrize").val(_UnitPrize);
+
+        onchangeUnitPrize();
+    }
+
+
+    var GetInputFields = function () {
+        var _CommonCharge = $("#CommonCharge").val();
+        if (_CommonCharge === null || _CommonCharge === '')
+            _CommonCharge = 0;
+
+        var _Discount = $("#Discount").val();
+        if (_Discount === null || _Discount === '')
+            _Discount = 0;
+
+        var _Tax = $("#Tax").val();
+        if (_Tax === null || _Tax === '')
+            _Tax = 0;
+
+        var _Quantity = $("#Quantity").val();
+        if (_Quantity === null || _Quantity === '')
+            _Quantity = 0;
+
+        var _UnitPrize = $("#UnitPrize").val();
+        if (_UnitPrize === null || _UnitPrize === '')
+            _UnitPrize = 0;
+
+        var _PaidAmount = $("#PaidAmount").val();
+        if (_PaidAmount === null || _PaidAmount === '')
+            _PaidAmount = 0;
+
+        var _DueAmount = $("#DueAmount").val();
+        if (_DueAmount === null || _DueAmount === '')
+            _DueAmount = 0;
+
+        var _ChangedAmount = $("#ChangedAmount").val();
+        if (_ChangedAmount === null || _ChangedAmount === '')
+            _ChangedAmount = 0;
+
+        var _GrandTotal = $("#GrandTotal").val();
+        if (_GrandTotal === null || _GrandTotal === '')
+            _GrandTotal = 0;
+
+        var _InsuranceCoverage = $("#InsuranceCoverage").val();
+        if (_InsuranceCoverage === null || _InsuranceCoverage === '')
+            _InsuranceCoverage = 0;
+
+        var SendObject = {
+            CommonCharge: parseFloat(_CommonCharge),
+            Discount: parseFloat(_Discount),
+            Tax: parseFloat(_Tax),
+            Quantity: parseFloat(_Quantity),
+            UnitPrize: parseFloat(_UnitPrize),
+            PaidAmount: parseFloat(_PaidAmount),
+            DueAmount: parseFloat(_DueAmount),
+            ChangedAmount: parseFloat(_ChangedAmount),
+            GrandTotal: parseFloat(_GrandTotal),
+            InsuranceCoverage: parseFloat(_InsuranceCoverage),
+        }
+        return SendObject;
+    }
+</script>

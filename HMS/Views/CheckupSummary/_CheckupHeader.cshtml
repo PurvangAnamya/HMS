@@ -1,0 +1,24 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupHistoryViewModel
+
+<div class="row">
+    <div class="col-sm-9">
+        <address style="margin-top:1px">
+            <strong>@Model.CompanyInfoCRUDViewModel.Name</strong>
+            <br>@Model.CompanyInfoCRUDViewModel.Address<br>
+            <abbr><b>Mobile: </b></abbr>@Model.CompanyInfoCRUDViewModel.Phone<br>
+            <abbr><b>Email: </b></abbr>@Model.CompanyInfoCRUDViewModel.Email<br>
+            <abbr><b>Website: </b></abbr>@Model.CompanyInfoCRUDViewModel.Website
+        </address>
+    </div>
+    <div class="col-sm-3">
+        <address style="margin-top:1px">
+            <abbr><b>Patient Name: </b></abbr>@Model.PatientInfoCRUDViewModel.FullName<br>
+            <abbr><b>Patient Code: </b></abbr>@Model.PatientInfoCRUDViewModel.PatientCode<br>
+            <abbr><b>Blood Group: </b></abbr>@Model.PatientInfoCRUDViewModel.BloodGroup<br>
+            <abbr><b>Phone: </b></abbr>@Model.PatientInfoCRUDViewModel.Phone<br>
+            <abbr><b>Address: </b></abbr>@Model.PatientInfoCRUDViewModel.Address
+        </address>
+        <div class="m-b-15 visible-print"><strong>Print Date </strong>: @DateTime.Today.ToString("dd MMMM yyyy")</div>
+    </div>
+</div>
+

@@ -1,0 +1,35 @@
+@model HMS.Models.ExpensesViewModel.ExpensesCRUDViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddEdit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="CreatedDate" />
+                <input type="hidden" asp-for="CreatedBy" />
+
+                <div class="form-group">
+                    <label asp-for="ExpenseCategoriesId" class="control-label"></label>
+                    <select asp-for="ExpenseCategoriesId" asp-items="@ViewBag._LoadddlExpenseCategories" id="ExpenseCategoriesId" class="form-control">
+                        <option disabled selected>--- SELECT ---</option>
+                    </select>
+                    <span asp-validation-for="ExpenseCategoriesId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Amount" class="control-label"></label>
+                    <input asp-for="Amount" class="form-control" />
+                    <span asp-validation-for="Amount" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-info">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>

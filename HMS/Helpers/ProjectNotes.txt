@@ -1,0 +1,53 @@
+﻿
+-- Kill Current Connection and Drop MSSQL DB: 
+USE [master]
+GO
+ALTER DATABASE [HMSDev] SET  SINGLE_USER WITH ROLLBACK IMMEDIATE
+GO
+USE [master]
+GO
+DROP DATABASE [HMSDev]
+GO
+
+
+
+
+Entity:
+1. Manage Bed:
+BedCategories: Id, Name, Description
+Bed: Id, BedCategoryId, No, Description
+BedAllotments: Id, BedCategoryId, BedNo, AllotmentDate, DischargeDate, Notes
+
+
+
+2. Manage Lab
+LabTestCategories: Id, Name, Description
+LabTests: Id, LabTestCategoryId, LabTestName, Unit, ReferenceRange, Status
+
+PatientTest: Id, PatientId, ConsultantId, TestDate, DeliveryDate, PaymentStatus: Pending, Delivered
+TestDetail: Id, TestName, Result, Remarks
+
+
+
+3. Manage Finance
+PaymentCategories: Id, Name, Description
+ExpenseCategories: Id, Name, Description
+Payments: Consulting Charge....
+Expenses: Id, ExpenseCategoriesId, Amount
+
+
+
+
+4. Manage Checkup History
+Checkup: Id, Doctor, Symptoms, Diagnosis, CheckupDate, 
+Prescription: Medication, No.of Days, When to take, Before Meal?, ExtraNotes
+
+
+
+dotnet add package Pomelo.EntityFrameworkCore.MySql --version 5.0.0
+
+dotnet ef migrations add InitialCreate
+dotnet ef database update
+
+
+dotnet publish -c Release -p:UseAppHost=false

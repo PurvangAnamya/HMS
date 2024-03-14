@@ -1,0 +1,44 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupViewModel
+
+
+<abbr><b>Test Date: </b></abbr>@Model.PatientTestCRUDViewModel.TestDate
+<br>
+<abbr><b>Delivery Date: </b></abbr>@Model.PatientTestCRUDViewModel.DeliveryDate
+<br>
+<abbr><b>Payment Status: </b></abbr>@Model.PatientTestCRUDViewModel.PaymentStatus
+<br>
+<div class="row" style="width:100%; margin:0 auto;">
+    <table class="CustomBlueTable" style="width:100%" border="1">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Lab Tests Id</th>
+                <th>Unit Price</th>
+                <th>Result</th>
+                <th>Remarks</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.listPatientTestDetailCRUDViewModel)
+            {
+<tr>
+    <td>
+        @Html.DisplayFor(modelItem => item.Id)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.LabTestsName)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.UnitPrice)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Result)
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Remarks)
+    </td>
+</tr>}
+        </tbody>
+    </table>
+</div>
+

@@ -1,0 +1,208 @@
+﻿
+<div class="row">
+    <div class="form-group col-sm-12">
+        <table id="tblItemList" class="ItemsTable" border="1">
+            <thead>
+                <tr>
+                    <th>Tests Id</th>
+                    <th>Test Name</th>
+                    <th>Unit Price</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+            <tfoot id="tblAddLabTeststfoot">
+                <tr>
+                    <td>
+                        <input id="tblLabTestsId" value="1" type="number" style="width: 50px;" class="unstyled-button" hidden readonly />
+                    </td>
+                    <td>
+                        <select asp-items="@ViewBag._LoadddlLabTests" id="LabTestsId" onchange="LoadUnitPrice()" class="form-control" style="width:400px;">
+                            <option disabled selected>--- SELECT ---</option>
+                        </select>
+                    </td>
+                    <td>
+                        <input id="UnitPrice" style="width: 70px;" class="unstyled-button" readonly />
+                    </td>
+                    <td>
+                        <input type="button" id="btnAddLabTestsItem" onclick="AddHTMLTableRowLabTest();" value="Add Test" class="btn btn-success btn-xs" />
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+</div>
+
+
+
+<script>
+    var listPatientTestDetail = new Array();
+    var AddHTMLTableRowLabTest = function () {
+        if (!FieldValidation('#LabTestsId')) {
+            FieldValidationAlert('#LabTestsId', 'Lab Test Name is Required.', "warning");
+            return;
+        }
+
+        var _LabTestsId = $("#LabTestsId").val();
+        //for (var i = 0; i < listPatientTestDetail.length; i++) {
+        //    if (listPatientTestDetail[i].LabTestsId == parseFloat(_LabTestsId) || listPatientTestDetail[i].Medicine == _LabTestsId) {
+        //        FieldValidationAlert('#LabTestsId', 'Lab Test Already Added.', "warning");
+        //        return;
+        //    }
+        //}
+
+
+        var tBody = $("#tblItemList > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#LabTestsId").val());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#LabTestsId option:selected").text());
+
+        var cell = $(row.insertCell(-1));
+        cell.html($("#UnitPrice").val());
+
+
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "RemoveLabTestItem(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+
+        var LabTestsItems = {};
+        LabTestsItems.LabTestsId = $("#LabTestsId").val();
+        LabTestsItems.UnitPrice = $("#UnitPrice").val();
+        listPatientTestDetail.push(LabTestsItems);
+
+        if (parseFloat($("#Id").val()) > 0) {
+            LabTestsItems.PatientTestId = $("#PatientTestId").val();
+            SavePatientTestDetailDB(LabTestsItems);
+        }
+
+        $("#LabTestsId").focus();
+        ClearTableRowDataLabTests();
+    }
+
+    //Edit Option: Load Items
+    $(document).ready(function () {
+        if (parseFloat($("#Id").val()) > 0) {
+            var result = @Html.Raw(Json.Serialize(Model.listPatientTestDetailCRUDViewModel));
+            if (result != null) {
+                result.forEach(CreateTableRowLabTest);
+                listPatientTestDetail = result;
+            }
+        }
+    });
+
+    function CreateTableRowLabTest(item, index) {
+        var tBody = $("#tblItemList > TBODY")[0];
+        var row = tBody.insertRow(-1);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.LabTestsId);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.LabTestsName);
+
+        var cell = $(row.insertCell(-1));
+        cell.html(item.UnitPrice);
+
+        cell = $(row.insertCell(-1));
+        var btnRemove = $("<input />");
+        btnRemove.attr("type", "button");
+        btnRemove.attr('class', 'btn btn-danger btn-xs');
+        btnRemove.attr("onclick", "RemoveLabTestItem(this);");
+        btnRemove.val("Remove");
+        cell.append(btnRemove);
+    }
+
+    var ClearTableRowDataLabTests = function () {
+        $("#tblLabTestsId").val("");
+        $("#UnitPrice").val("");
+        $('#LabTestsId').val(0).trigger('change');
+    }
+
+    function RemoveLabTestItem(button) {
+        Swal.fire({
+            title: 'Do you want to delete this item?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes'
+        }).then((result) => {
+            if (result.value) {
+                RemoveHTMLTableRowLabTest(button);
+            }
+        });
+    }
+
+    function RemoveHTMLTableRowLabTest(button) {
+        var row = $(button).closest("TR");
+        var table = $("#tblItemList")[0];
+        table.deleteRow(row[0].rowIndex);
+
+        var _LabTestsId = $("TD", row).eq(0).html();
+        listPatientTestDetail = listPatientTestDetail.filter((item) => item.LabTestsId !== _LabTestsId);
+
+        if (parseFloat($("#Id").val()) > 0) {
+            var item = {};
+            item.MedicineId = _LabTestsId;
+            DeleteCheckupMedicineDetailsDB(item);
+        }
+        else {
+            toastr.success("Item removed successfully.");
+        }
+    }
+
+    function SavePatientTestDetailDB(LabTestsItems) {
+        $.ajax({
+            type: "POST",
+            url: "/PatientTest/SavePatientTestDetail",
+            data: LabTestsItems,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("New patient test item has been created successfully. Lab Test ID: " + result.LabTestsId, 'Success');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    function DeletePatientTestDetailDB(LabTestsItems) {
+        $.ajax({
+            type: "POST",
+            url: "/PatientTest/DeletePatientTestDetail",
+            data: LabTestsItems,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Patient Test Detail Item has been deleted successfully. Lab Test ID: " + result.LabTestsId, 'Success');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    var LoadUnitPrice = function () {
+        var _LabTestsId = $("#LabTestsId").val();
+        $.ajax({
+            type: "GET",
+            url: "/CheckupSummary/LoadUnitPrice?Id=" + _LabTestsId,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data === null) return;
+                $("#UnitPrice").val(data.UnitPrice);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+</script>

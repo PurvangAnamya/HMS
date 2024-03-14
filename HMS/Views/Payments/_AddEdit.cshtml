@@ -1,0 +1,420 @@
+﻿@model HMS.Models.PaymentsViewModel.ManagePaymentsViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+
+<div class="col-md-12">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div hidden>
+        <input asp-for="PaymentsCRUDViewModel.Id" id="Id" />
+        <input asp-for="PaymentsCRUDViewModel.InvoiceNo" id="InvoiceNo" />
+        <input asp-for="PaymentsCRUDViewModel.CreatedDate" id="CreatedDate" />
+        <input asp-for="PaymentsCRUDViewModel.CreatedBy" id="CreatedBy" />
+
+        <input asp-for="PaymentsCRUDViewModel.PatientId" id="PatientIdEditMode" />
+        <input asp-for="PaymentsCRUDViewModel.VisitId" id="VisitIdEditMode" />
+        <input asp-for="PaymentsCRUDViewModel.PatientName" id="PatientNameEditMode" />
+        <input asp-for="PaymentsCRUDViewModel.UserRole" id="UserRole" />
+    </div>
+
+    <div class="row" id="AddMode">
+        <div class="col-sm-6">
+            <div class="form-group row">
+                <label asp-for="PaymentsCRUDViewModel.PatientId" class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <select asp-for="PaymentsCRUDViewModel.PatientId" asp-items="@ViewBag._LoadddlPatientName" id="PatientId" onchange="LoadVisitId()" class="form-control" style="width:100%;">
+                        <option disabled selected>--- SELECT ---</option>
+                    </select>
+                    <span asp-validation-for="PaymentsCRUDViewModel.PatientId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="form-group row">
+                <label asp-for="PaymentsCRUDViewModel.VisitId" class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <select asp-for="PaymentsCRUDViewModel.VisitId" asp-items="@ViewBag._LoadddlVisitID" id="VisitId" class="form-control" style="width:100%;">
+                        <option disabled selected>--- SELECT ---</option>
+                    </select>
+                    <span asp-validation-for="PaymentsCRUDViewModel.VisitId" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-sm-12" id="EditMode">
+        <label id="lblVisitId"></label>&nbsp;&nbsp;&nbsp;
+        <label id="lblPatientName"></label>
+    </div>
+    <h5>Payment Item: Σ <label id="SumPaymentItem"></label></h5>
+    <partial name="_AddPaymentsDetails" />
+    <br />
+
+    <div class="row">
+        <div class="col-sm-5">
+            <table class="" border="1" style=" width:100%;margin:1px auto;">
+                <tr>
+                    <th style="background-color:aqua">Paid Amount</th>
+                    <td style="width:50%">
+                        <input type="number" asp-for="PaymentsCRUDViewModel.PaidAmount" value="0.00" id="PaidAmount" class="unstyled-button" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Sub Total</th>
+                    <td style="width:50%">
+                        <input type="number" asp-for="PaymentsCRUDViewModel.SubTotal" value="0.00" id="SubTotal" class="unstyled-button" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Grand Total</th>
+                    <td style="width:50%">
+                        <input type="number" asp-for="PaymentsCRUDViewModel.GrandTotal" value="0.00" id="GrandTotal" class="unstyled-button" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Due Amount</th>
+                    <td style="width:50%">
+                        <input type="number" asp-for="PaymentsCRUDViewModel.DueAmount" value="0.00" id="DueAmount" class="unstyled-button" readonly />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Changed Amount</th>
+                    <td style="width:50%">
+                        <input type="number" asp-for="PaymentsCRUDViewModel.ChangedAmount" value="0.00" id="ChangedAmount" class="unstyled-button" readonly />
+                    </td>
+                </tr>
+            </table>
+            <hr />
+            <table class="" border="1" style=" width:100%;margin:1px auto;">
+                <tr>
+                    <th>Common Charge</th>
+                    <td style="width:50%">
+                        <input asp-for="PaymentsCRUDViewModel.CommonCharge" onchange="UpdateCommonCharge()" id="CommonCharge" class="form-control" type="number" min="0" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Discount(%)&nbsp;<label id="DiscountAmount"></label></th>
+                    <td style="width:50%">
+                        <input asp-for="PaymentsCRUDViewModel.Discount" onchange="UpdateDiscount()" id="Discount" class="form-control" type="number" min="0" />
+                    </td>
+                </tr>
+                <tr>
+                    <th>Tax(%)&nbsp;<label id="TaxAmount"></label></th>
+                    <td style="width:50%">
+                        <input asp-for="PaymentsCRUDViewModel.Tax" onchange="UpdateTax()" id="Tax" class="form-control" type="number" min="0" />
+                    </td>
+                </tr>
+            </table>
+
+            <div class="form-group row">
+                <label class="col-sm-3 col-form-label">Has Insurance</label>
+                <div class="col-sm-9">
+                    <input type="checkbox" id="chkHasInsuranceCovarage" />
+                </div>
+            </div>
+
+            <div id="divInsurance">
+                <div class="form-group row">
+                    <label asp-for="PaymentsCRUDViewModel.InsuranceNo" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <input asp-for="PaymentsCRUDViewModel.InsuranceNo" id="InsuranceNo" class="form-control" type="text" />
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="PaymentsCRUDViewModel.InsuranceCompanyId" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <select asp-for="PaymentsCRUDViewModel.InsuranceCompanyId" asp-items="@ViewBag._LoadddlInsuranceCompanyInfo" id="InsuranceCompanyId" class="form-control" style="width:100%;">
+                            <option disabled selected>--- SELECT ---</option>
+                        </select>
+                        <span asp-validation-for="PaymentsCRUDViewModel.InsuranceCompanyId" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="PaymentsCRUDViewModel.InsuranceCoverage" class="col-sm-4 col-form-label"></label>
+                    <div class="col-sm-8">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <input asp-for="PaymentsCRUDViewModel.InsuranceCoverage" onchange="UpdateInsuranceCoverage()" id="InsuranceCoverage" class="form-control" type="number" min="0" />
+                            </div>
+                            <div class="col-sm-6">
+                                <label id="InsuranceAmount"></label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-7">
+            <h5>Payment Detail: Σ <label id="SumPaymentDetail"></label></h5>
+            <partial name="_AddPaymentModeHistory" />
+            <div class="col-sm-6">
+                <input type="checkbox" id="chkFullPaid" />
+                <label>Full Paid:</label>
+            </div>
+
+            <div class="form-group row">
+                <label asp-for="PaymentsCRUDViewModel.CurrencyId" class="col-sm-3 col-form-label"></label>
+                <div class="col-sm-9">
+                    <select asp-for="PaymentsCRUDViewModel.CurrencyId" id="CurrencyId" asp-items="@ViewBag.ddlCurrency" class="form-control" required>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group row">
+                <div class="col-sm-12">
+                    <input type="button" value="Save" onclick="SavePayments()" class="btn btn-info">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#PatientId").select2();
+        $("#PaymentItemCode").select2();
+        $("#InsuranceCompanyName").select2();
+    });
+
+
+    var _divInsurance = document.getElementById("divInsurance");
+    var _InsuranceNo = $("#InsuranceNo").val();
+    if (_InsuranceNo == null || _InsuranceNo == '') {
+        _divInsurance.style.display = "none";
+        $("#chkHasInsuranceCovarage").prop("checked", false);
+    }
+    else {
+        _divInsurance.style.display = "block";
+        $("#chkHasInsuranceCovarage").prop("checked", true);
+    }
+
+    $("body").on("click", "#chkHasInsuranceCovarage", function () {
+        if ($('#chkHasInsuranceCovarage').is(":checked")) {
+            _divInsurance.style.display = "block";
+        }
+        else {
+            _divInsurance.style.display = "none";
+        }
+    });
+
+
+    var LoadVisitId = function () {
+        var _PatientId = $("#PatientId").val();
+        $.ajax({
+            type: "GET",
+            url: "/Payments/LoadVisitId?Id=" + _PatientId,
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                if (data === null) return;
+
+                var _LoadddlVisitID = '<option value="-1">Please Select Vist ID</option>';
+                for (var i = 0; i < data.length; i++) {
+                    _LoadddlVisitID += '<option value="' + data[i].Name + '">' + data[i].Name + '</option>';
+                }
+                $("#VisitId").html(_LoadddlVisitID);
+            },
+            error: function (response) {
+                console.log(response);
+            }
+        });
+    }
+
+    var SavePayments = function () {
+        if (listPaymentsDetails.length == 0) {
+            FieldValidationAlert('#PaymentItemCode', 'Please add at one payment item.', "warning");
+            return;
+        }
+
+        if (parseFloat($("#Id").val()) > 0) {
+            for (var i = 0; i < listPaymentsDetails.length; i++) {
+                var _Quantity = parseFloat($("#Quantity" + listPaymentsDetails[i].Id).val());
+                var _UnitPrize = parseFloat($("#UnitPrize" + listPaymentsDetails[i].Id).val());
+
+                listPaymentsDetails[i].Quantity = _Quantity;
+                listPaymentsDetails[i].UnitPrize = _UnitPrize;
+                listPaymentsDetails[i].TotalAmount = _Quantity * _UnitPrize;
+            }
+        }
+        else {
+            if (!FieldValidation('#PatientId')) {
+                FieldValidationAlert('#PatientId', 'Patient Name is Required.', "warning");
+                return;
+            }
+
+            var _VisitId = $("#VisitId").val();
+            if (!FieldValidation('#VisitId') || _VisitId == -1) {
+                FieldValidationAlert('#VisitId', 'Visit Id is Required.', "warning");
+                return;
+            }
+        }
+
+
+        UpdateAllNumericField();
+        var _PreparedFormObj = PreparedFormObj();
+        if (parseFloat($("#Id").val()) > 0) {
+            _PreparedFormObj.PaymentsCRUDViewModel.PatientId = $("#PatientIdEditMode").val();
+            _PreparedFormObj.PaymentsCRUDViewModel.VisitId = $("#VisitIdEditMode").val();
+            _PreparedFormObj.listPaymentsDetailsCRUDViewModel = null;
+        }
+
+        $.ajax({
+            type: "POST",
+            url: "/Payments/AddEdit",
+            data: _PreparedFormObj,
+            dataType: "json",
+            success: function (result) {
+                Swal.fire({
+                    title: result,
+                    icon: "success"
+                }).then(function () {
+                    var _CurrentURL = localStorage.getItem('CurrentURL');
+                    var _PaymentId = localStorage.getItem('PaymentId');                   
+                    if (_CurrentURL == null) {
+                        location.href = "/Payments/PaymentsList/";
+                    }
+                    else {
+                        location.href = _CurrentURL + "?_PaymentId=" + _PaymentId;
+                    }
+                });
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    var SavePaymentsDetailsDB = function (PaymentsDetailstems) {
+        var _PaymentItemName = $("#PaymentItemCode option:selected").text();
+
+        var _PreparedFormObj = PreparedFormObj();
+        _PreparedFormObj.PaymentsDetailsCRUDViewModel = PaymentsDetailstems;
+        _PreparedFormObj.listPaymentsDetailsCRUDViewModel = null;
+
+        _PreparedFormObj.PaymentsCRUDViewModel.PatientId = $("#PatientIdEditMode").val();
+        _PreparedFormObj.PaymentsCRUDViewModel.VisitId = $("#VisitIdEditMode").val();
+
+
+        $.ajax({
+            type: "POST",
+            url: "/Payments/SavePaymentsDetails",
+            data: _PreparedFormObj,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Payments details item has been created successfully. ID: " + result.Id, 'Success');
+
+                listPaymentsDetails.push(result);
+                var AddNewPaymentsDetails = new Array();
+                result.PaymentItemName = _PaymentItemName;
+                AddNewPaymentsDetails.push(result);
+                AddNewPaymentsDetails.forEach(LoadTableRowFromDB);
+
+                UpdateAllNumericField();
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+    function UpdatePaymentsDetailsDB(button) {
+        var row = $(button).closest("TR");
+        var _PaymentsDetailsId = $("TD", row).eq(0).html();
+        var _Quantity = parseFloat($("#Quantity" + _PaymentsDetailsId).val());
+        var _UnitPrize = parseFloat($("#UnitPrize" + _PaymentsDetailsId).val());
+
+        var PaymentsDetailsCRUDViewModel = {};
+        PaymentsDetailsCRUDViewModel.Id = _PaymentsDetailsId;
+        PaymentsDetailsCRUDViewModel.Quantity = _Quantity;
+        PaymentsDetailsCRUDViewModel.UnitPrize = _UnitPrize;
+        PaymentsDetailsCRUDViewModel.TotalAmount = _Quantity * _UnitPrize;
+
+        $.ajax({
+            type: "POST",
+            url: "/Payments/UpdatePaymentsDetailsDB",
+            data: PaymentsDetailsCRUDViewModel,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Update patient test item successfully. Lab Test ID: " + result.Id, 'Success');
+                AddEdit(result.PaymentsId);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+
+
+
+    var DeletePaymentsDetailsDB = function (PaymentsDetailstems) {
+        var _PreparedFormObj = PreparedFormObj();
+        _PreparedFormObj.PaymentsDetailsCRUDViewModel = PaymentsDetailstems;
+
+        _PreparedFormObj.PaymentsCRUDViewModel.PatientId = $("#PatientIdEditMode").val();
+        _PreparedFormObj.PaymentsCRUDViewModel.VisitId = $("#VisitIdEditMode").val();
+
+        $.ajax({
+            type: "POST",
+            url: "/Payments/DeletePaymentsDetails",
+            data: _PreparedFormObj,
+            dataType: "json",
+            success: function (result) {
+                toastr.success("Payments details item has been deleted successfully. ID: " + result.Id, 'Success');
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    }
+
+    var PreparedFormObj = function () {
+        var _PaymentsCRUDViewModel = {
+            Id: $("#Id").val(),
+            VisitId: $("#VisitId").val(),
+            InvoiceNo: $("#InvoiceNo").val(),
+            CreatedDate: $("#CreatedDate").val(),
+            CreatedBy: $("#CreatedBy").val(),
+            PatientId: $("#PatientId").val(),
+
+            CommonCharge: $("#CommonCharge").val(),
+            Discount: $("#Discount").val(),
+            DiscountAmount: $("#DiscountAmount").text(),
+            Tax: $("#Tax").val(),
+            TaxAmount: $("#TaxAmount").text(),
+            SubTotal: $("#SubTotal").val(),
+            GrandTotal: $("#GrandTotal").val(),
+            PaidAmount: $("#PaidAmount").val(),
+            DueAmount: $("#DueAmount").val(),
+            ChangedAmount: $("#ChangedAmount").val(),
+            InsuranceNo: $("#InsuranceNo").val(),
+            InsuranceCompanyId: $("#InsuranceCompanyId").val(),
+            InsuranceCoverage: $("#InsuranceCoverage").val(),
+            CurrencyId: $("#CurrencyId").val(),
+            PaymentStatus: $("#PaymentStatus").val(),
+        };
+
+        var SendObject = {
+            PaymentsCRUDViewModel: _PaymentsCRUDViewModel,
+            PaymentsDetailsCRUDViewModel: null,
+            listPaymentsDetailsCRUDViewModel: listPaymentsDetails,
+            listPaymentModeHistoryCRUDViewModel: listPaymentModeHistory
+        };
+        return SendObject;
+    }
+
+</script>
+
+<style>
+    table th {
+        padding-left: 5px;
+    }
+
+    table td {
+        padding-left: 5px;
+    }
+</style>

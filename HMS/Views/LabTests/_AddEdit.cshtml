@@ -1,0 +1,56 @@
+@model HMS.Models.LabTestsViewModel.LabTestsCRUDViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddEdit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="PaymentItemCode" />
+                <input type="hidden" asp-for="CreatedDate" />
+                <input type="hidden" asp-for="CreatedBy" />
+
+                <div class="form-group">
+                    <label asp-for="LabTestCategoryId" class="control-label"></label>
+                    <select asp-for="LabTestCategoryId" asp-items="@ViewBag._LoadddlLabTestCategories" id="LabTestCategoryId" class="form-control">
+                        <option disabled selected>--- SELECT ---</option>
+                    </select>
+                    <span asp-validation-for="LabTestCategoryId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="LabTestName" class="control-label"></label>
+                    <input asp-for="LabTestName" class="form-control" />
+                    <span asp-validation-for="LabTestName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Unit" class="control-label"></label>
+                    <input asp-for="Unit" class="form-control" />
+                    <span asp-validation-for="Unit" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="UnitPrice" class="control-label"></label>
+                    <input asp-for="UnitPrice" class="form-control" />
+                    <span asp-validation-for="UnitPrice" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="ReferenceRange" class="control-label"></label>
+                    <input asp-for="ReferenceRange" class="form-control" />
+                    <span asp-validation-for="ReferenceRange" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Status" class="control-label"></label>
+                    <input asp-for="Status" class="form-control" />
+                    <span asp-validation-for="Status" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-info">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>

@@ -1,0 +1,41 @@
+@model HMS.Models.PaymentsViewModel.PaymentsReportViewModel
+
+<partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+<div class="row">
+    <input type="hidden" id="CurrentURL" asp-for="PaymentsCRUDViewModel.CurrentURL" />
+    <div class="col-sm-12">
+        <div class="panel-footer text-right">
+            <button class="btn btn-success" onclick="ThermalPrintPaymentInvoice('@Model.PaymentsCRUDViewModel.VisitId', '@Model.PaymentsCRUDViewModel.Id')"><span class="fa fa-print">Thermal</span></button>
+            <button class="btn btn-info" onclick="printDiv('printableArea')"><span class="fa fa-print"></span></button>
+            <button class="btn btn-info" onclick="DownloadPaymentInvoiceReportPDF('@Model.PaymentsCRUDViewModel.Id')"><span class="fa fa-download"></span></button>
+
+            <button class="btn btn-info" onclick="AddEdit('@Model.PaymentsCRUDViewModel.Id')">Edit</button>
+            <button class="btn btn-dark" onclick="BacktoPreviousPage()">Back</button>
+        </div>
+
+        <div id="printableArea">
+            <partial name="~/Views/DownloadReport/_CompanyBanner.cshtml" />
+            <hr />
+            <partial name="~/Views/DownloadReport/_PaymentInvoicePrintableArea.cshtml" />
+        </div>
+    </div>
+</div>
+
+<script>
+    var DownloadPaymentInvoiceReportPDF = function (PaymentId) {
+        location.href = "/DownloadReport/DownloadPaymentInvoiceReportPDF?_PaymentId=" + PaymentId;
+    };
+
+    var ThermalPrintPaymentInvoice = function (VisitId, PaymentId) {
+        location.href = "/Payments/ThermalPrintPaymentInvoice?_VisitId=" + VisitId + "&_PaymentId= " + PaymentId;
+    };
+
+    var AddEdit = function (id) {
+        localStorage.setItem('CurrentURL', window.location.pathname);
+        localStorage.setItem('PaymentId', '@Model.PaymentsCRUDViewModel.Id');
+
+        $('#titleExtraBigModal').html("Edit Payments");
+        loadExtraBigModal("/Payments/AddEdit?id=" + id);
+    };
+</script>
+

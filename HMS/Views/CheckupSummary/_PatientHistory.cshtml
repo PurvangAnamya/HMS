@@ -1,0 +1,33 @@
+@model HMS.Models.CheckupSummaryViewModel.ManageCheckupHistoryViewModel
+
+<div class="col-sm-12">
+    <div class="panel-footer text-right">
+        <button class="btn btn-danger" onclick="generatePDF('printableArea')"><span class="fa fa-download"></span></button>
+        <button class="btn btn-info" onclick="printDiv('printableArea')"><span class="fa fa-print"></span></button>
+    </div>
+</div>
+
+
+<div id="printableArea">
+    <partial name="_CheckupHeader" />
+    <br />
+    <partial name="_CheckupSummaryAndMedicineDetails" />
+    <br />
+</div>
+
+
+<script src="https://raw.githack.com/eKoopmans/html2pdf/master/dist/html2pdf.bundle.js"></script>
+<script>
+    function generatePDF(printableArea) {
+        var element = document.getElementById(printableArea);
+        var opt = {
+            margin: 0.25,
+            filename: 'PatientCheckupSummar.pdf',
+            image: { type: 'jpeg', quality: 0.98 },
+            html2canvas: { scale: 2 },
+            jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save();
+    }
+</script>

@@ -1,0 +1,99 @@
+﻿@model HMS.Models.DashboardViewModel.DashboardDataViewModel
+
+<hr />
+<section class="content">
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="Index" asp-controller="PatientInfo">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/Patient.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Patient</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalPatient</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="IndexNurse" asp-controller="UserManagement">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/nurse.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Nurse</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalNurse</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="IndexPharmacist" asp-controller="UserManagement">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/pharmacist.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Pharmacist</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalPharmacist</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="IndexAccountants" asp-controller="UserManagement">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/accountant.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Accountant</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalAccountant</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+    <hr />
+
+    <div class="row">
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="Index" asp-controller="DoctorsInfo">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/doctor.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Doctor</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalDoctor</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="IndexLaboraties" asp-controller="UserManagement">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/medical-laboratory.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Laboratorist</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalLaboratorist</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="Index" asp-controller="Medicines">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/medicine.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Medicines</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalMedicines</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+        <div class="col-12 col-sm-6 col-md-3">
+            <a asp-action="Index" asp-controller="Bed">
+                <div class="info-box">
+                    <span class="box"><img src="/images/dashboard/hospital-bed.png"></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text">Beds</span>
+                        <h2>@Model.DashboardSummaryViewModel.TotalBeds</h2>
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+</section>

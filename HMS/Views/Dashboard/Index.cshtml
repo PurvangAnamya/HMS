@@ -1,0 +1,16 @@
+﻿@{
+    ViewData["Title"] = "Dashboard";
+}
+<div class="wrapper">
+    @{
+        var _IsInRole = User.IsInRole("Admin");
+        if (_IsInRole)
+        {
+            <partial name="_DashboardSummary" />
+            <partial name="_RecentPayments" />
+            <partial name="_RecentCheckup" />
+
+            <partial name="_PieChartPaymentsDetails" />
+        }
+    }
+</div>

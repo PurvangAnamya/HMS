@@ -1,0 +1,136 @@
+@model HMS.Models.LabTestConfigurationViewModel.ManageLabTestConfigurationViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<div>
+    <form id="frmAddConfigureTest">
+        <div class="row">
+            <span><b>Lab Test ID: </b></span>
+            <label id="LabTestsId">@Model.LabTestsCRUDViewModel.Id</label>&nbsp;&nbsp;&nbsp;
+            <span><b>Lab Test Name: </b></span>
+            <label id="LabTestName">@Model.LabTestsCRUDViewModel.LabTestName</label>&nbsp;&nbsp;&nbsp;
+            <span><b>Lab Test Category: </b> @Model.LabTestsCRUDViewModel.LabTestCategoryName</span>
+            <hr />
+
+            <div class="col-md-12">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="LabTestConfigurationCRUDViewModel.Id" id="Id" />
+
+                <div class="form-group row">
+                    <label asp-for="LabTestConfigurationCRUDViewModel.NameOfTest" class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input asp-for="LabTestConfigurationCRUDViewModel.NameOfTest" id="NameOfTest" class="form-control" />
+                        <span asp-validation-for="LabTestConfigurationCRUDViewModel.NameOfTest" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label asp-for="LabTestConfigurationCRUDViewModel.NormalValue" class="col-sm-5 col-form-label"></label>
+                            <div class="col-sm-7">
+                                <input asp-for="LabTestConfigurationCRUDViewModel.NormalValue" id="NormalValue" class="form-control" />
+                                <span asp-validation-for="LabTestConfigurationCRUDViewModel.NormalValue" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="LabTestConfigurationCRUDViewModel.Sorting" class="col-sm-5 col-form-label"></label>
+                            <div class="col-sm-7">
+                                <input asp-for="LabTestConfigurationCRUDViewModel.Sorting" id="Sorting" class="form-control" />
+                                <span asp-validation-for="LabTestConfigurationCRUDViewModel.Sorting" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="form-group row">
+                            <label asp-for="LabTestConfigurationCRUDViewModel.Result" class="col-sm-5 col-form-label"></label>
+                            <div class="col-sm-7">
+                                <input asp-for="LabTestConfigurationCRUDViewModel.Result" id="Result" class="form-control" />
+                                <span asp-validation-for="LabTestConfigurationCRUDViewModel.Result" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="LabTestConfigurationCRUDViewModel.ReportGroup" class="col-sm-5 col-form-label"></label>
+                            <div class="col-sm-7">
+                                <input asp-for="LabTestConfigurationCRUDViewModel.ReportGroup" id="ReportGroup" class="form-control" />
+                                <span asp-validation-for="LabTestConfigurationCRUDViewModel.ReportGroup" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-2 col-form-label"></label>
+                    <div class="col-sm-10">
+                        <input type="button" onclick="SaveConfigureTest()" value="Save" class="btn btn-info">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <partial name="~/Views/UIComponents/_bootstrapAlert.cshtml" />
+    <hr />
+    <partial name="_listLabTestConfiguration" />
+</div>
+
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+
+    var SaveConfigureTest = function () {
+        if (LabTestConfigurationValidation() != true) {
+            return;
+        }
+
+        var _PreparedFormObj = PreparedFormObj();
+
+        $.ajax({
+            type: "POST",
+            url: "/LabTestConfiguration/AddEdit",
+            data: _PreparedFormObj,
+            dataType: "json",
+            success: function (result) {
+                AddConfigureTest(result.LabTestsId);
+            },
+            error: function (errormessage) {
+                alert(errormessage.responseText);
+            }
+        });
+    };
+
+    var LabTestConfigurationValidation = function () {
+        if (!FieldValidation('#NameOfTest')) {
+            FieldValidationAlert('#NameOfTest', 'Name Of Test is Required.', "warning");
+            return false;
+        }
+        if (!FieldValidation('#NormalValue')) {
+            FieldValidationAlert('#NormalValue', 'Normal Value is Required.', "warning");
+            return false;
+        }
+        if (!FieldValidation('#Result')) {
+            FieldValidationAlert('#Result', 'Result is Required.', "warning");
+            return false;
+        }
+        return true;
+    }
+
+    var PreparedFormObj = function () {
+        var LabTestConfigurationCRUDViewModel = {
+            Id: $("#Id").val(),
+            LabTestsId: $("#LabTestsId").text(),
+            LabTestName: $("#LabTestName").text(),
+            Sorting: $("#Sorting").val(),
+            ReportGroup: $("#ReportGroup").val(),
+            NameOfTest: $("#NameOfTest").val(),
+            Result: $("#Result").val(),
+            NormalValue: $("#NormalValue").val(),
+        };
+        return LabTestConfigurationCRUDViewModel;
+    }
+</script>
+

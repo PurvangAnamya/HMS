@@ -1,0 +1,125 @@
+@model HMS.Models.DoctorsInfoViewModel.ManageDoctorInfoViewModel
+
+@{ ViewData["Title"] = "Create"; }
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="Edit" method="post" enctype="multipart/form-data">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="DoctorsInfoEditViewModel.Id" />
+                <input type="hidden" asp-for="DoctorsInfoEditViewModel.ApplicationUserId" />
+                <input type="hidden" asp-for="DoctorsInfoEditViewModel.CreatedDate" />
+                <input type="hidden" asp-for="DoctorsInfoEditViewModel.CreatedBy" />
+
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.UserProfileId" />
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.ApplicationUserId" />
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.ProfilePicture" />
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.RoleId" />
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.CreatedDate" />
+                <input type="hidden" asp-for="UserProfileCRUDViewModel.CreatedBy" />
+
+                <div class="row">
+                    <div class="col-6 col-sm-6">
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.FirstName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.FirstName" class="form-control" type="text" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.FirstName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.LastName" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.LastName" class="form-control" type="text" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.LastName" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.PhoneNumber" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.PhoneNumber" class="form-control" type="text" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.PhoneNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.Email" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.Email" class="form-control" type="email" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.Email" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="DoctorsInfoEditViewModel.DoctorFee" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="DoctorsInfoEditViewModel.DoctorFee" class="form-control" type="number" />
+                                <span asp-validation-for="DoctorsInfoEditViewModel.DoctorFee" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="col-6 col-sm-6">                       
+                        <div class="form-group row">
+                            <label asp-for="DoctorsInfoEditViewModel.DesignationId" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <select asp-for="DoctorsInfoEditViewModel.DesignationId" asp-items="@ViewBag.ddlDesignation" id="DesignationId"
+                                    class="form-control" style="width:100%;">
+                                    <option disabled selected>--- SELECT ---</option>
+                                </select>
+                                <span asp-validation-for="DoctorsInfoEditViewModel.DesignationId" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <label asp-for="DoctorsInfoEditViewModel.DoctorsID" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="DoctorsInfoEditViewModel.DoctorsID" class="form-control" type="text" />
+                                <span asp-validation-for="DoctorsInfoEditViewModel.DoctorsID" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.Address" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.Address" class="form-control" type="text" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.Address" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.Country" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input asp-for="UserProfileCRUDViewModel.Country" class="form-control" type="text" />
+                                <span asp-validation-for="UserProfileCRUDViewModel.Country" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label asp-for="UserProfileCRUDViewModel.ProfilePicture" class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <span class="control-fileupload">
+                                    <label for="file">Choose a file :</label>
+                                    <input type="file" asp-for="UserProfileCRUDViewModel.ProfilePictureDetails" />
+                                </span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label"></label>
+                            <div class="col-sm-9">
+                                <input type="submit" value="Save" class="btn btn-info">
+                                <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $("#RoleId").select2();
+        $("#DesignationId").select2();
+    });
+</script>

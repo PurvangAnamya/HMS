@@ -1,0 +1,46 @@
+@model HMS.Models.LabTestConfigurationViewModel.ManageLabTestConfigurationViewModel
+
+<div class="row">
+    <table class="CustomBlueTable" border="1">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Name Of Test</th>
+                <th>Result</th>
+                <th>Normal Value</th>
+                <th>Sorting</th>
+
+                <th></th>
+                <th></th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.listLabTestConfiguration)
+        {
+<tbody>
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NameOfTest)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Result)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NormalValue)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Sorting)
+        </td>
+        <td>
+            <a href="#" class="btn btn-info btn-xs" onclick="EditConfigureTest('@item.Id');">Edit</a>
+        </td>
+        <td>
+            <a href="#" class="btn btn-danger btn-xs" onclick="DeleteLabTestConfigurationItem('@item.Id');">Delete</a>
+        </td>
+    </tr>
+</tbody>}
+    </table>
+</div>
+

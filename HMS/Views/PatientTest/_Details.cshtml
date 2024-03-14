@@ -1,0 +1,84 @@
+﻿@model HMS.Models.PatientTestViewModel.ManagePatientTestViewModel
+
+
+<div>
+    <div class="row" style="width:100%; margin:0 auto;">
+        <table class="ItemTranTable" border="1">
+            <tr>
+                <th>ID</th>
+                <td style="width:70%;">@Model.PatientTestCRUDViewModel.Id</td>
+            </tr>
+            <tr>
+                <th>Patient Name</th>
+                <td>@Model.PatientTestCRUDViewModel.PatientName</td>
+            </tr>
+            @*<tr>
+                    <th>Consultant Name</th>
+                    <td>@Model.PatientTestCRUDViewModel.ConsultantName</td>
+                </tr>*@
+            <tr>
+                <th>Test Date</th>
+                <td>@Model.PatientTestCRUDViewModel.TestDate</td>
+            </tr>
+            <tr>
+                <th>Delivery Date</th>
+                <td>@Model.PatientTestCRUDViewModel.DeliveryDate</td>
+            </tr>
+            <tr>
+                <th>Payment Status</th>
+                <td>@Model.PatientTestCRUDViewModel.PaymentStatus</td>
+            </tr>
+            <tr>
+                <th>Created Date</th>
+                <td>@Model.PatientTestCRUDViewModel.CreatedDate</td>
+            </tr>
+            <tr>
+                <th>Modified Date</th>
+                <td>@Model.PatientTestCRUDViewModel.ModifiedDate</td>
+            </tr>
+            <tr>
+                <th>Created By</th>
+                <td>@Model.PatientTestCRUDViewModel.CreatedBy</td>
+            </tr>
+            <tr>
+                <th>Modified By</th>
+                <td>@Model.PatientTestCRUDViewModel.ModifiedBy</td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<hr />
+<h4>Patient Test Detail</h4>
+<div>
+    <div class="row" style="width:100%; margin:0 auto;">
+        <table class="CustomBlueTable" border="1">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Lab Tests Id</th>
+                    <th>Result</th>
+                    <th>Remarks</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.listPatientTestDetailCRUDViewModel)
+                {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Id)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.LabTestsName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Result)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Remarks)
+        </td>
+    </tr>}
+            </tbody>
+        </table>
+    </div>
+</div>
