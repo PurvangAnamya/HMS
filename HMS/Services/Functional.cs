@@ -104,10 +104,11 @@ namespace HMS.Services
                 await _roles.GenerateRolesFromPageList();
 
                 ApplicationUser superAdmin = new ApplicationUser();
+                SeedData _SeedData = new();
                 superAdmin.Email = _superAdminDefaultOptions.Email;
                 superAdmin.UserName = superAdmin.Email;
                 superAdmin.EmailConfirmed = true;
-
+                var hospitalId = _context.Hospital.SingleOrDefault().Id;
                 var result = await _userManager.CreateAsync(superAdmin, _superAdminDefaultOptions.Password);
 
                 if (result.Succeeded)
@@ -135,7 +136,8 @@ namespace HMS.Services
                         CreatedDate = DateTime.Now,
                         ModifiedDate = DateTime.Now,
                         CreatedBy = "Admin",
-                        ModifiedBy = "Admin"
+                        ModifiedBy = "Admin",
+                        HospitalId = hospitalId
                     };
 
                     await _context.UserProfile.AddAsync(_UserProfile);
@@ -144,9 +146,38 @@ namespace HMS.Services
                     await _roles.AddToRoles(superAdmin);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                throw;
+            }
+        }
 
+
+        public async Task CreateDefaultHospital()
+        {
+            try
+            {
+                SeedData _SeedData = new();
+                var _getHospitalList = _SeedData.GetHospitalList();
+                foreach (var item in _getHospitalList)
+                {
+                    Hospital _hospital = new Hospital
+                    {
+                        HospitalName = item.HospitalName,
+                        Description = item.Description,
+                        Address = item.Address,
+                        HospitalLogoImagePath = item.HospitalLogoImagePath,
+                        CreatedDate = item.CreatedDate,
+                        ModifiedDate = item.ModifiedDate,
+                        CreatedBy = "Admin",
+                        ModifiedBy = "Admin"
+                    };
+                    _context.Hospital.Add(_hospital);
+                }
+                await _context.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
                 throw;
             }
         }
@@ -185,12 +216,14 @@ namespace HMS.Services
             SeedData _SeedData = new();
 
             var _GetMedicineCategoriesList = _SeedData.GetMedicineCategoriesList();
+            var hospitalId = _context.Hospital.SingleOrDefault().Id;
             foreach (var item in _GetMedicineCategoriesList)
             {
                 item.CreatedDate = DateTime.Now;
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.MedicineCategories.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -201,6 +234,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.Unit.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -211,6 +245,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.MedicineManufacture.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -221,6 +256,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.Medicines.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -233,6 +269,7 @@ namespace HMS.Services
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
                 _context.BedCategories.Add(item);
+                item.HospitalId = hospitalId;
                 await _context.SaveChangesAsync();
             }
 
@@ -243,6 +280,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.Bed.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -254,6 +292,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.ExpenseCategories.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -265,6 +304,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.PaymentCategories.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -276,6 +316,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.LabTestCategories.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -286,6 +327,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.LabTests.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -297,6 +339,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.Currency.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -307,6 +350,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.InsuranceCompanyInfo.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -317,6 +361,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.ManageUserRoles.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -327,6 +372,7 @@ namespace HMS.Services
                 item.ModifiedDate = DateTime.Now;
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
+                item.HospitalId = hospitalId;
                 _context.Designation.Add(item);
                 await _context.SaveChangesAsync();
             }
@@ -338,6 +384,7 @@ namespace HMS.Services
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
                 _context.Department.Add(item);
+                item.HospitalId = hospitalId;
                 await _context.SaveChangesAsync();
             }
             var _GetSubDepartmentList = _SeedData.GetSubDepartmentList();
@@ -348,6 +395,7 @@ namespace HMS.Services
                 item.CreatedBy = "Admin";
                 item.ModifiedBy = "Admin";
                 _context.SubDepartment.Add(item);
+                item.HospitalId = hospitalId;
                 await _context.SaveChangesAsync();
             }
 
@@ -356,6 +404,7 @@ namespace HMS.Services
             _GetCompanyInfo.ModifiedDate = DateTime.Now;
             _GetCompanyInfo.CreatedBy = "Admin";
             _GetCompanyInfo.ModifiedBy = "Admin";
+            _GetCompanyInfo.HospitalId = hospitalId;
             _context.CompanyInfo.Add(_GetCompanyInfo);
             await _context.SaveChangesAsync();
         }
@@ -376,9 +425,19 @@ namespace HMS.Services
                         RoleName = item.RoleName
                     };
 
-                    if (role.Id == 1)
+                    if (role.Id == 1 || role.Id == 5)
                     {
-                        _ManageRoleDetails.IsAllowed = true;
+                        if (role.Id == 1) // Super Admin
+                        {
+                            _ManageRoleDetails.IsAllowed = true;
+                        }
+                        else if (role.Id == 5) // Hospital Admin
+                        {
+                            if (item.RoleName == "Hospital Management" || item.RoleName == "System Role" || item.RoleName == "Manage User Roles")
+                                _ManageRoleDetails.IsAllowed = false;
+                            else
+                                _ManageRoleDetails.IsAllowed = true;
+                        }
                     }
                     else if (role.Id == 2)
                     {
@@ -462,6 +521,7 @@ namespace HMS.Services
         {
             SeedData _SeedData = new();
             var _GetDoctorsInfoList = _SeedData.GetDoctorsInfoList();
+            var hospitalId = _context.Hospital.SingleOrDefault().Id;
             foreach (var item in _GetDoctorsInfoList)
             {
                 item.RoleId = 3;
@@ -477,17 +537,20 @@ namespace HMS.Services
                         CreatedDate = DateTime.Now,
                         ModifiedDate = DateTime.Now,
                         CreatedBy = "Admin",
-                        ModifiedBy = "Admin"
+                        ModifiedBy = "Admin",
+                        HospitalId = hospitalId
                     };
                     _context.DoctorsInfo.Add(_DoctorsInfo);
                     await _context.SaveChangesAsync();
                 }
             }
         }
+
         public async Task CreateDefaultOtherUser()
         {
             SeedData _SeedData = new();
             var _GetUserProfileList = _SeedData.GetUserProfileList();
+            var hospitalId = _context.Hospital.SingleOrDefault().Id;
             foreach (var item in _GetUserProfileList)
             {
                 item.RoleId = 2;
@@ -498,13 +561,35 @@ namespace HMS.Services
                 item.SubDepartment = 1;
                 item.JoiningDate = DateTime.Now.AddYears(-1);
                 item.LeavingDate = DateTime.Now;
+                item.HospitalId = hospitalId;
                 await _iAccount.CreateUserProfile(item, "Admin");
+            }
+        }
+
+        public async Task CreateDefaultHospitalUser()
+        {
+            SeedData _SeedData = new();
+            var _GetUserProfileList = _SeedData.GetUserProfileList();
+            var hospitalId = _context.Hospital.SingleOrDefault().Id;
+            foreach (var item in _GetUserProfileList)
+            {
+                item.RoleId = 2;
+                item.EmployeeId = StaticData.RandomDigits(6);
+                item.DateOfBirth = DateTime.Now.AddYears(-25);
+                item.Designation = 1;
+                item.Department = 1;
+                item.SubDepartment = 1;
+                item.JoiningDate = DateTime.Now.AddYears(-1);
+                item.LeavingDate = DateTime.Now;
+                item.HospitalId = hospitalId;
+                await _iAccount.CreateUserProfile(item, "HospitalAdmin");
             }
         }
         public async Task CreateDefaultPatientUser()
         {
             SeedData _SeedData = new();
             var _GetPatientInfoList = _SeedData.GetPatientInfoList();
+            var hospitalId = _context.Hospital.SingleOrDefault().Id;
             foreach (var item in _GetPatientInfoList)
             {
                 item.UserType = UserType.Patient;
@@ -522,6 +607,7 @@ namespace HMS.Services
                     _PatientInfo.ModifiedDate = DateTime.Now;
                     _PatientInfo.CreatedBy = "Admin";
                     _PatientInfo.ModifiedBy = "Admin";
+                    _PatientInfo.HospitalId = hospitalId;
                     _context.PatientInfo.Add(_PatientInfo);
                     await _context.SaveChangesAsync();
                 }
@@ -529,12 +615,19 @@ namespace HMS.Services
         }
         public async Task<SharedUIDataViewModel> GetSharedUIData(ClaimsPrincipal _ClaimsPrincipal)
         {
-            SharedUIDataViewModel _SharedUIDataViewModel = new SharedUIDataViewModel();
-            ApplicationUser _ApplicationUser = await _userManager.GetUserAsync(_ClaimsPrincipal);
-            _SharedUIDataViewModel.UserProfile = _context.UserProfile.SingleOrDefault(x => x.ApplicationUserId.Equals(_ApplicationUser.Id));
-            _SharedUIDataViewModel.MainMenuViewModel = await _roles.RolebaseMenuLoad(_ApplicationUser);
-            _SharedUIDataViewModel.ApplicationInfo = _applicationInfo;
-            return _SharedUIDataViewModel;
+            try
+            {
+                SharedUIDataViewModel _SharedUIDataViewModel = new SharedUIDataViewModel();
+                ApplicationUser _ApplicationUser = await _userManager.GetUserAsync(_ClaimsPrincipal);
+                _SharedUIDataViewModel.UserProfile = _context.UserProfile.SingleOrDefault(x => x.ApplicationUserId.Equals(_ApplicationUser.Id));
+                _SharedUIDataViewModel.MainMenuViewModel = await _roles.RolebaseMenuLoad(_ApplicationUser);
+                _SharedUIDataViewModel.ApplicationInfo = _applicationInfo;
+                return _SharedUIDataViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
         public async Task<DefaultIdentityOptions> GetDefaultIdentitySettings()
         {

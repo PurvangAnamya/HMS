@@ -9,6 +9,7 @@ namespace HMS.Services
         Task InitAppData();
         Task GenerateUserUserRole();
         Task CreateDefaultSuperAdmin();
+        Task CreateDefaultHospital();
 
         Task SendEmailBySendGridAsync(string apiKey,
             string fromEmail,
@@ -34,6 +35,7 @@ namespace HMS.Services
 
         Task CreateDefaultDoctorUser();
         Task CreateDefaultOtherUser();
+        Task CreateDefaultHospitalUser();
         Task CreateDefaultPatientUser();
 
         Task CreateDefaultIdentitySettings();

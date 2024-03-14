@@ -275,6 +275,7 @@ namespace HMS.Controllers
             ViewBag.ddlDepartment = new SelectList(_iCommon.GetTableData<Department>(_context), "Id", "Name");
             ViewBag.ddlSubDepartment = new SelectList(_iCommon.GetTableData<SubDepartment>(_context), "Id", "Name");
             ViewBag.ddlDesignation = new SelectList(_iCommon.GetTableData<Designation>(_context), "Id", "Name");
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
             return PartialView("_Register");
         }
 
@@ -296,7 +297,7 @@ namespace HMS.Controllers
                         var callbackUrl = Url.EmailConfirmationLink(_ApplicationUser.Item1.Id, _ConfirmationToken, Request.Scheme);
                         await _emailSender.SendEmailConfirmationAsync(_ApplicationUser.Item1.Email, callbackUrl);
                     }
-                 
+
                     _JsonResultViewModel.AlertMessage = "User Created Successfully. User Name: " + _ApplicationUser.Item1.Email;
                     _JsonResultViewModel.CurrentURL = _UserProfileViewModel.CurrentURL;
                     _JsonResultViewModel.IsSuccess = true;

@@ -404,6 +404,15 @@
                                 </a>
                             </li>
                         }
+                        @if (Model.MainMenuViewModel.HospitalManagement)
+                        {
+                            <li class="nav-item">
+                                <a href="@MainMenu.HospitalManagement.Path" class="nav-link">
+                                    <i class="nav-icon fas fa-hospital"></i>
+                                    <p>@MainMenu.HospitalManagement.PageName</p>
+                                </a>
+                            </li>
+                        }
                         @if (Model.MainMenuViewModel.Nurse)
                         {
                             <li class="nav-item">

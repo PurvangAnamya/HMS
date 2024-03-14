@@ -5,11 +5,11 @@
         <ul class="nav nav-tabs" id="custom-tabs-three-tab" role="tablist">
             <li class="nav-item">
                 <a class="nav-link active" id="Tab01" data-toggle="pill" href="#divTab01" role="tab"
-                    aria-controls="Tab01" aria-selected="true">Summary</a>
+                   aria-controls="Tab01" aria-selected="true">Summary</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link" id="Tab02" data-toggle="pill" href="#divTab02" role="tab" aria-controls="Tab02"
-                    aria-selected="true">Details</a>
+                   aria-selected="true">Details</a>
             </li>
         </ul>
     </div>
@@ -31,7 +31,7 @@
                                         <label class="col-sm-3 col-form-label">First Name</label>
                                         <div class="col-sm-9">
                                             <input asp-for="FirstName" class="form-control" id="FirstName"
-                                                type="text" />
+                                                   type="text" />
                                             <span asp-validation-for="FirstName" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -46,7 +46,7 @@
                                         <label class="col-sm-3 col-form-label">Phone Number</label>
                                         <div class="col-sm-9">
                                             <input asp-for="PhoneNumber" class="form-control" id="PhoneNumber"
-                                                type="text" />
+                                                   type="text" />
                                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -61,7 +61,7 @@
                                         <label class="col-sm-3 col-form-label">Password</label>
                                         <div class="col-sm-9">
                                             <input asp-for="PasswordHash" class="form-control" id="PasswordHash"
-                                                type="password" />
+                                                   type="password" />
                                             <span asp-validation-for="PasswordHash" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -69,7 +69,7 @@
                                         <label class="col-sm-4 col-form-label">Confirm Password</label>
                                         <div class="col-sm-8">
                                             <input asp-for="ConfirmPassword" class="form-control" id="ConfirmPassword"
-                                                type="password" />
+                                                   type="password" />
                                             <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
                                         </div>
                                     </div>
@@ -89,7 +89,19 @@
                                             <input asp-for="Country" class="form-control" id="Country" type="text" />
                                             <span asp-validation-for="Country" class="text-danger"></span>
                                         </div>
-                                    </div>                                 
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-3 col-form-label">Hospital</label>
+                                        <div class="col-sm-9">
+                                            <select asp-for="HospitalId" asp-items="@ViewBag.ddlHospital" id="HosptalId"
+                                                    class="form-control" style="width:100%;">
+                                                <option disabled selected>--- SELECT ---</option>
+                                            </select>
+                                            <span asp-validation-for="HospitalId" class="text-danger"></span>
+                                        </div>
+                                    </div>
+
 
                                     <div class="form-group row">
                                         <label class="col-sm-3 col-form-label" for="file">Choose a file :</label>
@@ -104,9 +116,11 @@
                                         <label class="col-sm-3 col-form-label"></label>
                                         <div class="col-sm-9">
                                             <input type="button" id="btnSave" value="Save" onclick="SaveUserInLoginUI()"
-                                                class="btn btn-info">
+                                                   class="btn btn-info">
                                             <button type="button" id="btnAddEditUserAccountClose" class="btn btn-danger"
-                                                data-dismiss="modal">Close</button>
+                                                    data-dismiss="modal">
+                                                Close
+                                            </button>
                                         </div>
                                     </div>
                                 </div>
@@ -137,7 +151,7 @@
                             <label class="col-sm-3 col-form-label">Designation</label>
                             <div class="col-sm-9">
                                 <select asp-for="Designation" asp-items="@ViewBag.ddlDesignation" id="Designation"
-                                    class="form-control" style="width:100%;">
+                                        class="form-control" style="width:100%;">
                                     <option disabled selected>--- SELECT ---</option>
                                 </select>
                                 <span asp-validation-for="Designation" class="text-danger"></span>
@@ -148,7 +162,7 @@
                             <label class="col-sm-3 col-form-label">Department</label>
                             <div class="col-sm-9">
                                 <select asp-for="Department" asp-items="@ViewBag.ddlDepartment" id="Department"
-                                    class="form-control" style="width:100%;">
+                                        class="form-control" style="width:100%;">
                                     <option disabled selected>--- SELECT ---</option>
                                 </select>
                                 <span asp-validation-for="Department" class="text-danger"></span>
@@ -158,7 +172,7 @@
                             <label class="col-sm-4 col-form-label">Sub Department</label>
                             <div class="col-sm-8">
                                 <select asp-for="SubDepartment" asp-items="@ViewBag.ddlSubDepartment" id="SubDepartment"
-                                    class="form-control" style="width:100%;">
+                                        class="form-control" style="width:100%;">
                                     <option disabled selected>--- SELECT ---</option>
                                 </select>
                             </div>
@@ -195,5 +209,6 @@
         $("#Designation").select2();
         $("#Department").select2();
         $("#SubDepartment").select2();
+        $("#HospitalId").select2();
     });
 </script>

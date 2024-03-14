@@ -13,10 +13,13 @@ namespace HMS.Data
             }
             else
             {
+                // Int64 hospitalId = await functional.CreateDefaultHospital();
+                await functional.CreateDefaultHospital();
+                await functional.CreateDefaultHospitalUser();
                 await functional.CreateDefaultSuperAdmin();
                 await functional.CreateDefaultEmailSettings();
                 await functional.CreateDefaultIdentitySettings();
-                
+
                 await functional.InitAppData();
                 await functional.GenerateUserUserRole();
                 await functional.CreateDefaultDoctorUser();

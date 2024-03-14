@@ -16,6 +16,15 @@ namespace HMS.Data
             base.OnModelCreating(builder);
             builder.Entity<PaymentsGridViewModel>().HasNoKey();
             builder.Entity<ItemDropdownListViewModel>().HasNoKey();
+            builder.Entity<Hospital>()
+            .Property(h => h.Id)
+            .ValueGeneratedOnAdd();
+
+            //builder.Entity<ApplicationUser>()
+            //.HasOne(u => u.Hospital)
+            //.WithMany()
+            //.HasForeignKey(u => u.Hospitalid)
+            //.IsRequired(false);
         }
 
         public DbSet<PaymentsGridViewModel> PaymentsGridViewModel { get; set; }
@@ -66,5 +75,6 @@ namespace HMS.Data
         public DbSet<Designation> Designation { get; set; }
         public DbSet<Department> Department { get; set; }
         public DbSet<SubDepartment> SubDepartment { get; set; }
+        public DbSet<Hospital> Hospital { get; set; }
     }
 }

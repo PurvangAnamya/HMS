@@ -864,7 +864,6 @@ namespace HMS.Services
             }
         }
 
-
         public IQueryable<CheckupMedicineDetailsCRUDViewModel> GetCheckupMedicineDetails()
         {
             try
@@ -946,6 +945,33 @@ namespace HMS.Services
                 throw;
             }
         }
+
+        public IQueryable<ExpensesGridViewModel> GetExpensesGridItemByHospitalId(long hospitalId)
+        {
+            try
+            {
+
+                return (from _Expenses in _context.Expenses
+                        join _ExpenseCategories in _context.ExpenseCategories on _Expenses.ExpenseCategoriesId equals _ExpenseCategories.Id
+                        where _Expenses.Cancelled == false
+                        select new ExpensesGridViewModel
+                        {
+                            Id = _Expenses.Id,
+                            ExpenseCategoriesId = _Expenses.ExpenseCategoriesId,
+                            ExpenseCategoriesName = _ExpenseCategories.Name,
+                            Amount = _Expenses.Amount,
+                            CreatedDate = _Expenses.CreatedDate,
+                            ModifiedDate = _Expenses.ModifiedDate,
+                            CreatedBy = _Expenses.CreatedBy,
+                            ModifiedBy = _Expenses.ModifiedBy,
+                        }).OrderByDescending(x => x.Id);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         public IQueryable<PatientAppointmentCRUDViewModel> GetPatientAppointmentGridItem()
         {
@@ -1186,7 +1212,9 @@ namespace HMS.Services
                           join _Designation in _context.Designation on vm.Designation equals _Designation.Id
                           into _Designation
                           from objDesignation in _Designation.DefaultIfEmpty()
-
+                          join _Hospital in _context.Hospital on vm.HospitalId equals _Hospital.Id
+                          into _Hospital
+                          from Hospital in _Hospital.DefaultIfEmpty()
                           join _ManageRole in _context.ManageUserRoles on vm.RoleId equals _ManageRole.Id
                           into _ManageRole
                           from objManageRole in _ManageRole.DefaultIfEmpty()
@@ -1220,6 +1248,7 @@ namespace HMS.Services
                               CreatedBy = vm.CreatedBy,
                               ModifiedBy = vm.ModifiedBy,
                               Cancelled = vm.Cancelled,
+                              HospitalId = vm.HospitalId
                           }).OrderByDescending(x => x.UserProfileId);
             return result;
         }

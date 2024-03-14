@@ -1,0 +1,49 @@
+﻿@model HMS.Models.HospitalViewModel.HospitalCRUDViewModel
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<div>
+    <div class="row">
+        <div class="col-md-12">
+            <form asp-action="AddEdit" id="frmHospital">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <input type="hidden" asp-for="@Model.HospitalLogoImagePath" />
+                <input type="hidden" asp-for="@Model.CreatedDate" />
+                <input type="hidden" asp-for="@Model.CreatedBy" />
+
+                <div class="form-group">
+                    <label asp-for="HospitalName" class="control-label"></label>
+                    <input asp-for="HospitalName" class="form-control" />
+                    <span asp-validation-for="HospitalName" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Address" class="control-label"></label>
+                    <input asp-for="Address" class="form-control" />
+                    <span asp-validation-for="Address" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Description" class="control-label"></label>
+                    <input asp-for="Description" class="form-control" />
+                    <span asp-validation-for="Description" class="text-danger"></span>
+                </div>
+                <div class="form-group row">
+                    <label asp-for="HospitalLogo" class="col-sm-3 col-form-label"></label>
+                    <div class="col-sm-9">
+                        <span class="control-fileupload">
+                            <label for="file">Choose a file :</label>
+                            <input type="file" asp-for="HospitalLogo" />
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-info">
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>

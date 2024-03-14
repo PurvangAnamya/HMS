@@ -10,7 +10,7 @@
         {
             public const string RoleName = "Super Admin";
         }
-        
+
         public static class Settings
         {
             public const string RoleName = "Settings";
@@ -349,6 +349,12 @@
             public const string PageName = "Sub Department";
             public const string RoleName = "Sub Department";
             public const string Path = "/SubDepartment/Index";
+        }
+        public static class HospitalManagement
+        {
+            public const string PageName = "Hospital Management";
+            public const string RoleName = "Hospital Management";
+            public const string Path = "/HospitalManagement/Index";
         }
     }
 }

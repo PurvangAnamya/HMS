@@ -15,6 +15,7 @@
         public bool LoginHistory { get; set; }
         public bool CompanyInfo { get; set; }
         public bool Currency { get; set; }
+        public bool HospitalManagement { get; set; }
 
         //Business       
         public bool PatientInfo { get; set; }
@@ -33,7 +34,7 @@
         public bool Bed { get; set; }
         public bool BedAllotments { get; set; }
         public bool Payments { get; set; }
-        public bool PatientPayments { get; set; }        
+        public bool PatientPayments { get; set; }
         public bool InsuranceCompanyInfo { get; set; }
         public bool Expenses { get; set; }
         public bool ExpenseCategories { get; set; }

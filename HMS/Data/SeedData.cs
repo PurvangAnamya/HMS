@@ -2,6 +2,7 @@
 using HMS.Helpers;
 using HMS.Models;
 using HMS.Models.DoctorsInfoViewModel;
+using HMS.Models.HospitalViewModel;
 using HMS.Models.PatientInfoViewModel;
 using HMS.Models.UserProfileViewModel;
 
@@ -101,7 +102,7 @@ namespace HMS.Data
                 new UserProfileCRUDViewModel { FirstName = "Nurse 01", LastName = "User", UserType = UserType.Nurse, Email = "nurse1@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse1.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Nurse 02", LastName = "User", UserType = UserType.Nurse, Email = "nurse2@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse2.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Nurse 03", LastName = "User", UserType = UserType.Nurse, Email = "nurse3@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse3.png", Address = "California", Country = "USA", },
-                
+
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 01", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties1@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U4.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 02", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties2@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U5.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 03", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties3@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U6.png", Address = "California", Country = "USA", },
@@ -128,6 +129,14 @@ namespace HMS.Data
 
                 new DoctorsInfoCRUDViewModel { FirstName = "Dr.", LastName = "Kate", UserType = UserType.Doctor, Email="Kate@gmail.com", PasswordHash="123", ConfirmPassword="123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/DocIcon/U6.png" },
                 new DoctorsInfoCRUDViewModel { FirstName = "Dr.", LastName = "Ameen", UserType = UserType.Doctor, Email="Ameen@gmail.com", PasswordHash="123", ConfirmPassword="123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/DocIcon/U7.png" },
+            };
+        }
+
+        public IEnumerable<HospitalCRUDViewModel> GetHospitalList()
+        {
+            return new List<HospitalCRUDViewModel>
+            {
+                new HospitalCRUDViewModel {HospitalName = "Sample Hospital", Description = "This is the best city hospital", Address = "Thaltej - Ahmedabd, Gujarat", CreatedDate = DateTime.UtcNow,ModifiedDate = DateTime.UtcNow, HospitalLogoImagePath = "/images/Hospital/H1.jpg" }
             };
         }
 
@@ -213,6 +222,7 @@ namespace HMS.Data
                 new ManageUserRoles { Name = "General", Description = "User Role: General"},
                 new ManageUserRoles { Name = "Doctor", Description = "User Role: Doctor"},
                 new ManageUserRoles { Name = "Patient", Description = "User Role: Patient"},
+                new ManageUserRoles { Name = "HospitalAdmin", Description = "User Role: HospitalAdmin"},
             };
         }
         public IEnumerable<Department> GetDepartmentList()

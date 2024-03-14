@@ -1,9 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace HMS.Models
 {
-    public class EntityBase
+    public class EntityBaseWithoutHospital
     {
         [Display(Name = "Created Date")]
         public DateTime CreatedDate { get; set; }
@@ -11,6 +10,5 @@ namespace HMS.Models
         public string CreatedBy { get; set; }
         public string ModifiedBy { get; set; }
         public bool Cancelled { get; set; }
-        public Int64 HospitalId { get; set; }
     }
 }
