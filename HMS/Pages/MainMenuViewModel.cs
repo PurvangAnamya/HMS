@@ -59,6 +59,7 @@
 
         public bool SystemRole { get; set; }
         public bool ManageUserRoles { get; set; }
+        public bool SampleChetnaManage { get; set; }
         public bool Designation { get; set; }
         public bool Department { get; set; }
         public bool SubDepartment { get; set; }

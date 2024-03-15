@@ -320,6 +320,17 @@ namespace HMS.Services
                 _context.ManageUserRoles.Add(item);
                 await _context.SaveChangesAsync();
             }
+
+            var _GetSampleChetnaManageList = _SeedData.GetSampleChetnaManageList();
+            foreach (var item in _GetSampleChetnaManageList)
+            {
+                item.CreatedDate = DateTime.Now;
+                item.ModifiedDate = DateTime.Now;
+                item.CreatedBy = "Admin";
+                item.ModifiedBy = "Admin";
+                _context.SampleChetnaManage.Add(item);
+                await _context.SaveChangesAsync();
+            }
             var _GetDesignationList = _SeedData.GetDesignationList();
             foreach (var item in _GetDesignationList)
             {
@@ -406,6 +417,56 @@ namespace HMS.Services
                     _ManageRoleDetails.CreatedBy = "Admin";
                     _ManageRoleDetails.ModifiedBy = "Admin";
                     _context.Add(_ManageRoleDetails);
+                    await _context.SaveChangesAsync();
+                }
+            }
+        }
+        public async Task GenerateSmapleChetnaManage()
+        {
+            var _SampleChetnaManage = await _context.SampleChetnaManage.ToListAsync();
+            var _GetSampleChetnaManageRoleList = await _roles.GetSampleChetnaManageRoleList();
+
+            foreach (var role in _SampleChetnaManage)
+            {
+                foreach (var item in _GetSampleChetnaManageRoleList)
+                {
+                    SampleChetnaManageRoleDetails _SampleChetnaManageDetails = new()
+                    {
+                        ManageRoleId = role.Id,
+                        RoleId = item.RoleId,
+                        RoleName = item.RoleName
+                    };
+
+                    if (role.Id == 1)
+                    {
+                        _SampleChetnaManageDetails.IsAllowed = true;
+                    }
+                    else if (role.Id == 2)
+                    {
+                        if (item.RoleName == "User Profile" || item.RoleName == "Dashboard")
+                            _SampleChetnaManageDetails.IsAllowed = true;
+                    }
+                    else if (role.Id == 3)
+                    {
+                        if (item.RoleName == "User Profile" || item.RoleName == "Dashboard" || item.RoleName == "Checkup" || item.RoleName == "Manage Clinic")
+                            _SampleChetnaManageDetails.IsAllowed = true;
+                    }
+                    else if (role.Id == 4)
+                    {
+                        if (item.RoleName == "User Profile" || item.RoleName == "Dashboard" || item.RoleName == "Manage Clinic"
+                        || item.RoleName == "Patient Prescriptions" || item.RoleName == "Patient Appointment")
+                            _SampleChetnaManageDetails.IsAllowed = true;
+                    }
+                    else
+                    {
+                        _SampleChetnaManageDetails.IsAllowed = false;
+                    }
+
+                    _SampleChetnaManageDetails.CreatedDate = DateTime.Now;
+                    _SampleChetnaManageDetails.ModifiedDate = DateTime.Now;
+                    _SampleChetnaManageDetails.CreatedBy = "Admin";
+                    _SampleChetnaManageDetails.ModifiedBy = "Admin";
+                    _context.Add(_SampleChetnaManageDetails);
                     await _context.SaveChangesAsync();
                 }
             }

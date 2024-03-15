@@ -332,6 +332,13 @@
             public const string RoleName = "Manage User Roles";
             public const string Path = "/ManageUserRoles/Index";
         }
+
+        public static class SampleChetnaManage
+        {
+            public const string PageName = "Sample Chetna Manage";
+            public const string RoleName = "Sample Chetna Manage";
+            public const string Path = "/SampleChetnaManage/Index";
+        }
         public static class Designation
         {
             public const string PageName = "Designation";

@@ -463,6 +463,15 @@
                                     </a>
                                 </li>
                             }
+                             @if (Model.MainMenuViewModel.SampleChetnaManage)
+                            {
+                                <li class="nav-item">
+                                    <a href="@MainMenu.SampleChetnaManage.Path" class="nav-link">
+                                        <i class="nav-icon fas fa-desktop"></i>
+                                        <p>@MainMenu.SampleChetnaManage.PageName</p>
+                                    </a>
+                                </li>
+                            }
                             @if (Model.MainMenuViewModel.SystemRole)
                             {
                                 <li class="nav-item">

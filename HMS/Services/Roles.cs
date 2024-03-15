@@ -2,6 +2,7 @@
 using HMS.Models;
 using HMS.Models.CommonViewModel;
 using HMS.Models.ManageUserRolesVM;
+using HMS.Models.SampleChetnaManageVM;
 using HMS.Pages;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -95,6 +96,20 @@ namespace HMS.Services
             }
             return _MainMenuViewModel;
         }
+        public async Task<MainMenuViewModel> ManageSampleChetnaRoleDetails(ApplicationUser _ApplicationUser, ApplicationDbContext _context)
+        {
+            MainMenuViewModel _MainMenuViewModel = new();
+            var _UserProfile = await _context.UserProfile.Where(x => x.ApplicationUserId == _ApplicationUser.Id).SingleOrDefaultAsync();
+            var _ManageRoleDetails = await _context.SampleChetnaManageRoleDetails
+            .Where(x => x.ManageRoleId == _UserProfile.RoleId).OrderBy(x => x.RoleName).ToArrayAsync();
+            var _PropertyInfo = typeof(MainMenuViewModel).GetProperties().OrderBy(x => x.Name).ToArray();
+
+            for (int i = 0; i < _PropertyInfo.Count(); i++)
+            {
+                _PropertyInfo[i].SetValue(_MainMenuViewModel, _ManageRoleDetails[i].IsAllowed);
+            }
+            return _MainMenuViewModel;
+        }
         public async Task<List<ManageUserRolesDetails>> GetRolesByUser(GetRolesByUserViewModel vm)
         {
             List<ManageUserRolesDetails> list = new();
@@ -121,6 +136,32 @@ namespace HMS.Services
             return list;
         }
 
+        public async Task<List<SampleChetnaManageRoleDetails>> GetSampleChetnaManageByUser(GetSampleChetnaManageByUserVM vm)
+        {
+            List<SampleChetnaManageRoleDetails> list = new();
+            var user = await vm.UserManager.FindByIdAsync(vm.ApplicationUserId);
+            if (user != null)
+            {
+                foreach (var role in vm.listIdentityRole)
+                {
+                    var _SampleChetnaManageRoleDetails = new SampleChetnaManageRoleDetails
+                    {
+                        RoleId = role.Id,
+                        RoleName = role.Name
+                    };
+                    var _IsInRoleAsync = await vm.UserManager.IsInRoleAsync(user, role.Name);
+                    if (_IsInRoleAsync)
+                        _SampleChetnaManageRoleDetails.IsAllowed = true;
+                    else
+                        _SampleChetnaManageRoleDetails.IsAllowed = false;
+                    list.Add(_SampleChetnaManageRoleDetails);
+                }
+            }
+
+            list = list.OrderBy(x => x.RoleName).ToList();
+            return list;
+        }
+
         public async Task<List<ManageUserRolesDetails>> GetRoleList()
         {
             List<ManageUserRolesDetails> list = new List<ManageUserRolesDetails>();
@@ -134,6 +175,23 @@ namespace HMS.Services
                     IsAllowed = false
                 };
                 list.Add(_ManageUserRolesDetails);
+            }
+            return list.OrderBy(x => x.RoleName).ToList();
+        }
+
+        public async Task<List<SampleChetnaManageRoleDetails>> GetSampleChetnaManageRoleList()
+        {
+            List<SampleChetnaManageRoleDetails> list = new List<SampleChetnaManageRoleDetails>();
+            var _Roles = await _roleManager.Roles.ToListAsync();
+            foreach (var role in _Roles)
+            {
+                var _SampleChetnaManageRoleDetails = new SampleChetnaManageRoleDetails
+                {
+                    RoleId = role.Id,
+                    RoleName = role.Name,
+                    IsAllowed = false
+                };
+                list.Add(_SampleChetnaManageRoleDetails);
             }
             return list.OrderBy(x => x.RoleName).ToList();
         }
@@ -176,6 +234,47 @@ namespace HMS.Services
                 throw;
             }
         }
+        public async Task<JsonResultViewModel> UpdateSampleChetnaManageRoles(SampleChetnaManageCURDViewModel vm)
+        {
+            JsonResultViewModel _JsonResultViewModel = new();
+            try
+            {
+                var _ApplicationUser = await _userManager.FindByIdAsync(vm.ApplicationUserId);
+                if (_ApplicationUser == null)
+                {
+                    _JsonResultViewModel.IsSuccess = false;
+                    _JsonResultViewModel.AlertMessage = "User not found";
+                    return _JsonResultViewModel;
+                }
+                var roles = await _userManager.GetRolesAsync(_ApplicationUser);
+                var result = await _userManager.RemoveFromRolesAsync(_ApplicationUser, roles);
+                if (!result.Succeeded)
+                {
+                    _JsonResultViewModel.IsSuccess = false;
+                    _JsonResultViewModel.AlertMessage = "Cannot remove user existing roles";
+                    return _JsonResultViewModel;
+                }
+                result = await _userManager.AddToRolesAsync(_ApplicationUser, vm.listSampleChetnaManageRoleDetails.Where(x => x.IsAllowed).Select(y => y.RoleName));
+                if (!result.Succeeded)
+                {
+                    _JsonResultViewModel.IsSuccess = false;
+                    _JsonResultViewModel.AlertMessage = "Cannot add selected roles to user";
+                    return _JsonResultViewModel;
+                }
+                _JsonResultViewModel.AlertMessage = "Role update Successfully. User Name: " + _ApplicationUser.Email;
+                _JsonResultViewModel.IsSuccess = true;
+                return _JsonResultViewModel;
+            }
+            catch (Exception ex)
+            {
+                _JsonResultViewModel.IsSuccess = false;
+                _JsonResultViewModel.AlertMessage = ex.Message;
+                return _JsonResultViewModel;
+                throw;
+            }
+        }
+
+
         private string ProcessRoleName(string RoleName)
         {
             string result = Regex.Replace(RoleName, "([a-z])_?([A-Z])", "$1 $2");

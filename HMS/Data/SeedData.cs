@@ -216,17 +216,17 @@ namespace HMS.Data
             };
         }
 
-        //public IEnumerable<SampleChetnaManage> GetSampleChetnaManageList()
-        //{
-        //    return new List<SampleChetnaManage>
-        //    {
-        //        new SampleChetnaManage { Title = "S1", Description = "SampleChetnaManage: New1", DateOfBirth=DateTime.Now},
-        //        new SampleChetnaManage { Title = "S2", Description = "SampleChetnaManage: New2", DateOfBirth=DateTime.Now},
-        //        new SampleChetnaManage { Title = "S3", Description = "SampleChetnaManage: New3", DateOfBirth = DateTime.Now},
+        public IEnumerable<SampleChetnaManage> GetSampleChetnaManageList()
+        {
+            return new List<SampleChetnaManage>
+            {
+                new SampleChetnaManage { Title = "S1", Description = "SampleChetnaManage: New1", DateOfBirth=DateTime.Now},
+                new SampleChetnaManage { Title = "S2", Description = "SampleChetnaManage: New2", DateOfBirth=DateTime.Now},
+                new SampleChetnaManage { Title = "S3", Description = "SampleChetnaManage: New3", DateOfBirth = DateTime.Now},
 
-        //    };
+            };
 
-        //}
+        }
 
 
         public IEnumerable<Department> GetDepartmentList()

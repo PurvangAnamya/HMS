@@ -24,6 +24,7 @@ namespace HMS.Services
     public interface ICommon
     {
         string UploadedFile(IFormFile ProfilePicture);
+        Int64 GetImageFileDetails(String usrName, IFormFile ProfilePicture, string folderName, long? ImageId);
         Task<SMTPEmailSetting> GetSMTPEmailSetting();
         Task<SendGridSetting> GetSendGridEmailSetting();
         UserProfile GetByUserProfile(Int64 id);
@@ -78,6 +79,7 @@ namespace HMS.Services
         Task<PatientTestDetail> CreatePatientTestDetail(PatientTestDetailCRUDViewModel vm);
         IQueryable<PaymentsDetailsCRUDViewModel> GetServicePaymentList();
         Task<List<ManageUserRolesDetails>> GetManageRoleDetailsList(Int64 id);
+        Task<List<SampleChetnaManageRoleDetails>> GetSampleChetnaManageRoleDetailsList(Int64 id);
         IQueryable<ItemDropdownListViewModel> GetCommonddlData(string strTableName);
         IQueryable<UserProfileCRUDViewModel> GetUserProfileDetails();
         IEnumerable<T> GetTableData<T>(ApplicationDbContext dbContext) where T : class;

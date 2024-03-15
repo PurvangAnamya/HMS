@@ -54,6 +54,82 @@ namespace HMS.Services
 
             return "blank-person.png";
         }
+        public Int64 GetImageFileDetails(String userName, IFormFile ProfilePicture, string folderName, long? ImageId = 0)
+        {
+            if (ProfilePicture != null && ProfilePicture.Length > 0)
+            {
+                string uploadsFolder = Path.Combine(_iHostingEnvironment.WebRootPath, "images", folderName); // Use the provided folder name
+                if (!Directory.Exists(uploadsFolder))
+                {
+                    Directory.CreateDirectory(uploadsFolder);
+                }
+
+                // Generate a unique file name
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ProfilePicture.FileName);
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                // Save the uploaded file to the specified folder
+                using (var fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    ProfilePicture.CopyTo(fileStream);
+                }
+
+                // Extract relative path after wwwroot
+                var updatedFilePath = filePath.Split("wwwroot");
+                string relativePath = updatedFilePath.Length > 1 ? updatedFilePath[1] : filePath;
+
+                if (ImageId.HasValue && ImageId.Value != 0)
+                {
+                    // Find the existing image record
+                    var existingImage = _context.UserImages.FirstOrDefault(img => img.Id == ImageId);
+
+                    if (existingImage != null)
+                    {
+                        // Delete the old file from the folder
+                        string oldFilePath = Path.Combine(_iHostingEnvironment.WebRootPath, existingImage.ImagePath);
+                        if (File.Exists(oldFilePath))
+                        {
+                            File.Delete(oldFilePath);
+                        }
+
+                        // Update existing image record with new details
+                        existingImage.Name = uniqueFileName;
+                        existingImage.ImagePath = relativePath;
+                        existingImage.ModifiedDate = DateTime.Now;
+                        existingImage.ModifiedBy = userName;
+
+                        // Save changes to the database
+                        _context.SaveChanges();
+
+                        // Return the ID of the updated record
+                        return existingImage.Id;
+                    }
+                }
+                else
+                {
+                    // Create UserImages object and populate properties
+                    var userImage = new UserImages
+                    {
+                        Name = uniqueFileName,
+                        ImagePath = relativePath,
+                        CreatedBy = userName,
+                        CreatedDate = DateTime.Now,
+                        ModifiedDate = DateTime.Now,
+                        ModifiedBy = userName
+                    };
+
+                    // Add UserImages object to context
+                    _context.UserImages.Add(userImage);
+                    _context.SaveChanges();
+
+                    // Return the ID of the inserted record
+                    return userImage.Id;
+                }
+            }
+
+            // Return the ImageId if no new image is uploaded
+            return ImageId ?? 0;
+        }
 
         public async Task<SMTPEmailSetting> GetSMTPEmailSetting()
         {
@@ -1175,6 +1251,19 @@ namespace HMS.Services
         {
             var result = await (from tblObj in _context.ManageUserRolesDetails.Where(x => x.ManageRoleId == id)
                                 select new ManageUserRolesDetails
+                                {
+                                    Id = tblObj.Id,
+                                    RoleId = tblObj.RoleId,
+                                    RoleName = tblObj.RoleName,
+                                    IsAllowed = tblObj.IsAllowed,
+                                }).OrderBy(x => x.RoleName).ToListAsync();
+            return result;
+        }
+
+        public async Task<List<SampleChetnaManageRoleDetails>> GetSampleChetnaManageRoleDetailsList(Int64 id)
+        {
+            var result = await (from tblObj in _context.SampleChetnaManageRoleDetails.Where(x => x.ManageRoleId == id)
+                                select new SampleChetnaManageRoleDetails
                                 {
                                     Id = tblObj.Id,
                                     RoleId = tblObj.RoleId,
