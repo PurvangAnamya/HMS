@@ -15,6 +15,22 @@ var AddEdit = function (id) {
     loadMediumModal(url);
 };
 
+// Function to load bed price based on Edit Loading
+function LoadBedPrice(selectedCategoryId) {
+    $.ajax({
+        url: '/BedAllotments/GetBedPrice',
+        type: 'GET',
+        data: { categoryId: selectedCategoryId },
+        success: function (data) {
+            $('#BedCategoryPrice').val(data);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+
 var Delete = function (id) {
     Swal.fire({
         title: 'Do you want to delete this item?',
@@ -48,6 +64,7 @@ var GetAvailableBedList = function () {
     var _BedCategoryId = $("#BedCategoryId").val();
     //$('#BedId').reload();
 
+    LoadBedPrice(_BedCategoryId);
     $.ajax({
         type: "GET",
         url: "/BedAllotments/GetAvailableBedList?id=" + _BedCategoryId,

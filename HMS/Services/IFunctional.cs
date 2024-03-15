@@ -10,6 +10,7 @@ namespace HMS.Services
         Task GenerateUserUserRole();
         Task CreateDefaultSuperAdmin();
 
+        //Task GenerateSmapleChetnaManage();
         Task SendEmailBySendGridAsync(string apiKey,
             string fromEmail,
             string fromFullName,

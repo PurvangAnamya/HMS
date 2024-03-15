@@ -16,9 +16,10 @@ namespace HMS.Data
                 await functional.CreateDefaultSuperAdmin();
                 await functional.CreateDefaultEmailSettings();
                 await functional.CreateDefaultIdentitySettings();
-                
+
                 await functional.InitAppData();
                 await functional.GenerateUserUserRole();
+               // await functional.GenerateSmapleChetnaManage();
                 await functional.CreateDefaultDoctorUser();
                 await functional.CreateDefaultOtherUser();
                 await functional.CreateDefaultPatientUser();

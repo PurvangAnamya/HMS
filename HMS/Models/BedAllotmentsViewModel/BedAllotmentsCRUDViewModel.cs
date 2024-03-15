@@ -17,6 +17,10 @@ namespace HMS.Models.BedAllotmentsViewModel
         [Display(Name = "Bed")]
         [Required]
         public Int64 BedId { get; set; }
+        [Display(Name = "Bed Category Price")]
+        public double? OldBedCategoryPrice { get; set; }
+        public double? BedCategoryPrice { get; set; }
+
         [Display(Name = "Released")]
         public bool IsReleased { get; set; }
         [Display(Name = "Allotment Date")]
@@ -27,6 +31,7 @@ namespace HMS.Models.BedAllotmentsViewModel
         public DateTime DischargeDate { get; set; } = DateTime.Now.AddDays(1);
         public string Note { get; set; }
 
+        public List<BedCategories> listBedCategories { get; set; }
 
         public static implicit operator BedAllotmentsCRUDViewModel(BedAllotments _BedAllotments)
         {

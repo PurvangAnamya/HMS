@@ -7,6 +7,7 @@ namespace HMS.Models
         public Int64 Id { get; set; }
         public Int64 PatientId { get; set; }
         public Int64 BedCategoryId { get; set; }
+        public double? BedCategoryPrice { get; set; }
         public Int64 BedId { get; set; }
         public bool IsReleased { get; set; }
         public DateTime AllotmentDate { get; set; }

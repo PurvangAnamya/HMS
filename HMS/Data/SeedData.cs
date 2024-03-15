@@ -63,11 +63,11 @@ namespace HMS.Data
         {
             return new List<BedCategories>
             {
-                new BedCategories { Name = "General", Description = "General Bed"},
-                new BedCategories { Name = "ICU", Description = "ICU Bed"},
-                new BedCategories { Name = "Semi Special", Description = "Semi Special Bed"},
-                new BedCategories { Name = "Special Rooms", Description = "Special Rooms"},
-                new BedCategories { Name = "VIP", Description = "VIP"}
+                new BedCategories { Name = "General", Description = "General Bed",BedPrice= 300},
+                new BedCategories { Name = "ICU", Description = "ICU Bed",BedPrice= 700},
+                new BedCategories { Name = "Semi Special", Description = "Semi Special Bed", BedPrice = 400},
+                new BedCategories { Name = "Special Rooms", Description = "Special Rooms", BedPrice = 1000},
+                new BedCategories { Name = "VIP", Description = "VIP"  , BedPrice = 500},
             };
         }
         public IEnumerable<Bed> GetBedList()
@@ -101,7 +101,7 @@ namespace HMS.Data
                 new UserProfileCRUDViewModel { FirstName = "Nurse 01", LastName = "User", UserType = UserType.Nurse, Email = "nurse1@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse1.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Nurse 02", LastName = "User", UserType = UserType.Nurse, Email = "nurse2@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse2.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Nurse 03", LastName = "User", UserType = UserType.Nurse, Email = "nurse3@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/nurse3.png", Address = "California", Country = "USA", },
-                
+
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 01", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties1@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U4.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 02", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties2@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U5.png", Address = "California", Country = "USA", },
                 new UserProfileCRUDViewModel { FirstName = "Laboraties 03", LastName = "User", UserType = UserType.Laboraties, Email = "laboraties3@gmail.com", PasswordHash = "123", ConfirmPassword = "123", PhoneNumber= StaticData.RandomDigits(11), ProfilePicture = "/images/UserIcon/U6.png", Address = "California", Country = "USA", },
@@ -215,6 +215,20 @@ namespace HMS.Data
                 new ManageUserRoles { Name = "Patient", Description = "User Role: Patient"},
             };
         }
+
+        //public IEnumerable<SampleChetnaManage> GetSampleChetnaManageList()
+        //{
+        //    return new List<SampleChetnaManage>
+        //    {
+        //        new SampleChetnaManage { Title = "S1", Description = "SampleChetnaManage: New1", DateOfBirth=DateTime.Now},
+        //        new SampleChetnaManage { Title = "S2", Description = "SampleChetnaManage: New2", DateOfBirth=DateTime.Now},
+        //        new SampleChetnaManage { Title = "S3", Description = "SampleChetnaManage: New3", DateOfBirth = DateTime.Now},
+
+        //    };
+
+        //}
+
+
         public IEnumerable<Department> GetDepartmentList()
         {
             return new List<Department>

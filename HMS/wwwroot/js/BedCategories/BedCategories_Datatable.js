@@ -32,8 +32,9 @@ $(document).ready(function () {
                 data: "Name", "name": "Name", render: function (data, type, row) {
                     return "<a href='#' onclick=Details('" + row.Id + "');>" + row.Name + "</a>";
                 }
-            },            
+            },
             { "data": "Description", "name": "Description" },
+            { "data": "BedPrice", "name": "BedPrice" },
             { "data": "CreatedBy", "name": "CreatedBy" },
 
             {

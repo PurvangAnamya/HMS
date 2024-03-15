@@ -63,6 +63,7 @@ namespace HMS.Controllers
                     _GetGridItem = _GetGridItem.Where(obj => obj.Id.ToString().Contains(searchValue)
                     || obj.Name.ToLower().Contains(searchValue)
                     || obj.Description.ToLower().Contains(searchValue)
+                    || obj.BedPrice.ToString().Contains(searchValue)
                     || obj.CreatedDate.ToString().ToLower().Contains(searchValue)
                     || obj.ModifiedDate.ToString().ToLower().Contains(searchValue)
                     || obj.CreatedBy.ToLower().Contains(searchValue)
@@ -95,6 +96,7 @@ namespace HMS.Controllers
                             Id = _BedCategories.Id,
                             Name = _BedCategories.Name,
                             Description = _BedCategories.Description,
+                            BedPrice = _BedCategories.BedPrice,
                             CreatedDate = _BedCategories.CreatedDate,
                             ModifiedDate = _BedCategories.ModifiedDate,
                             CreatedBy = _BedCategories.CreatedBy,

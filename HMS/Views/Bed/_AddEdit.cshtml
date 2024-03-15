@@ -1,6 +1,8 @@
 @model HMS.Models.BedViewModel.BedCRUDViewModel
 
-@{ ViewData["Title"] = "Create"; }
+@{
+    ViewData["Title"] = "Create";
+}
 
 <div>
     <div class="row">
@@ -11,19 +13,24 @@
                 <input type="hidden" asp-for="CreatedDate" />
                 <input type="hidden" asp-for="CreatedBy" />
                 <div class="form-group">
-                    <label asp-for="BedCategoryId" class="control-label"></label>
-                    <select asp-for="BedCategoryId" asp-items="@ViewBag.ddlBedCategories" id="BedCategoryId" class="form-control">
+                    <label asp-for="BedCategoryId" class="control-label">Bed Category</label>
+                    <select asp-for="BedCategoryId" asp-items="@ViewBag.ddlBedCategories" id="BedCategoryId" onchange="LoadBedPrice()" class="form-control">
                         <option disabled selected>--- SELECT ---</option>
                     </select>
                     <span asp-validation-for="BedCategoryId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="No" class="control-label"></label>
+                    <label asp-for="BedCategoryPrice" class="control-label">Bed Price</label>
+                    <input asp-for="BedCategoryPrice" id="BedCategoryPrice" class="form-control" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="No" class="control-label">No</label>
                     <input asp-for="No" class="form-control" />
                     <span asp-validation-for="No" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
+                    <label asp-for="Description" class="control-label">Description</label>
                     <input asp-for="Description" class="form-control" />
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
@@ -35,4 +42,25 @@
         </div>
     </div>
 </div>
+
 <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+
+<script>
+
+    // Function to load bed price based on selected category
+    function LoadBedPrice() {
+        var selectedCategoryId = $('#BedCategoryId').val();
+        console.log("LoadBedPrice - selectedCategoryId :" + selectedCategoryId);
+        $.ajax({
+            url: '/Bed/GetBedPrice', // Corrected URL
+            type: 'GET',
+            data: { categoryId: selectedCategoryId },
+            success: function (data) {
+                $('#BedCategoryPrice').val(data);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+</script>

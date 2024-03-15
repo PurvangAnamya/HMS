@@ -11,6 +11,11 @@ namespace HMS.Models.BedCategoriesViewModel
         public string Name { get; set; }
         public string Description { get; set; }
 
+        [Display(Name = "Bed Price")]
+        [Required(ErrorMessage = "Bed Price is required")]
+        [Range(0, double.MaxValue, ErrorMessage = "Bed Price must be a positive number")]
+        public double? BedPrice { get; set; }
+        public double? OldBedPrice { get; set; }
 
 
         public static implicit operator BedCategoriesCRUDViewModel(BedCategories _BedCategories)
@@ -20,6 +25,7 @@ namespace HMS.Models.BedCategoriesViewModel
                 Id = _BedCategories.Id,
                 Name = _BedCategories.Name,
                 Description = _BedCategories.Description,
+                BedPrice = _BedCategories.BedPrice,
                 CreatedDate = _BedCategories.CreatedDate,
                 ModifiedDate = _BedCategories.ModifiedDate,
                 CreatedBy = _BedCategories.CreatedBy,
@@ -36,6 +42,7 @@ namespace HMS.Models.BedCategoriesViewModel
                 Id = vm.Id,
                 Name = vm.Name,
                 Description = vm.Description,
+                BedPrice = vm.BedPrice,
                 CreatedDate = vm.CreatedDate,
                 ModifiedDate = vm.ModifiedDate,
                 CreatedBy = vm.CreatedBy,

@@ -1,6 +1,7 @@
 using HMS.Data;
 using HMS.Models;
 using HMS.Models.BedAllotmentsViewModel;
+using HMS.Models.BedViewModel;
 using HMS.Models.CommonViewModel;
 using HMS.Pages;
 using HMS.Services;
@@ -67,6 +68,7 @@ namespace HMS.Controllers
                     || obj.PatientName.ToLower().Contains(searchValue)
                     || obj.BedCategoryName.ToLower().Contains(searchValue)
                     || obj.BedNo.ToLower().Contains(searchValue)
+                    || obj.BedCategoryPrice.ToString().Contains(searchValue)
                     || obj.AllotmentDateDisplay.ToLower().Contains(searchValue)
                     || obj.DischargeDateDisplay.ToLower().Contains(searchValue)
                     || obj.ReleasedStatus.ToLower().Contains(searchValue)
@@ -104,6 +106,7 @@ namespace HMS.Controllers
                             BedCategoryName = _BedCategories.Name,
                             BedId = _Bed.Id,
                             BedNo = _Bed.No,
+                            BedCategoryPrice = _BedAllotments.BedCategoryPrice,
                             AllotmentDateDisplay = String.Format("{0:D}", _BedAllotments.AllotmentDate),
                             DischargeDateDisplay = String.Format("{0:D}", _BedAllotments.DischargeDate),
                             ReleasedStatus = _BedAllotments.IsReleased == false ? "No" : "Yes",
@@ -124,18 +127,60 @@ namespace HMS.Controllers
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
         }
+        [HttpGet]
+        public IActionResult GetBedPrice(int categoryId)
+        {
+            // Retrieve the bed price based on the categoryId
+            double? bedPrice = _context.BedCategories
+                .Where(bc => bc.Id == categoryId)
+                .Select(bc => bc.BedPrice)
+                .FirstOrDefault();
 
+            // Check if the bed price is null
+            if (bedPrice.HasValue)
+            {
+                // Convert the nullable double to string
+                string actualBedPrice = bedPrice.ToString();
+                return Ok(actualBedPrice);
+            }
+            else
+            {
+                // Handle the case where bed price is null
+                // You can return a default value or handle it as per your application logic
+                return NotFound(); // Or you can return BadRequest or any other appropriate status code
+            }
+        }
         public async Task<IActionResult> AddEdit(int id)
         {
+
             ViewBag.LoadddlPatientName = new SelectList(_iCommon.LoadddlPatientName(), "Id", "Name");
             ViewBag.LoadddBedCategories = new SelectList(_iCommon.LoadddBedCategories(), "Id", "Name");
-
+            ViewBag._IsInAdminRole = User.IsInRole("Admin");
             BedAllotmentsCRUDViewModel vm = new BedAllotmentsCRUDViewModel();
+            vm.listBedCategories = await _iCommon.GetBedCategorieslist();
             if (id > 0)
             {
-                vm = await _context.BedAllotments.Where(x => x.Id == id).SingleOrDefaultAsync();
-                ViewBag.LoadddlBedNo = new SelectList(_iCommon.LoadddlBedNo(vm), "Id", "Name");
+                vm = await _context.BedAllotments.Where(x => x.Id == id)
+                                      .Select(b => new BedAllotmentsCRUDViewModel
+                                      {
+                                          Id = b.Id,
+                                          BedCategoryId = b.BedCategoryId,
+                                          PatientId = b.PatientId,
+                                          BedId = b.BedId,
+                                          BedCategoryPrice = b.BedCategoryPrice,
+                                          OldBedCategoryPrice = _context.BedCategories
+                                                               .Where(bc => bc.Id == b.BedCategoryId)
+                                                               .Select(bc => bc.BedPrice)
+                                                               .FirstOrDefault()
+                                      })
+                                      .SingleOrDefaultAsync();
+                ViewBag.LoadddlBedNo = new SelectList(_iCommon.LoadddlBedNo(vm, true), "Id", "Name");
+
+
+
             }
+
+
             return PartialView("_AddEdit", vm);
         }
 
@@ -153,25 +198,51 @@ namespace HMS.Controllers
                         if (vm.Id > 0)
                         {
                             _BedAllotments = await _context.BedAllotments.FindAsync(vm.Id);
+                            //BedCategoryPrice Change By Admn User
+                            if (User.IsInRole("Admin"))
+                            {
+                                _BedAllotments.BedCategoryPrice = vm.BedCategoryPrice;
 
+
+                            }
+                            else
+                            {
+                                _BedAllotments.BedCategoryPrice = vm.OldBedCategoryPrice;
+                            }
                             vm.CreatedDate = _BedAllotments.CreatedDate;
                             vm.CreatedBy = _BedAllotments.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
                             _context.Entry(_BedAllotments).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
+
+
                             TempData["successAlert"] = "BedAllotments Updated Successfully. ID: " + _BedAllotments.Id;
                             return RedirectToAction(nameof(Index));
                         }
                         else
                         {
                             _BedAllotments = vm;
+                            //BedCategoryPrice Change By Admn User
+                            if (User.IsInRole("Admin"))
+                            {
+                                _BedAllotments.BedCategoryPrice = vm.BedCategoryPrice;
+
+
+                            }
+                            else
+                            {
+                                _BedAllotments.BedCategoryPrice = vm.OldBedCategoryPrice;
+                            }
                             _BedAllotments.CreatedDate = DateTime.Now;
                             _BedAllotments.ModifiedDate = DateTime.Now;
                             _BedAllotments.CreatedBy = HttpContext.User.Identity.Name;
                             _BedAllotments.ModifiedBy = HttpContext.User.Identity.Name;
+
                             _context.Add(_BedAllotments);
                             await _context.SaveChangesAsync();
+
+
                             TempData["successAlert"] = "BedAllotments Created Successfully. ID: " + _BedAllotments.Id;
                             return RedirectToAction(nameof(Index));
                         }

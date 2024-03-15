@@ -7,6 +7,7 @@ namespace HMS.Migrations
 {
     public partial class InitialCreate : Migration
     {
+
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -96,6 +97,7 @@ namespace HMS.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     PatientId = table.Column<long>(type: "bigint", nullable: false),
                     BedCategoryId = table.Column<long>(type: "bigint", nullable: false),
+                    BedCategoryPrice = table.Column<double>(type: "float", nullable: true),
                     BedId = table.Column<long>(type: "bigint", nullable: false),
                     IsReleased = table.Column<bool>(type: "bit", nullable: false),
                     AllotmentDate = table.Column<DateTime>(type: "datetime2", nullable: false),
@@ -120,6 +122,7 @@ namespace HMS.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    BedPrice = table.Column<double>(type: "float", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -543,6 +546,50 @@ namespace HMS.Migrations
                 {
                     table.PrimaryKey("PK_ManageUserRolesDetails", x => x.Id);
                 });
+
+
+
+            migrationBuilder.CreateTable(
+             name: "SampleChetnaManage",
+             columns: table => new
+             {
+                 Id = table.Column<long>(type: "bigint", nullable: false)
+                     .Annotation("SqlServer:Identity", "1, 1"),
+                 ProfilePicture = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                 Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                 Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                 DateOfBirth = table.Column<DateTime>(type: "datetime2", nullable: true),
+                 ImageId = table.Column<long>(type: "bigint", nullable: false),
+                 CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                 ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                 CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                 ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                 Cancelled = table.Column<bool>(type: "bit", nullable: false)
+             },
+             constraints: table =>
+             {
+                 table.PrimaryKey("PK_SampleChetnaManage", x => x.Id);
+             });
+
+            migrationBuilder.CreateTable(
+               name: "UserImages",
+               columns: table => new
+               {
+                   Id = table.Column<long>(type: "bigint", nullable: false)
+                      .Annotation("SqlServer:Identity", "1, 1"),
+                   Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                   ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                   CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                   ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                   CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                   ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                   Cancelled = table.Column<bool>(type: "bit", nullable: false)
+               },
+               constraints: table =>
+               {
+                   table.PrimaryKey("PK_UserImages", x => x.Id);
+               });
+
 
             migrationBuilder.CreateTable(
                 name: "MedicineCategories",
@@ -1215,8 +1262,7 @@ namespace HMS.Migrations
             migrationBuilder.DropTable(
                 name: "AuditLogs");
 
-            migrationBuilder.DropTable(
-                name: "Bed");
+
 
             migrationBuilder.DropTable(
                 name: "BedAllotments");
