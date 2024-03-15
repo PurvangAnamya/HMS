@@ -1,14 +1,11 @@
 using HMS.Data;
-using HMS.Models;
 using HMS.Models.LabTestCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -18,12 +15,20 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public LabTestCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
         }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
+        }
+
 
         [Authorize(Roles = Pages.MainMenu.LabTestCategories.RoleName)]
         public IActionResult Index()
@@ -48,7 +53,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -79,12 +85,12 @@ namespace HMS.Controllers
             }
         }
 
-        private IQueryable<LabTestCategoriesGridViewModel> GetGridItem()
+        private IQueryable<LabTestCategoriesGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _LabTestCategories in _context.LabTestCategories
-                        where _LabTestCategories.Cancelled == false
+                        where _LabTestCategories.Cancelled == false && _LabTestCategories.HospitalId == hospitalId
                         select new LabTestCategoriesGridViewModel
                         {
                             Id = _LabTestCategories.Id,
@@ -128,7 +134,7 @@ namespace HMS.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        LabTestCategories _LabTestCategories = new LabTestCategories();
+                        HMS.Models.LabTestCategories _LabTestCategories = new HMS.Models.LabTestCategories();
                         if (vm.Id > 0)
                         {
                             _LabTestCategories = await _context.LabTestCategories.FindAsync(vm.Id);
@@ -137,6 +143,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _LabTestCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_LabTestCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Lab Test Categories Updated Successfully. ID: " + _LabTestCategories.Id;
@@ -149,6 +156,7 @@ namespace HMS.Controllers
                             _LabTestCategories.ModifiedDate = DateTime.Now;
                             _LabTestCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _LabTestCategories.ModifiedBy = HttpContext.User.Identity.Name;
+                            _LabTestCategories.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_LabTestCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Lab Test Categories Created Successfully. ID: " + _LabTestCategories.Id;

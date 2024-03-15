@@ -7,6 +7,7 @@ using HMS.Models.MedicinesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,12 +24,18 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private string _hospitalId;
 
         public MedicinesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.Medicines.RoleName)]
@@ -54,7 +61,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = _iCommon.GetAllMedicines();
+                var _GetGridItem = _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -90,7 +98,7 @@ namespace HMS.Controllers
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
-            MedicinesCRUDViewModel vm = await _iCommon.GetAllMedicines().Where(x => x.Id == id).SingleOrDefaultAsync();
+            MedicinesCRUDViewModel vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
         }
@@ -135,6 +143,7 @@ namespace HMS.Controllers
                             vm.OldSellPrice = _OldItems.SellPrice;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_OldItems).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
 
@@ -174,6 +183,7 @@ namespace HMS.Controllers
                             _Medicines.ModifiedDate = DateTime.Now;
                             _Medicines.CreatedBy = HttpContext.User.Identity.Name;
                             _Medicines.ModifiedBy = HttpContext.User.Identity.Name;
+                            _Medicines.HospitalId = Convert.ToInt64(_hospitalId); ;
                             _context.Add(_Medicines);
                             await _context.SaveChangesAsync();
 
@@ -184,7 +194,7 @@ namespace HMS.Controllers
                             _MedicineHistoryCRUDViewModel.TranQuantity = 0;
                             _MedicineHistoryCRUDViewModel.OldQuantity = vm.Quantity;
                             _MedicineHistoryCRUDViewModel.NewQuantity = vm.Quantity;
-
+                            _MedicineHistoryCRUDViewModel.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.MedicineHistory.Add(_MedicineHistoryCRUDViewModel);
                             await _context.SaveChangesAsync();
 
@@ -213,7 +223,7 @@ namespace HMS.Controllers
         public async Task<IActionResult> UpdateQuantity(Int64 id)
         {
             MedicinesCRUDViewModel vm = new MedicinesCRUDViewModel();
-            if (id > 0) vm = await _iCommon.GetAllMedicines().Where(x => x.Id == id).SingleOrDefaultAsync();
+            if (id > 0) vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
             return PartialView("_UpdateQuantity", vm);
         }
         [HttpPost]
@@ -229,6 +239,7 @@ namespace HMS.Controllers
                 _Medicines.UpdateQntNote = vm.UpdateQntNote;
                 _Medicines.ModifiedDate = DateTime.Now;
                 _Medicines.ModifiedBy = HttpContext.User.Identity.Name;
+                _Medicines.HospitalId = Convert.ToInt64(_hospitalId); 
                 _context.Medicines.Update(_Medicines);
                 await _context.SaveChangesAsync();
 

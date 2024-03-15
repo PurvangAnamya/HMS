@@ -4,6 +4,7 @@ using HMS.Models.UnitViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -18,11 +19,17 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public UnitController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.Unit.RoleName)]
@@ -48,7 +55,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -78,12 +86,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<UnitGridViewModel> GetGridItem()
+        private IQueryable<UnitGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _Unit in _context.Unit
-                        where _Unit.Cancelled == false
+                        where _Unit.Cancelled == false && _Unit.HospitalId == hospitalId
                         select new UnitGridViewModel
                         {
                             Id = _Unit.Id,
@@ -132,18 +140,20 @@ namespace HMS.Controllers
                             vm.CreatedBy = _Unit.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_Unit).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Unit Updated Successfully. ID: " + _Unit.Id;
                             return RedirectToAction(nameof(Index));
                         }
                         else
-                        {
+                        {           
                             _Unit = vm;
                             _Unit.CreatedDate = DateTime.Now;
                             _Unit.ModifiedDate = DateTime.Now;
                             _Unit.CreatedBy = HttpContext.User.Identity.Name;
                             _Unit.ModifiedBy = HttpContext.User.Identity.Name;
+                            _Unit.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_Unit);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Unit Created Successfully. ID: " + _Unit.Id;

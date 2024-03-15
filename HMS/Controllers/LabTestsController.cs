@@ -7,6 +7,7 @@ using HMS.Models.LabTestsViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -23,12 +24,18 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private string _hospitalId;
 
         public LabTestsController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.LabTests.RoleName)]
@@ -54,7 +61,7 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = _iCommon.GetAllLabTests();
+                var _GetGridItem = _iCommon.GetAllLabTestsByHospital(Convert.ToInt64(_hospitalId));
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -89,7 +96,8 @@ namespace HMS.Controllers
         {
             if (id == null) return NotFound();
             ManageLabTestConfigurationViewModel vm = new ManageLabTestConfigurationViewModel();
-            vm.LabTestsCRUDViewModel = await _iCommon.GetAllLabTests().Where(x => x.Id == id).SingleOrDefaultAsync();
+            var hospitalId = HttpContext.Session.GetString("HospitalId");
+            vm.LabTestsCRUDViewModel = await _iCommon.GetAllLabTestsByHospital(Convert.ToInt64(hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
             vm.listLabTestConfiguration = _context.LabTestConfiguration.Where(x => x.LabTestsId == id && x.Cancelled == false).OrderBy(x => x.Sorting).ToList();
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
@@ -123,6 +131,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _LabTests.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_LabTests).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Lab Tests Updated Successfully. ID: " + _LabTests.Id;
@@ -136,6 +145,7 @@ namespace HMS.Controllers
                             _LabTests.ModifiedDate = DateTime.Now;
                             _LabTests.CreatedBy = HttpContext.User.Identity.Name;
                             _LabTests.ModifiedBy = HttpContext.User.Identity.Name;
+                            _LabTests.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_LabTests);
                             await _context.SaveChangesAsync();
 

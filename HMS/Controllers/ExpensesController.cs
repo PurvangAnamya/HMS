@@ -4,6 +4,7 @@ using HMS.Models.ExpensesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
@@ -19,11 +20,18 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public ExpensesController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.Expenses.RoleName)]
@@ -49,7 +57,7 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = _iCommon.GetExpensesGridItem();
+                var _GetGridItem = _iCommon.GetExpensesGridItemByHospitalId(Convert.ToInt64(_hospitalId));
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -82,7 +90,7 @@ namespace HMS.Controllers
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
-            ExpensesGridViewModel vm = await _iCommon.GetExpensesGridItem().Where(x => x.Id == id).SingleOrDefaultAsync();
+            ExpensesGridViewModel vm = await _iCommon.GetExpensesGridItemByHospitalId(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
         }
@@ -114,6 +122,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _Expenses.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_Expenses).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expenses Updated Successfully. ID: " + _Expenses.Id;
@@ -126,6 +135,7 @@ namespace HMS.Controllers
                             _Expenses.ModifiedDate = DateTime.Now;
                             _Expenses.CreatedBy = HttpContext.User.Identity.Name;
                             _Expenses.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_Expenses);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expenses Created Successfully. ID: " + _Expenses.Id;

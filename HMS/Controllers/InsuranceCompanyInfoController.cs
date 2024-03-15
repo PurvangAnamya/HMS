@@ -4,11 +4,13 @@ using HMS.Models.InsuranceCompanyInfoViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using static HMS.Pages.MainMenu;
 
 namespace HMS.Controllers
 {
@@ -18,11 +20,18 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public InsuranceCompanyInfoController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.InsuranceCompanyInfo.RoleName)]
@@ -48,7 +57,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -81,12 +91,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<InsuranceCompanyInfoGridViewModel> GetGridItem()
+        private IQueryable<InsuranceCompanyInfoGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _InsuranceCompanyInfo in _context.InsuranceCompanyInfo
-                        where _InsuranceCompanyInfo.Cancelled == false
+                        where _InsuranceCompanyInfo.Cancelled == false && _InsuranceCompanyInfo.HospitalId == hospitalId
                         select new InsuranceCompanyInfoGridViewModel
                         {
                             Id = _InsuranceCompanyInfo.Id,
@@ -130,7 +140,7 @@ namespace HMS.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        InsuranceCompanyInfo _InsuranceCompanyInfo = new InsuranceCompanyInfo();
+                        HMS.Models.InsuranceCompanyInfo _InsuranceCompanyInfo = new HMS.Models.InsuranceCompanyInfo();
                         if (vm.Id > 0)
                         {
                             _InsuranceCompanyInfo = await _context.InsuranceCompanyInfo.FindAsync(vm.Id);
@@ -139,6 +149,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _InsuranceCompanyInfo.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_InsuranceCompanyInfo).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Insurance Company Info Updated Successfully. Name: " + _InsuranceCompanyInfo.Name;
@@ -151,6 +162,7 @@ namespace HMS.Controllers
                             _InsuranceCompanyInfo.ModifiedDate = DateTime.Now;
                             _InsuranceCompanyInfo.CreatedBy = HttpContext.User.Identity.Name;
                             _InsuranceCompanyInfo.ModifiedBy = HttpContext.User.Identity.Name;
+                            _InsuranceCompanyInfo.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_InsuranceCompanyInfo);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Insurance Company Info Created Successfully. Name: " + _InsuranceCompanyInfo.Name;

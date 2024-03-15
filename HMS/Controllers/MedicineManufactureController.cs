@@ -4,11 +4,9 @@ using HMS.Models.MedicineManufactureViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -18,11 +16,18 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public MedicineManufactureController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
+        }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.MedicineManufacture.RoleName)]
@@ -48,7 +53,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -79,12 +85,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<MedicineManufactureGridViewModel> GetGridItem()
+        private IQueryable<MedicineManufactureGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _MedicineManufacture in _context.MedicineManufacture
-                        where _MedicineManufacture.Cancelled == false
+                        where _MedicineManufacture.Cancelled == false && _MedicineManufacture.HospitalId == hospitalId
                         select new MedicineManufactureGridViewModel
                         {
                             Id = _MedicineManufacture.Id,
@@ -137,6 +143,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _MedicineManufacture.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_MedicineManufacture).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Medicine Manufacture Updated Successfully. ID: " + _MedicineManufacture.Id;
@@ -149,6 +156,7 @@ namespace HMS.Controllers
                             _MedicineManufacture.ModifiedDate = DateTime.Now;
                             _MedicineManufacture.CreatedBy = HttpContext.User.Identity.Name;
                             _MedicineManufacture.ModifiedBy = HttpContext.User.Identity.Name;
+                            _MedicineManufacture.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_MedicineManufacture);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Medicine Manufacture Created Successfully. ID: " + _MedicineManufacture.Id;

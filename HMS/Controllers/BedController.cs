@@ -1,17 +1,13 @@
 using HMS.Data;
-using HMS.Models;
 using HMS.Models.BedViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -21,12 +17,19 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
-
+        private string _hospitalId;
         public BedController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
         }
+
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
+        }
+
 
         [Authorize(Roles = Pages.MainMenu.Bed.RoleName)]
         public IActionResult Index()
@@ -52,7 +55,9 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+               
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -87,13 +92,13 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<BedGridViewModel> GetGridItem()
+        private IQueryable<BedGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _Bed in _context.Bed
                         join _BedCategories in _context.BedCategories on _Bed.BedCategoryId equals _BedCategories.Id
-                        where _Bed.Cancelled == false
+                        where _Bed.Cancelled == false && _BedCategories.HospitalId == hospitalId
                         select new BedGridViewModel
                         {
                             Id = _Bed.Id,
@@ -116,7 +121,7 @@ namespace HMS.Controllers
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
-            BedGridViewModel vm = await GetGridItem().Where(x => x.Id == id).SingleOrDefaultAsync();
+            BedGridViewModel vm = await GetGridItem(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
         }
@@ -137,7 +142,7 @@ namespace HMS.Controllers
             {
                 if (ModelState.IsValid)
                 {
-                    Bed _Bed = new Bed();
+                    HMS.Models.Bed _Bed = new HMS.Models.Bed();
                     if (vm.Id > 0)
                     {
                         _Bed = await _context.Bed.FindAsync(vm.Id);

@@ -55,6 +55,7 @@ namespace HMS.Models.UserProfileViewModel
         public string CurrentURL { get; set; }
         public bool RememberMe { get; set; }
         public ManageUserRolesCRUDViewModel ManageUserRolesCRUDViewModel { get; set; }
+        public Int64 HospitalId { get; set; }
 
 
         public static implicit operator UserProfileCRUDViewModel(UserProfile vm)
@@ -85,6 +86,7 @@ namespace HMS.Models.UserProfileViewModel
                 CreatedBy = vm.CreatedBy,
                 ModifiedBy = vm.ModifiedBy,
                 Cancelled = vm.Cancelled,
+                //HospitalId = vm.HospitalId
             };
         }
 
@@ -115,6 +117,7 @@ namespace HMS.Models.UserProfileViewModel
                 CreatedBy = vm.CreatedBy,
                 ModifiedBy = vm.ModifiedBy,
                 Cancelled = vm.Cancelled,
+                //HospitalId = vm.HospitalId
             };
         }
     }

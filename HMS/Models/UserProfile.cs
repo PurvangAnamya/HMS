@@ -22,5 +22,6 @@ namespace HMS.Models
         public string ProfilePicture { get; set; }
         public Int64 RoleId { get; set; }
         public int UserType { get; set; }
+        //public Int64 HospitalId { get; set; }
     }
 }

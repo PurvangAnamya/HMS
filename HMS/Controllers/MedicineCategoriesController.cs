@@ -4,6 +4,7 @@ using HMS.Models.MedicineCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -18,11 +19,17 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public MedicineCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
             _context = context;
             _iCommon = iCommon;
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.MedicineCategories.RoleName)]
@@ -48,7 +55,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
+
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -83,12 +91,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<MedicineCategoriesGridViewModel> GetGridItem()
+        private IQueryable<MedicineCategoriesGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _MedicineCategories in _context.MedicineCategories
-                        where _MedicineCategories.Cancelled == false
+                        where _MedicineCategories.Cancelled == false && _MedicineCategories.HospitalId == hospitalId
                         select new MedicineCategoriesGridViewModel
                         {
                             Id = _MedicineCategories.Id,
@@ -141,6 +149,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _MedicineCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_MedicineCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "MedicineCategories Updated Successfully. ID: " + _MedicineCategories.Id;
@@ -153,6 +162,7 @@ namespace HMS.Controllers
                             _MedicineCategories.ModifiedDate = DateTime.Now;
                             _MedicineCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _MedicineCategories.ModifiedBy = HttpContext.User.Identity.Name;
+                            _MedicineCategories.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_MedicineCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "MedicineCategories Created Successfully. ID: " + _MedicineCategories.Id;

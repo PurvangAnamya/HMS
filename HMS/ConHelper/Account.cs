@@ -48,6 +48,12 @@ namespace HMS.ConHelper
             string errorMessage = string.Empty;
             try
             {
+                long id = 0;
+                var hospitalId = _context.Hospital.FirstOrDefault(x => x.Id == vm.HospitalId);
+                if (hospitalId is null)
+                {
+                    id = _context.Hospital.FirstOrDefault().Id;
+                }
                 IdentityResult _IdentityResult = null;
                 ApplicationUser _ApplicationUser = new()
                 {
@@ -55,7 +61,8 @@ namespace HMS.ConHelper
                     PhoneNumber = vm.PhoneNumber,
                     PhoneNumberConfirmed = true,
                     Email = vm.Email,
-                    EmailConfirmed = true
+                    EmailConfirmed = true,
+                    Hospitalid = (hospitalId != null) ? hospitalId.Id : id
                 };
                 if (vm.PasswordHash.Equals(vm.ConfirmPassword))
                 {
@@ -95,7 +102,7 @@ namespace HMS.ConHelper
                 }
                 return Tuple.Create(_ApplicationUser, "Success");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

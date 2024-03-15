@@ -4,11 +4,9 @@ using HMS.Models.ExpenseCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -18,6 +16,7 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private string _hospitalId;
 
         public ExpenseCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -25,6 +24,12 @@ namespace HMS.Controllers
             _iCommon = iCommon;
         }
 
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
+
+        }
         [Authorize(Roles = Pages.MainMenu.ExpenseCategories.RoleName)]
         public IActionResult Index()
         {
@@ -48,7 +53,7 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -78,12 +83,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<ExpenseCategoriesGridViewModel> GetGridItem()
+        private IQueryable<ExpenseCategoriesGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _ExpenseCategories in _context.ExpenseCategories
-                        where _ExpenseCategories.Cancelled == false
+                        where _ExpenseCategories.Cancelled == false && _ExpenseCategories.HospitalId == hospitalId
                         select new ExpenseCategoriesGridViewModel
                         {
                             Id = _ExpenseCategories.Id,
@@ -135,6 +140,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _ExpenseCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_ExpenseCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expense Categories Updated Successfully. ID: " + _ExpenseCategories.Id;
@@ -147,6 +153,7 @@ namespace HMS.Controllers
                             _ExpenseCategories.ModifiedDate = DateTime.Now;
                             _ExpenseCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _ExpenseCategories.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId); ;
                             _context.Add(_ExpenseCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expense Categories Created Successfully. ID: " + _ExpenseCategories.Id;

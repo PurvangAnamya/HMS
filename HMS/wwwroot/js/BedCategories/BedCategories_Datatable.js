@@ -32,7 +32,7 @@ $(document).ready(function () {
                 data: "Name", "name": "Name", render: function (data, type, row) {
                     return "<a href='#' onclick=Details('" + row.Id + "');>" + row.Name + "</a>";
                 }
-            },            
+            },
             { "data": "Description", "name": "Description" },
             { "data": "CreatedBy", "name": "CreatedBy" },
 
@@ -46,6 +46,7 @@ $(document).ready(function () {
                     return (month.length > 1 ? month : month) + "/" + date.getDate() + "/" + date.getFullYear();
                 }
             },
+            { "data": "Hospital", "name": "Hospital" },
             {
                 data: null, render: function (data, type, row) {
                     return "<a href='#' class='btn btn-info btn-xs' onclick=AddEdit('" + row.Id + "');>Edit</a>";
@@ -58,12 +59,19 @@ $(document).ready(function () {
             }
         ],
 
-        'columnDefs': [{
-            'targets': [5, 6],
-            'orderable': false,
-        }],
+        'columnDefs': [
+            { 'targets': [5, 6], 'orderable': false },
+        ],
 
-        "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]]
+        "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]],
+        "initComplete": function (settings, json) {
+            var column = this.api().column(5); // Index of the "Hospital" column
+            var data = column.data().toArray(); // Convert to array
+            var isEmpty = data.every(function (value) {
+                return value === null || value.trim() === '';
+            });
+            column.visible(!isEmpty);
+        }
     });
 
 });

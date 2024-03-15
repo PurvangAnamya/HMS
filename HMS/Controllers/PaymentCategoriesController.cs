@@ -6,11 +6,13 @@ using HMS.Models.PaymentCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+using static HMS.Pages.MainMenu;
 
 namespace HMS.Controllers
 {
@@ -21,12 +23,18 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private string _hospitalId;
 
         public PaymentCategoriesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+        }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            base.OnActionExecuting(context);
         }
 
         [Authorize(Roles = Pages.MainMenu.PaymentCategories.RoleName)]
@@ -52,7 +60,8 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = GetGridItem();
+
+                var _GetGridItem = GetGridItem(Convert.ToInt64(_hospitalId));
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
                 {
@@ -83,12 +92,12 @@ namespace HMS.Controllers
 
         }
 
-        private IQueryable<PaymentCategoriesGridViewModel> GetGridItem()
+        private IQueryable<PaymentCategoriesGridViewModel> GetGridItem(long hospitalId)
         {
             try
             {
                 return (from _PaymentCategories in _context.PaymentCategories
-                        where _PaymentCategories.Cancelled == false
+                        where _PaymentCategories.Cancelled == false && _PaymentCategories.HospitalId == hospitalId
                         select new PaymentCategoriesGridViewModel
                         {
                             Id = _PaymentCategories.Id,
@@ -133,7 +142,7 @@ namespace HMS.Controllers
                 {
                     if (ModelState.IsValid)
                     {
-                        PaymentCategories _PaymentCategories = new PaymentCategories();
+                        HMS.Models.PaymentCategories _PaymentCategories = new HMS.Models.PaymentCategories();
                         if (vm.Id > 0)
                         {
                             _PaymentCategories = await _context.PaymentCategories.FindAsync(vm.Id);
@@ -141,6 +150,7 @@ namespace HMS.Controllers
                             vm.CreatedBy = _PaymentCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_PaymentCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Payment Categories Updated Successfully. ID: " + _PaymentCategories.Id;
@@ -154,6 +164,7 @@ namespace HMS.Controllers
                             _PaymentCategories.ModifiedDate = DateTime.Now;
                             _PaymentCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _PaymentCategories.ModifiedBy = HttpContext.User.Identity.Name;
+                            _PaymentCategories.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_PaymentCategories);
                             await _context.SaveChangesAsync();
 

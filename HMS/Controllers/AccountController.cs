@@ -15,6 +15,7 @@ using System.Security.Claims;
 using UAParser;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using HMS.ConHelper;
+using Microsoft.Extensions.Options;
 
 namespace HMS.Controllers
 {
@@ -31,6 +32,7 @@ namespace HMS.Controllers
         private readonly IRoles _roles;
         private readonly IConfiguration _configuration;
         private readonly IAccount _iAccount;
+        private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -41,7 +43,8 @@ namespace HMS.Controllers
             ICommon iCommon,
             IRoles roles,
             IConfiguration configuration,
-            IAccount iAccount)
+            IAccount iAccount,
+            IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions)
         {
             _userManager = userManager;
             _signInManager = signInManager;
@@ -52,6 +55,7 @@ namespace HMS.Controllers
             _roles = roles;
             _configuration = configuration;
             _iAccount = iAccount;
+            _superAdminDefaultOptions = superAdminDefaultOptions.Value;
         }
 
         [TempData]
@@ -81,7 +85,19 @@ namespace HMS.Controllers
                 if (result.Succeeded)
                 {
                     //await JWTHandle(model);
+                    if (model.Email == _superAdminDefaultOptions.Email)
+                    {
+                        HttpContext.Session.SetString("Role", "SuperAdmin");
+                    }
+                    else
+                    {
+                        HttpContext.Session.SetString("Role", "User");
+                    }
+
                     HttpContext.Session.SetString("LoginUserName", model.Email);
+                    var hospitalId = _userManager.FindByNameAsync(model.Email).Result.Hospitalid;
+                    HttpContext.Session.SetString("HospitalId", hospitalId.ToString());
+
                     _logger.LogInformation(_AlertMessage);
 
                     _JsonResultViewModel.AlertMessage = _AlertMessage;
@@ -105,7 +121,6 @@ namespace HMS.Controllers
                 throw;
             }
         }
-
         private async Task JWTHandle(LoginViewModel model)
         {
             try
