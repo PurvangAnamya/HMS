@@ -1,10 +1,12 @@
 using HMS.Data;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.ExpenseCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
@@ -17,6 +19,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public ExpenseCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -27,6 +30,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
 
         }
@@ -87,18 +91,42 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _ExpenseCategories in _context.ExpenseCategories
-                        where _ExpenseCategories.Cancelled == false && _ExpenseCategories.HospitalId == hospitalId
-                        select new ExpenseCategoriesGridViewModel
-                        {
-                            Id = _ExpenseCategories.Id,
-                            Name = _ExpenseCategories.Name,
-                            Description = _ExpenseCategories.Description,
-                            CreatedDate = _ExpenseCategories.CreatedDate,
-                            ModifiedDate = _ExpenseCategories.ModifiedDate,
-                            CreatedBy = _ExpenseCategories.CreatedBy,
-                            ModifiedBy = _ExpenseCategories.ModifiedBy,
-                        }).OrderByDescending(x => x.Id);
+                if (_role == "SuperAdmin")
+                {
+                    return (from _ExpenseCategories in _context.ExpenseCategories
+                            join _hospital in _context.Hospital on _ExpenseCategories.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _ExpenseCategories.Cancelled == false
+                            select new ExpenseCategoriesGridViewModel
+                            {
+                                Id = _ExpenseCategories.Id,
+                                Name = _ExpenseCategories.Name,
+                                Description = _ExpenseCategories.Description,
+                                CreatedDate = _ExpenseCategories.CreatedDate,
+                                ModifiedDate = _ExpenseCategories.ModifiedDate,
+                                CreatedBy = _ExpenseCategories.CreatedBy,
+                                ModifiedBy = _ExpenseCategories.ModifiedBy,
+                                Hospital = _hospital.HospitalName
+
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _ExpenseCategories in _context.ExpenseCategories
+                            where _ExpenseCategories.Cancelled == false && _ExpenseCategories.HospitalId == hospitalId
+                            select new ExpenseCategoriesGridViewModel
+                            {
+                                Id = _ExpenseCategories.Id,
+                                Name = _ExpenseCategories.Name,
+                                Description = _ExpenseCategories.Description,
+                                CreatedDate = _ExpenseCategories.CreatedDate,
+                                ModifiedDate = _ExpenseCategories.ModifiedDate,
+                                CreatedBy = _ExpenseCategories.CreatedBy,
+                                ModifiedBy = _ExpenseCategories.ModifiedBy,
+                                Hospital = string.Empty
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -116,8 +144,16 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
-            ExpenseCategoriesCRUDViewModel vm = new ExpenseCategoriesCRUDViewModel();
-            if (id > 0) vm = await _context.ExpenseCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
+            ExpenseCategoriesCRUDViewModel vm = new ExpenseCategoriesCRUDViewModel();   
+            var data = await _context.ExpenseCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.ExpenseCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -140,7 +176,14 @@ namespace HMS.Controllers
                             vm.CreatedBy = _ExpenseCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
                             _context.Entry(_ExpenseCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expense Categories Updated Successfully. ID: " + _ExpenseCategories.Id;
@@ -153,7 +196,14 @@ namespace HMS.Controllers
                             _ExpenseCategories.ModifiedDate = DateTime.Now;
                             _ExpenseCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _ExpenseCategories.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId); ;
+                            if (_role == "SuperAdmin")
+                            {
+                                _ExpenseCategories.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _ExpenseCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
                             _context.Add(_ExpenseCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Expense Categories Created Successfully. ID: " + _ExpenseCategories.Id;

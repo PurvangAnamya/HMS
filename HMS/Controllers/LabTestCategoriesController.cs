@@ -1,9 +1,12 @@
 using HMS.Data;
+using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.LabTestCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
 
@@ -16,6 +19,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public LabTestCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -26,6 +30,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -89,19 +94,43 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _LabTestCategories in _context.LabTestCategories
-                        where _LabTestCategories.Cancelled == false && _LabTestCategories.HospitalId == hospitalId
-                        select new LabTestCategoriesGridViewModel
-                        {
-                            Id = _LabTestCategories.Id,
-                            Name = _LabTestCategories.Name,
-                            Description = _LabTestCategories.Description,
-                            CreatedDate = _LabTestCategories.CreatedDate,
-                            ModifiedDate = _LabTestCategories.ModifiedDate,
-                            CreatedBy = _LabTestCategories.CreatedBy,
-                            ModifiedBy = _LabTestCategories.ModifiedBy,
+                if (_role == "SuperAdmin")
+                {
+                    return (from _LabTestCategories in _context.LabTestCategories
+                            join _hospital in _context.Hospital on _LabTestCategories.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _LabTestCategories.Cancelled == false
+                            select new LabTestCategoriesGridViewModel
+                            {
+                                Id = _LabTestCategories.Id,
+                                Name = _LabTestCategories.Name,
+                                Description = _LabTestCategories.Description,
+                                CreatedDate = _LabTestCategories.CreatedDate,
+                                ModifiedDate = _LabTestCategories.ModifiedDate,
+                                CreatedBy = _LabTestCategories.CreatedBy,
+                                ModifiedBy = _LabTestCategories.ModifiedBy,
+                                Hospital = _hospital.HospitalName
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _LabTestCategories in _context.LabTestCategories
+                            where _LabTestCategories.Cancelled == false && _LabTestCategories.HospitalId == hospitalId
+                            select new LabTestCategoriesGridViewModel
+                            {
+                                Id = _LabTestCategories.Id,
+                                Name = _LabTestCategories.Name,
+                                Description = _LabTestCategories.Description,
+                                CreatedDate = _LabTestCategories.CreatedDate,
+                                ModifiedDate = _LabTestCategories.ModifiedDate,
+                                CreatedBy = _LabTestCategories.CreatedBy,
+                                ModifiedBy = _LabTestCategories.ModifiedBy,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -119,8 +148,20 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            //LabTestCategoriesCRUDViewModel vm = new LabTestCategoriesCRUDViewModel();
+            //if (id > 0) vm = await _context.LabTestCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            //return PartialView("_AddEdit", vm);
+
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             LabTestCategoriesCRUDViewModel vm = new LabTestCategoriesCRUDViewModel();
-            if (id > 0) vm = await _context.LabTestCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var data = await _context.LabTestCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.LabTestCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -143,7 +184,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _LabTestCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                       
                             _context.Entry(_LabTestCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Lab Test Categories Updated Successfully. ID: " + _LabTestCategories.Id;
@@ -156,7 +205,14 @@ namespace HMS.Controllers
                             _LabTestCategories.ModifiedDate = DateTime.Now;
                             _LabTestCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _LabTestCategories.ModifiedBy = HttpContext.User.Identity.Name;
-                            _LabTestCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _LabTestCategories.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _LabTestCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
                             _context.Add(_LabTestCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Lab Test Categories Created Successfully. ID: " + _LabTestCategories.Id;

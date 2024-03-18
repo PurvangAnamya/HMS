@@ -22,6 +22,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using UAParser;
 
+
+
 namespace HMS.Services
 {
     public class Common : ICommon
@@ -1033,26 +1035,54 @@ namespace HMS.Services
             }
         }
 
-        public IQueryable<LabTestsCRUDViewModel> GetAllLabTestsByHospital(long hospitalId)
+        public IQueryable<LabTestsCRUDViewModel> GetAllLabTestsByHospital(long hospitalId, string roleName)
         {
             try
             {
-                return (from _LabTests in _context.LabTests
-                        join _LabTestCategories in _context.LabTestCategories on _LabTests.LabTestCategoryId equals _LabTestCategories.Id
-                        where _LabTests.Cancelled == false && _LabTests.HospitalId == hospitalId
-                        select new LabTestsCRUDViewModel
-                        {
-                            Id = _LabTests.Id,
-                            PaymentItemCode = _LabTests.PaymentItemCode,
-                            LabTestCategoryName = _LabTestCategories.Name,
-                            LabTestName = _LabTests.LabTestName,
-                            Unit = _LabTests.Unit,
-                            UnitPrice = _LabTests.UnitPrice,
-                            ReferenceRange = _LabTests.ReferenceRange,
-                            Status = _LabTests.Status,
-                            CreatedDate = _LabTests.CreatedDate,
+                if (roleName == "SuperAdmin")
+                {
+                   
+                    return (from _LabTests in _context.LabTests
+                            join _LabTestCategories in _context.LabTestCategories on _LabTests.LabTestCategoryId equals _LabTestCategories.Id
+                            join _hospital in _context.Hospital on _LabTests.HospitalId equals _hospital.Id
+                             into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _LabTests.Cancelled == false 
+                            select new LabTestsCRUDViewModel
+                            {
+                                Id = _LabTests.Id,
+                                PaymentItemCode = _LabTests.PaymentItemCode,
+                                LabTestCategoryName = _LabTestCategories.Name,
+                                LabTestName = _LabTests.LabTestName,
+                                Unit = _LabTests.Unit,
+                                UnitPrice = _LabTests.UnitPrice,
+                                ReferenceRange = _LabTests.ReferenceRange,
+                                Status = _LabTests.Status,
+                                CreatedDate = _LabTests.CreatedDate,
+                                Hospital = _hospital.HospitalName
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _LabTests in _context.LabTests
+                            join _LabTestCategories in _context.LabTestCategories on _LabTests.LabTestCategoryId equals _LabTestCategories.Id
+                            where _LabTests.Cancelled == false && _LabTests.HospitalId == hospitalId
+                            select new LabTestsCRUDViewModel
+                            {
+                                Id = _LabTests.Id,
+                                PaymentItemCode = _LabTests.PaymentItemCode,
+                                LabTestCategoryName = _LabTestCategories.Name,
+                                LabTestName = _LabTests.LabTestName,
+                                Unit = _LabTests.Unit,
+                                UnitPrice = _LabTests.UnitPrice,
+                                ReferenceRange = _LabTests.ReferenceRange,
+                                Status = _LabTests.Status,
+                                CreatedDate = _LabTests.CreatedDate,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -1099,39 +1129,79 @@ namespace HMS.Services
                 throw;
             }
         }
-        public IQueryable<MedicinesCRUDViewModel> GetAllMedicinesByHospital(long hospitalId)
+        public IQueryable<MedicinesCRUDViewModel> GetAllMedicinesByHospital(long hospitalId, string roleName)
         {
             try
             {
-                return (from _Medicines in _context.Medicines
-                        join _MedicineCategories in _context.MedicineCategories on _Medicines.MedicineCategoryId equals _MedicineCategories.Id
-                        join _MedicineManufacture in _context.MedicineManufacture on _Medicines.ManufactureId equals _MedicineManufacture.Id
-                        join _Unit in _context.Unit on _Medicines.UnitId equals _Unit.Id
-                        where _Medicines.Cancelled == false && _Medicines.HospitalId == hospitalId
-                        select new MedicinesCRUDViewModel
-                        {
-                            Id = _Medicines.Id,
-                            Code = _Medicines.Code,
-                            MedicineCategoryId = _Medicines.MedicineCategoryId,
-                            MedicineCategoryName = _MedicineCategories.Name,
-                            PaymentItemCode = _Medicines.PaymentItemCode,
-                            MedicineName = _Medicines.MedicineName,
-                            UnitName = _Unit.Name,
-                            ManufactureId = _Medicines.ManufactureId,
-                            ManufactureName = _MedicineManufacture.Name,
-                            UnitPrice = _Medicines.UnitPrice,
-                            SellPrice = _Medicines.SellPrice,
-                            OldUnitPrice = _Medicines.OldUnitPrice,
-                            OldSellPrice = _Medicines.OldSellPrice,
-                            Quantity = _Medicines.Quantity,
-                            Description = _Medicines.Description,
-                            ExpiryDate = _Medicines.ExpiryDate,
-                            CreatedDate = _Medicines.CreatedDate,
-                            ModifiedDate = _Medicines.ModifiedDate,
-                            CreatedBy = _Medicines.CreatedBy,
-                            ModifiedBy = _Medicines.ModifiedBy
+                if (roleName == "SuperAdmin")
+                {
+                    return (from _Medicines in _context.Medicines
+                            join _MedicineCategories in _context.MedicineCategories on _Medicines.MedicineCategoryId equals _MedicineCategories.Id
+                            join _MedicineManufacture in _context.MedicineManufacture on _Medicines.ManufactureId equals _MedicineManufacture.Id
+                            join _Unit in _context.Unit on _Medicines.UnitId equals _Unit.Id
+                            join _hospital in _context.Hospital on _Medicines.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _Medicines.Cancelled == false
+                            select new MedicinesCRUDViewModel
+                            {
+                                Id = _Medicines.Id,
+                                Code = _Medicines.Code,
+                                MedicineCategoryId = _Medicines.MedicineCategoryId,
+                                MedicineCategoryName = _MedicineCategories.Name,
+                                PaymentItemCode = _Medicines.PaymentItemCode,
+                                MedicineName = _Medicines.MedicineName,
+                                UnitName = _Unit.Name,
+                                ManufactureId = _Medicines.ManufactureId,
+                                ManufactureName = _MedicineManufacture.Name,
+                                UnitPrice = _Medicines.UnitPrice,
+                                SellPrice = _Medicines.SellPrice,
+                                OldUnitPrice = _Medicines.OldUnitPrice,
+                                OldSellPrice = _Medicines.OldSellPrice,
+                                Quantity = _Medicines.Quantity,
+                                Description = _Medicines.Description,
+                                ExpiryDate = _Medicines.ExpiryDate,
+                                CreatedDate = _Medicines.CreatedDate,
+                                ModifiedDate = _Medicines.ModifiedDate,
+                                CreatedBy = _Medicines.CreatedBy,
+                                ModifiedBy = _Medicines.ModifiedBy,
+                                Hospital = _hospital.HospitalName
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _Medicines in _context.Medicines
+                            join _MedicineCategories in _context.MedicineCategories on _Medicines.MedicineCategoryId equals _MedicineCategories.Id
+                            join _MedicineManufacture in _context.MedicineManufacture on _Medicines.ManufactureId equals _MedicineManufacture.Id
+                            join _Unit in _context.Unit on _Medicines.UnitId equals _Unit.Id
+                            where _Medicines.Cancelled == false && _Medicines.HospitalId == hospitalId
+                            select new MedicinesCRUDViewModel
+                            {
+                                Id = _Medicines.Id,
+                                Code = _Medicines.Code,
+                                MedicineCategoryId = _Medicines.MedicineCategoryId,
+                                MedicineCategoryName = _MedicineCategories.Name,
+                                PaymentItemCode = _Medicines.PaymentItemCode,
+                                MedicineName = _Medicines.MedicineName,
+                                UnitName = _Unit.Name,
+                                ManufactureId = _Medicines.ManufactureId,
+                                ManufactureName = _MedicineManufacture.Name,
+                                UnitPrice = _Medicines.UnitPrice,
+                                SellPrice = _Medicines.SellPrice,
+                                OldUnitPrice = _Medicines.OldUnitPrice,
+                                OldSellPrice = _Medicines.OldSellPrice,
+                                Quantity = _Medicines.Quantity,
+                                Description = _Medicines.Description,
+                                ExpiryDate = _Medicines.ExpiryDate,
+                                CreatedDate = _Medicines.CreatedDate,
+                                ModifiedDate = _Medicines.ModifiedDate,
+                                CreatedBy = _Medicines.CreatedBy,
+                                ModifiedBy = _Medicines.ModifiedBy,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {

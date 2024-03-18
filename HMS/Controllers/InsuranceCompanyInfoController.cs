@@ -5,12 +5,14 @@ using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Drawing;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
-using static HMS.Pages.MainMenu;
+
 
 namespace HMS.Controllers
 {
@@ -21,6 +23,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public InsuranceCompanyInfoController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -31,6 +34,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -95,19 +99,42 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _InsuranceCompanyInfo in _context.InsuranceCompanyInfo
-                        where _InsuranceCompanyInfo.Cancelled == false && _InsuranceCompanyInfo.HospitalId == hospitalId
-                        select new InsuranceCompanyInfoGridViewModel
-                        {
-                            Id = _InsuranceCompanyInfo.Id,
-                            Name = _InsuranceCompanyInfo.Name,
-                            Address = _InsuranceCompanyInfo.Address,
-                            Phone = _InsuranceCompanyInfo.Phone,
-                            Email = _InsuranceCompanyInfo.Email,
-                            CoverageDetails = _InsuranceCompanyInfo.CoverageDetails,
-                            CreatedDate = _InsuranceCompanyInfo.CreatedDate,
+                if (_role == "SuperAdmin")
+                {
+                    return (from _InsuranceCompanyInfo in _context.InsuranceCompanyInfo
+                            join _hospital in _context.Hospital on _InsuranceCompanyInfo.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _InsuranceCompanyInfo.Cancelled == false
+                            select new InsuranceCompanyInfoGridViewModel
+                            {
+                                Id = _InsuranceCompanyInfo.Id,
+                                Name = _InsuranceCompanyInfo.Name,
+                                Address = _InsuranceCompanyInfo.Address,
+                                Phone = _InsuranceCompanyInfo.Phone,
+                                Email = _InsuranceCompanyInfo.Email,
+                                CoverageDetails = _InsuranceCompanyInfo.CoverageDetails,
+                                CreatedDate = _InsuranceCompanyInfo.CreatedDate,
+                                Hospital = _hospital.HospitalName
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _InsuranceCompanyInfo in _context.InsuranceCompanyInfo
+                            where _InsuranceCompanyInfo.Cancelled == false && _InsuranceCompanyInfo.HospitalId == hospitalId
+                            select new InsuranceCompanyInfoGridViewModel
+                            {
+                                Id = _InsuranceCompanyInfo.Id,
+                                Name = _InsuranceCompanyInfo.Name,
+                                Address = _InsuranceCompanyInfo.Address,
+                                Phone = _InsuranceCompanyInfo.Phone,
+                                Email = _InsuranceCompanyInfo.Email,
+                                CoverageDetails = _InsuranceCompanyInfo.CoverageDetails,
+                                CreatedDate = _InsuranceCompanyInfo.CreatedDate,
+                                Hospital = string.Empty
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -125,8 +152,17 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             InsuranceCompanyInfoCRUDViewModel vm = new InsuranceCompanyInfoCRUDViewModel();
-            if (id > 0) vm = await _context.InsuranceCompanyInfo.Where(x => x.Id == id).SingleOrDefaultAsync();
+            
+            var data = await _context.InsuranceCompanyInfo.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.InsuranceCompanyInfo.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -149,7 +185,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _InsuranceCompanyInfo.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Entry(_InsuranceCompanyInfo).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Insurance Company Info Updated Successfully. Name: " + _InsuranceCompanyInfo.Name;
@@ -162,7 +206,15 @@ namespace HMS.Controllers
                             _InsuranceCompanyInfo.ModifiedDate = DateTime.Now;
                             _InsuranceCompanyInfo.CreatedBy = HttpContext.User.Identity.Name;
                             _InsuranceCompanyInfo.ModifiedBy = HttpContext.User.Identity.Name;
-                            _InsuranceCompanyInfo.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _InsuranceCompanyInfo.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _InsuranceCompanyInfo.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Add(_InsuranceCompanyInfo);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Insurance Company Info Created Successfully. Name: " + _InsuranceCompanyInfo.Name;

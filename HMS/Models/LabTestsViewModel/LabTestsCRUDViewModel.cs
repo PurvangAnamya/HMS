@@ -22,6 +22,7 @@ namespace HMS.Models.LabTestsViewModel
         [Display(Name = "Reference Range")]
         public string ReferenceRange { get; set; }
         public bool Status { get; set; }
+        public string Hospital { get; set; }
 
 
 

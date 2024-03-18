@@ -1,15 +1,18 @@
 using HMS.Data;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.MedicineCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+
 
 namespace HMS.Controllers
 {
@@ -20,6 +23,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public MedicineCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -29,6 +33,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -95,19 +100,44 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _MedicineCategories in _context.MedicineCategories
-                        where _MedicineCategories.Cancelled == false && _MedicineCategories.HospitalId == hospitalId
-                        select new MedicineCategoriesGridViewModel
-                        {
-                            Id = _MedicineCategories.Id,
-                            Name = _MedicineCategories.Name,
-                            Description = _MedicineCategories.Description,
-                            CreatedDate = _MedicineCategories.CreatedDate,
-                            ModifiedDate = _MedicineCategories.ModifiedDate,
-                            CreatedBy = _MedicineCategories.CreatedBy,
-                            ModifiedBy = _MedicineCategories.ModifiedBy,
 
-                        }).OrderByDescending(x => x.Id);
+                if (_role == "SuperAdmin")
+                {
+                    return (from _MedicineCategories in _context.MedicineCategories
+                            join _hospital in _context.Hospital on _MedicineCategories.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _MedicineCategories.Cancelled == false
+                            select new MedicineCategoriesGridViewModel
+                            {
+                                Id = _MedicineCategories.Id,
+                                Name = _MedicineCategories.Name,
+                                Description = _MedicineCategories.Description,
+                                CreatedDate = _MedicineCategories.CreatedDate,
+                                ModifiedDate = _MedicineCategories.ModifiedDate,
+                                CreatedBy = _MedicineCategories.CreatedBy,
+                                ModifiedBy = _MedicineCategories.ModifiedBy,
+                                Hospital = _hospital.HospitalName
+
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _MedicineCategories in _context.MedicineCategories
+                            where _MedicineCategories.Cancelled == false && _MedicineCategories.HospitalId == hospitalId
+                            select new MedicineCategoriesGridViewModel
+                            {
+                                Id = _MedicineCategories.Id,
+                                Name = _MedicineCategories.Name,
+                                Description = _MedicineCategories.Description,
+                                CreatedDate = _MedicineCategories.CreatedDate,
+                                ModifiedDate = _MedicineCategories.ModifiedDate,
+                                CreatedBy = _MedicineCategories.CreatedBy,
+                                ModifiedBy = _MedicineCategories.ModifiedBy,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -125,8 +155,20 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            //MedicineCategoriesCRUDViewModel vm = new MedicineCategoriesCRUDViewModel();
+            //if (id > 0) vm = await _context.MedicineCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            //return PartialView("_AddEdit", vm);
+
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             MedicineCategoriesCRUDViewModel vm = new MedicineCategoriesCRUDViewModel();
-            if (id > 0) vm = await _context.MedicineCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var data = await _context.MedicineCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.MedicineCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -149,7 +191,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _MedicineCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           // vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_MedicineCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "MedicineCategories Updated Successfully. ID: " + _MedicineCategories.Id;
@@ -162,7 +212,15 @@ namespace HMS.Controllers
                             _MedicineCategories.ModifiedDate = DateTime.Now;
                             _MedicineCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _MedicineCategories.ModifiedBy = HttpContext.User.Identity.Name;
-                            _MedicineCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _MedicineCategories.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _MedicineCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                            //_MedicineCategories.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_MedicineCategories);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "MedicineCategories Created Successfully. ID: " + _MedicineCategories.Id;

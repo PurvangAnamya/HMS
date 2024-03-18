@@ -188,7 +188,7 @@ namespace HMS.Controllers
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
                             if (_role == "SuperAdmin")
                             {
-                                vm.HospitalId = _BedCategories.HospitalId;
+                                vm.HospitalId = vm.HospitalId;
                             }
                             else
                             {

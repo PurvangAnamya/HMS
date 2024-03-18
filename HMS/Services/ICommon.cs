@@ -71,10 +71,10 @@ namespace HMS.Services
         IQueryable<ExpensesGridViewModel> GetExpensesGridItemByHospitalId(long hospitalId);
         IQueryable<PatientAppointmentCRUDViewModel> GetPatientAppointmentGridItem();
         IQueryable<LabTestsCRUDViewModel> GetAllLabTests();
-        IQueryable<LabTestsCRUDViewModel> GetAllLabTestsByHospital(long hospitalId);
+        IQueryable<LabTestsCRUDViewModel> GetAllLabTestsByHospital(long hospitalId, string roleName);
         IQueryable<CheckupMedicineDetailsCRUDViewModel> GetCheckupMedicineDetails();
         IQueryable<MedicinesCRUDViewModel> GetAllMedicines();
-        IQueryable<MedicinesCRUDViewModel> GetAllMedicinesByHospital(long hospitalId);
+        IQueryable<MedicinesCRUDViewModel> GetAllMedicinesByHospital(long hospitalId, string roleName);
         public IQueryable<MedicineHistoryCRUDViewModel> GetAllMedicineHistory();
         Task<PatientTestDetail> CreatePatientTestDetail(PatientTestDetailCRUDViewModel vm);
         IQueryable<PaymentsDetailsCRUDViewModel> GetServicePaymentList();

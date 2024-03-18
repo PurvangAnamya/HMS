@@ -1,15 +1,18 @@
 using HMS.Data;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.UnitViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
+
 
 namespace HMS.Controllers
 {
@@ -20,6 +23,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public UnitController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -29,6 +33,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -90,15 +95,36 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _Unit in _context.Unit
-                        where _Unit.Cancelled == false && _Unit.HospitalId == hospitalId
-                        select new UnitGridViewModel
-                        {
-                            Id = _Unit.Id,
-                            Name = _Unit.Name,
-                            Description = _Unit.Description,
-                            CreatedDate = _Unit.CreatedDate,
-                        }).OrderByDescending(x => x.Id);
+                if (_role == "SuperAdmin")
+                {
+                    return (from _Unit in _context.Unit
+                            join _hospital in _context.Hospital on _Unit.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _Unit.Cancelled == false
+                            select new UnitGridViewModel
+                            {
+                                Id = _Unit.Id,
+                                Name = _Unit.Name,
+                                Description = _Unit.Description,
+                                CreatedDate = _Unit.CreatedDate,
+                                Hospital = _hospital.HospitalName
+
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _Unit in _context.Unit
+                            where _Unit.Cancelled == false && _Unit.HospitalId == hospitalId
+                            select new UnitGridViewModel
+                            {
+                                Id = _Unit.Id,
+                                Name = _Unit.Name,
+                                Description = _Unit.Description,
+                                CreatedDate = _Unit.CreatedDate,
+                                Hospital = string.Empty
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception)
             {
@@ -116,8 +142,21 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            //UnitCRUDViewModel vm = new UnitCRUDViewModel();
+            //if (id > 0) vm = await _context.Unit.Where(x => x.Id == id).SingleOrDefaultAsync();
+            //return PartialView("_AddEdit", vm);
+
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             UnitCRUDViewModel vm = new UnitCRUDViewModel();
-            if (id > 0) vm = await _context.Unit.Where(x => x.Id == id).SingleOrDefaultAsync();
+
+            var data = await _context.Unit.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.Unit.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -140,7 +179,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _Unit.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                            //vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_Unit).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Unit Updated Successfully. ID: " + _Unit.Id;
@@ -153,7 +200,15 @@ namespace HMS.Controllers
                             _Unit.ModifiedDate = DateTime.Now;
                             _Unit.CreatedBy = HttpContext.User.Identity.Name;
                             _Unit.ModifiedBy = HttpContext.User.Identity.Name;
-                            _Unit.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _Unit.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _Unit.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           // _Unit.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Add(_Unit);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Unit Created Successfully. ID: " + _Unit.Id;

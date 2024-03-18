@@ -2,11 +2,13 @@ using HMS.ConHelper;
 using HMS.Data;
 using HMS.Helpers;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.PaymentCategoriesViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
@@ -24,7 +26,7 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
         private string _hospitalId;
-
+        private string _role;
         public PaymentCategoriesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
         {
             _context = context;
@@ -34,6 +36,8 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
+
             base.OnActionExecuting(context);
         }
 
@@ -96,20 +100,45 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _PaymentCategories in _context.PaymentCategories
-                        where _PaymentCategories.Cancelled == false && _PaymentCategories.HospitalId == hospitalId
-                        select new PaymentCategoriesGridViewModel
-                        {
-                            Id = _PaymentCategories.Id,
-                            Name = _PaymentCategories.Name,
-                            UnitPrice = _PaymentCategories.UnitPrice,
-                            Description = _PaymentCategories.Description,
-                            CreatedDate = _PaymentCategories.CreatedDate,
-                            ModifiedDate = _PaymentCategories.ModifiedDate,
-                            CreatedBy = _PaymentCategories.CreatedBy,
-                            ModifiedBy = _PaymentCategories.ModifiedBy,
+                if (_role == "SuperAdmin")
+                {
+                    return (from _PaymentCategories in _context.PaymentCategories
+                            join _hospital in _context.Hospital on _PaymentCategories.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _PaymentCategories.Cancelled == false
+                            select new PaymentCategoriesGridViewModel
+                            {
+                                Id = _PaymentCategories.Id,
+                                Name = _PaymentCategories.Name,
+                                UnitPrice = _PaymentCategories.UnitPrice,
+                                Description = _PaymentCategories.Description,
+                                CreatedDate = _PaymentCategories.CreatedDate,
+                                ModifiedDate = _PaymentCategories.ModifiedDate,
+                                CreatedBy = _PaymentCategories.CreatedBy,
+                                ModifiedBy = _PaymentCategories.ModifiedBy,
+                                Hospital = _hospital.HospitalName
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
+                else {
+                    return (from _PaymentCategories in _context.PaymentCategories
+                            where _PaymentCategories.Cancelled == false && _PaymentCategories.HospitalId == hospitalId
+                            select new PaymentCategoriesGridViewModel
+                            {
+                                Id = _PaymentCategories.Id,
+                                Name = _PaymentCategories.Name,
+                                UnitPrice = _PaymentCategories.UnitPrice,
+                                Description = _PaymentCategories.Description,
+                                CreatedDate = _PaymentCategories.CreatedDate,
+                                ModifiedDate = _PaymentCategories.ModifiedDate,
+                                CreatedBy = _PaymentCategories.CreatedBy,
+                                ModifiedBy = _PaymentCategories.ModifiedBy,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+                }
+                    
             }
             catch (Exception)
             {
@@ -127,9 +156,19 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             PaymentCategoriesCRUDViewModel vm = new PaymentCategoriesCRUDViewModel();
-            if (id > 0) vm = await _context.PaymentCategories.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var data = await _context.PaymentCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.PaymentCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
+
         }
 
         [HttpPost]
@@ -150,7 +189,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _PaymentCategories.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Entry(_PaymentCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Payment Categories Updated Successfully. ID: " + _PaymentCategories.Id;
@@ -164,7 +211,15 @@ namespace HMS.Controllers
                             _PaymentCategories.ModifiedDate = DateTime.Now;
                             _PaymentCategories.CreatedBy = HttpContext.User.Identity.Name;
                             _PaymentCategories.ModifiedBy = HttpContext.User.Identity.Name;
-                            _PaymentCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _PaymentCategories.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _PaymentCategories.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Add(_PaymentCategories);
                             await _context.SaveChangesAsync();
 

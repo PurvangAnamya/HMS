@@ -49,7 +49,7 @@ namespace HMS.Models.MedicinesViewModel
         public string StockKeepingUnit { get; set; }
         public string Note { get; set; }
 
-
+        public string Hospital { get; set; }
 
         public static implicit operator MedicinesCRUDViewModel(Medicines _Medicines)
         {

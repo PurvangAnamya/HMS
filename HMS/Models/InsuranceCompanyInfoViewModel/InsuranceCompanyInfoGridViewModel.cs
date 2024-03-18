@@ -10,6 +10,8 @@ namespace HMS.Models.InsuranceCompanyInfoViewModel
         public string Phone { get; set; }
         public string Email { get; set; }
         public string CoverageDetails { get; set; }
+        public string Hospital { get; set; }
+
     }
 }
 

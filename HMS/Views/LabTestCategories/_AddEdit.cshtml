@@ -10,7 +10,19 @@
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="CreatedDate" />
                 <input type="hidden" asp-for="CreatedBy" />
-
+                @if (ViewBag.Role == "SuperAdmin")
+                {
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Hospital</label>
+                        <div class="col-sm-9">
+                            <select asp-for="HospitalId" asp-items="@ViewBag.ddlHospital" id="HospitalId"
+                                    class="form-control" style="width:100%;">
+                                <option disabled selected>--- SELECT ---</option>
+                            </select>
+                            <span asp-validation-for="HospitalId" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
                 <div class="form-group">
                     <label asp-for="Name" class="control-label"></label>
                     <input asp-for="Name" class="form-control" />

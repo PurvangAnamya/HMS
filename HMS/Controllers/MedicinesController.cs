@@ -2,6 +2,7 @@ using HMS.ConHelper;
 using HMS.Data;
 using HMS.Helpers;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.MedicineHistoryViewModel;
 using HMS.Models.MedicinesViewModel;
 using HMS.Services;
@@ -15,6 +16,7 @@ using System.Linq;
 using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 
+
 namespace HMS.Controllers
 {
     [Authorize]
@@ -25,6 +27,7 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
         private string _hospitalId;
+        private string _role;
 
         public MedicinesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
         {
@@ -35,6 +38,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -61,7 +65,7 @@ namespace HMS.Controllers
                 int skip = start != null ? Convert.ToInt32(start) : 0;
                 int resultTotal = 0;
 
-                var _GetGridItem = _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId));
+                var _GetGridItem = _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId),_role);
 
                 //Sorting
                 if (!(string.IsNullOrEmpty(sortColumn) && string.IsNullOrEmpty(sortColumnAscDesc)))
@@ -98,25 +102,48 @@ namespace HMS.Controllers
         public async Task<IActionResult> Details(long? id)
         {
             if (id == null) return NotFound();
-            MedicinesCRUDViewModel vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
+            MedicinesCRUDViewModel vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId),_role).Where(x => x.Id == id).SingleOrDefaultAsync();
             if (vm == null) return NotFound();
             return PartialView("_Details", vm);
         }
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            //ViewBag._LoadddlMedicineCategories = new SelectList(_iCommon.LoadddlMedicineCategories(), "Id", "Name");
+            //ViewBag._LoadddlUnit = new SelectList(_iCommon.LoadddlUnit(), "Id", "Name");
+            //ViewBag._LoadddlMedicineManufacture = new SelectList(_iCommon.LoadddlMedicineManufacture(), "Id", "Name");
+
+            //MedicinesCRUDViewModel vm = new MedicinesCRUDViewModel();
+            //if (id > 0)
+            //{
+            //    vm = await _context.Medicines.Where(x => x.Id == id).SingleOrDefaultAsync();
+            //}
+            //else
+            //{
+            //    vm.Code = StaticData.GetUniqueID("M");
+            //}
+            //return PartialView("_AddEdit", vm);
+
+
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             ViewBag._LoadddlMedicineCategories = new SelectList(_iCommon.LoadddlMedicineCategories(), "Id", "Name");
             ViewBag._LoadddlUnit = new SelectList(_iCommon.LoadddlUnit(), "Id", "Name");
             ViewBag._LoadddlMedicineManufacture = new SelectList(_iCommon.LoadddlMedicineManufacture(), "Id", "Name");
 
             MedicinesCRUDViewModel vm = new MedicinesCRUDViewModel();
+            var data = await _context.Medicines.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (id > 0)
             {
-                vm = await _context.Medicines.Where(x => x.Id == id).SingleOrDefaultAsync();
+                vm = await _context.Medicines.Where(x => x.Id == id).FirstOrDefaultAsync();
             }
             else
             {
                 vm.Code = StaticData.GetUniqueID("M");
+            }
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
             }
             return PartialView("_AddEdit", vm);
         }
@@ -143,7 +170,15 @@ namespace HMS.Controllers
                             vm.OldSellPrice = _OldItems.SellPrice;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                            // vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_OldItems).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
 
@@ -183,7 +218,15 @@ namespace HMS.Controllers
                             _Medicines.ModifiedDate = DateTime.Now;
                             _Medicines.CreatedBy = HttpContext.User.Identity.Name;
                             _Medicines.ModifiedBy = HttpContext.User.Identity.Name;
-                            _Medicines.HospitalId = Convert.ToInt64(_hospitalId); ;
+                            if (_role == "SuperAdmin")
+                            {
+                                _Medicines.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _Medicines.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                            //_Medicines.HospitalId = Convert.ToInt64(_hospitalId); ;
                             _context.Add(_Medicines);
                             await _context.SaveChangesAsync();
 
@@ -223,7 +266,7 @@ namespace HMS.Controllers
         public async Task<IActionResult> UpdateQuantity(Int64 id)
         {
             MedicinesCRUDViewModel vm = new MedicinesCRUDViewModel();
-            if (id > 0) vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId)).Where(x => x.Id == id).SingleOrDefaultAsync();
+            if (id > 0) vm = await _iCommon.GetAllMedicinesByHospital(Convert.ToInt64(_hospitalId),_role).Where(x => x.Id == id).SingleOrDefaultAsync();
             return PartialView("_UpdateQuantity", vm);
         }
         [HttpPost]
