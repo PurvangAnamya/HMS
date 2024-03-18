@@ -19,7 +19,6 @@ using HMS.Models.PaymentsViewModel;
 using HMS.Models.ReportViewModel;
 using HMS.Models.UserProfileViewModel;
 using Microsoft.EntityFrameworkCore;
-using System.Net;
 using UAParser;
 
 namespace HMS.Services
@@ -28,10 +27,12 @@ namespace HMS.Services
     {
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly ApplicationDbContext _context;
-        public Common(IWebHostEnvironment iHostingEnvironment, ApplicationDbContext context)
+        private readonly ILogger<Common> _logger;
+        public Common(IWebHostEnvironment iHostingEnvironment, ApplicationDbContext context, ILogger<Common> logger)
         {
             _iHostingEnvironment = iHostingEnvironment;
             _context = context;
+            _logger = logger;
         }
         public string UploadedFile(IFormFile ProfilePicture)
         {
@@ -78,10 +79,12 @@ namespace HMS.Services
 
                 _context.Add(_LoginHistory);
                 await _context.SaveChangesAsync();
+                _logger.LogInformation("Insert login History Successfully.");
                 return true;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into a Insert login History.");
                 throw;
             }
         }
@@ -328,8 +331,9 @@ namespace HMS.Services
                             Cancelled = _UserProfile.Cancelled,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Doctor info List.");
                 throw;
             }
         }
@@ -368,8 +372,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Patient test List.");
                 throw;
             }
         }
@@ -399,8 +404,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Patient Test Details.");
                 throw;
             }
         }
@@ -416,8 +422,9 @@ namespace HMS.Services
                 vm.listPaymentModeHistoryCRUDViewModel = GetPaymentModeHistory().Where(x => x.PaymentId == id).ToList();
                 return vm;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Payment Details.");
                 throw;
             }
         }
@@ -477,8 +484,9 @@ namespace HMS.Services
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Payment Details.");
                 throw;
             }
         }
@@ -516,8 +524,9 @@ namespace HMS.Services
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting payment Grid List.");
                 throw;
             }
         }
@@ -555,8 +564,9 @@ namespace HMS.Services
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting payment Mode Report data.");
                 throw;
             }
         }
@@ -587,8 +597,9 @@ namespace HMS.Services
                             CheckupDate = _CheckupSummary.CheckupDate,
                         }).OrderByDescending(x => x.CheckupDate);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting patient payment Grid List.");
                 throw;
             }
         }
@@ -700,8 +711,9 @@ namespace HMS.Services
 
                 return result2.AsQueryable();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting payment Details.");
                 throw;
             }
         }
@@ -739,8 +751,9 @@ namespace HMS.Services
                     return listOtherService.AsQueryable();
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting payment details2.");
                 throw;
             }
         }
@@ -765,8 +778,9 @@ namespace HMS.Services
                             Cancelled = _PaymentModeHistory.Cancelled
                         }).OrderBy(x => x.CreatedDate);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting payment Mode History.");
                 throw;
             }
         }
@@ -809,8 +823,9 @@ namespace HMS.Services
                 vm.CompanyInfoCRUDViewModel = GetCompanyInfo();
                 return vm;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting patient History.");
                 throw;
             }
         }
@@ -858,8 +873,9 @@ namespace HMS.Services
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Checkup Details.");
                 throw;
             }
         }
@@ -887,8 +903,9 @@ namespace HMS.Services
                             Cancelled = _CheckupMedicineDetails.Cancelled,
                         }).OrderBy(x => x.CreatedDate);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Checkup Medicine Details.");
                 throw;
             }
         }
@@ -915,8 +932,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Patient Grid List.");
                 throw;
             }
         }
@@ -940,8 +958,9 @@ namespace HMS.Services
                             ModifiedBy = _Expenses.ModifiedBy,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Expenses.");
                 throw;
             }
         }
@@ -966,8 +985,9 @@ namespace HMS.Services
                             ModifiedBy = _Expenses.ModifiedBy,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Expenses.");
                 throw;
             }
         }
@@ -1000,8 +1020,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting patient appointment Grid.");
                 throw;
             }
         }
@@ -1027,8 +1048,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting lab test list.");
                 throw;
             }
         }
@@ -1054,8 +1076,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting All Lab tests.");
                 throw;
             }
         }
@@ -1094,8 +1117,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting All Medicine List.");
                 throw;
             }
         }
@@ -1133,8 +1157,9 @@ namespace HMS.Services
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Medicine List.");
                 throw;
             }
         }
@@ -1174,8 +1199,9 @@ namespace HMS.Services
                             Cancelled = _MedicineHistory.Cancelled,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting All medicine history.");
                 throw;
             }
         }
@@ -1211,8 +1237,9 @@ namespace HMS.Services
 
                 return _ServicePaymentViewModel;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting Service Payment List.");
                 throw;
             }
         }
@@ -1245,8 +1272,9 @@ namespace HMS.Services
 
                 return AllItem;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Getting All Item.");
                 throw;
             }
         }

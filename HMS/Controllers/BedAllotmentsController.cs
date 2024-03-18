@@ -8,11 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Dynamic.Core;
-using System.Threading.Tasks;
 
 namespace HMS.Controllers
 {
@@ -22,11 +18,14 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<BedAllotmentsController> _logger;
 
-        public BedAllotmentsController(ApplicationDbContext context, ICommon iCommon)
+        public BedAllotmentsController(ApplicationDbContext context, ICommon iCommon
+            , ILogger<BedAllotmentsController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = MainMenu.BedAllotments.RoleName)]
@@ -78,11 +77,14 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
+
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Bed Allotments.");
                 throw;
             }
 
@@ -111,8 +113,9 @@ namespace HMS.Controllers
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Bed Allotments.");
                 throw;
             }
         }
@@ -187,6 +190,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add or Update Bed Allotments.");
                         throw;
                     }
                 }
@@ -208,8 +212,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_BedAllotments);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Bed Allotments.");
                 throw;
             }
         }

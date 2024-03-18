@@ -1,7 +1,6 @@
 using HMS.Data;
 using HMS.Models;
 using HMS.Models.BedCategoriesViewModel;
-using HMS.Models.DoctorsInfoViewModel;
 using HMS.Pages;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,6 +20,7 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private string _hospitalId;
         private string _role;
+
 
         public BedCategoriesController(ApplicationDbContext context, ICommon iCommon)
         {

@@ -23,13 +23,14 @@ namespace HMS.Services
         private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
         private readonly ApplicationInfo _applicationInfo;
         private readonly IAccount _iAccount;
-
+        private readonly ILogger<Functional> _logger;
         public Functional(UserManager<ApplicationUser> userManager,
            ApplicationDbContext context,
            IRoles roles,
            IOptions<SuperAdminDefaultOptions> superAdminDefaultOptions,
            IOptions<ApplicationInfo> applicationInfo,
-           IAccount iAccount)
+           IAccount iAccount,
+           ILogger<Functional> logger)
         {
             _userManager = userManager;
             _context = context;
@@ -37,6 +38,7 @@ namespace HMS.Services
             _superAdminDefaultOptions = superAdminDefaultOptions.Value;
             _applicationInfo = applicationInfo.Value;
             _iAccount = iAccount;
+            _logger = logger;
         }
 
         public async Task SendEmailBySendGridAsync(string apiKey,
@@ -148,6 +150,7 @@ namespace HMS.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Create Super Admin.");
                 throw;
             }
         }
@@ -178,6 +181,7 @@ namespace HMS.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Create Default Hospital.");
                 throw;
             }
         }
@@ -626,6 +630,7 @@ namespace HMS.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Shared UI Data.");
                 throw;
             }
         }
