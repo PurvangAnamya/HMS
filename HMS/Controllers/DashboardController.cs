@@ -6,6 +6,9 @@ using HMS.Models.DashboardViewModel;
 using HMS.Services;
 using HMS.Models.ReportViewModel;
 using HMS.Helpers;
+using static HMS.Pages.MainMenu;
+using UserProfile = HMS.Models.UserProfile;
+using ManageUserRoles = HMS.Models.ManageUserRoles;
 
 namespace HMS.Controllers
 {
@@ -28,8 +31,10 @@ namespace HMS.Controllers
                 DashboardDataViewModel _DashboardDataViewModel = new();
                 DashboardSummaryViewModel _DashboardSummaryViewModel = new();
 
+               // List<UserRoleCountsModel> _UserRolesCountsModel = _context.UserRoleCountsModels.Where(x => x.Cancelled == false).ToList();
+                List<ManageUserRoles> _manageUserRoles = _context.ManageUserRoles.Where(x => x.Cancelled == false).ToList();
                 List<UserProfile> _UserProfile = _context.UserProfile.Where(x => x.Cancelled == false).ToList();
-                _DashboardSummaryViewModel.TotalDoctor = _UserProfile.Where(x => x.UserType == UserType.Doctor).Count();
+                _DashboardSummaryViewModel.TotalDoctor = _UserProfile.Where(x => x.RoleId == UserType.Doctor).Count();
                 _DashboardSummaryViewModel.TotalNurse = _UserProfile.Where(x => x.UserType == UserType.Nurse).Count();
                 _DashboardSummaryViewModel.TotalPharmacist = _UserProfile.Where(x => x.UserType == UserType.Pharmacist).Count();
                 _DashboardSummaryViewModel.TotalLaboratorist = _UserProfile.Where(x => x.UserType == UserType.Laboraties).Count();
@@ -39,19 +44,39 @@ namespace HMS.Controllers
                 _DashboardSummaryViewModel.TotalBeds = _context.Bed.Where(x => x.Cancelled == false).Count();
                 _DashboardSummaryViewModel.TotalMedicines = _context.Medicines.Where(x => x.Cancelled == false).Count();
 
+                List<UserRoleCountsModel> _userRoleCountsModel = new List<UserRoleCountsModel>();
+                foreach (var userRole in _manageUserRoles)
+                {
+                    if (userRole.Name.ToLower() != "admin")
+                    {
+                        try
+                        {
+                            _userRoleCountsModel.Add(new UserRoleCountsModel()
+                            {
+                                RoleId = userRole.Id,
+                                RoleName = userRole.Name,
+                                UserCounts = _context.UserProfile.Where(x => x.RoleId == userRole.Id && x.Cancelled == false).Count(),
+                                LeftMenuImage = _context.UserImages.Where(x => x.Id == userRole.ImageId).FirstOrDefault()?.ImagePath,
+                                DashboardImage = _context.UserImages.Where(x => x.Id == userRole.DashboardImageId).FirstOrDefault()?.ImagePath,
+                            });
+                        }
+                        catch (Exception ex)
+                        {
+                            throw;
+                        }
+                    }
+                }
                 _DashboardDataViewModel.DashboardSummaryViewModel = _DashboardSummaryViewModel;
 
                 _DashboardDataViewModel.listPaymentsCRUDViewModel = _iCommon.GetPaymentDetails().Take(10).ToList();
                 _DashboardDataViewModel.listCheckupSummaryCRUDViewModel = _iCommon.GetCheckupGridItem().Take(10).ToList();
                 return View(_DashboardDataViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }
         }
-
-
 
         [HttpGet]
         public JsonResult GetPaymentsDetailsGroupBy()

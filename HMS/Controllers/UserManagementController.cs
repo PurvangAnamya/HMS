@@ -168,6 +168,7 @@ namespace HMS.Controllers
                     _UserProfileViewModel.ModifiedBy = HttpContext.User.Identity.Name;
                     _UserProfileViewModel.CreatedDate = _UserProfile.CreatedDate;
                     _UserProfileViewModel.CreatedBy = _UserProfile.CreatedBy;
+                    _UserProfileViewModel.UserType = _UserProfile.UserType;
                     _context.Entry(_UserProfile).CurrentValues.SetValues(_UserProfileViewModel);
                     await _context.SaveChangesAsync();
 

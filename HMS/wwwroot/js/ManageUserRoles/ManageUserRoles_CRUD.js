@@ -4,6 +4,28 @@ var Details = function (id) {
     loadExtraBigModal(url);
 };
 
+function validateImageFile(input) {
+    const file = input.files[0];
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+
+    if (file && allowedTypes.includes(file.type)) {
+        // Valid image file selected
+        document.getElementById('profilePictureError').textContent = '';
+    } else {
+        if (fileInput.files.length > 0) {
+            // Upload the new image file
+            formData.append("ProfilePictureDetails", fileInput.files[0]);
+        }
+        // Invalid file type selected
+        document.getElementById('profilePictureError').textContent = 'Invalid file type. Please select a JPEG, PNG, or GIF image.';
+        input.value = ''; // Clear the file input to allow selecting another file
+
+        if (fileInput.files.length < 0) {
+            document.getElementById('profilePicture').src = "/images/TheLegendPv/default-profile-image.png";
+        }
+    }
+}
+
 
 var AddEdit = function (id) {
     if (DemoUserAccountLockAll() == 1) return;
@@ -21,14 +43,31 @@ var Save = function () {
     if (!$("#frmUserRoles").valid()) {
         return;
     }
-
+    // Serialize form data excluding file input
     var _frmUserRoles = $("#frmUserRoles").serialize();
+
+    // Construct FormData object to include file input
+    var formData = new FormData($("#frmUserRoles")[0]);
+
+    // Append serialized form data to FormData object
+    formData.append("frmUserRoles", _frmUserRoles);
+
+    // Check if a new image file is provided
+    var fileInput = document.getElementById("ProfilePictureDetails");
+    var profilePictureElement = document.getElementById("profilePicture");
+
+    if (fileInput.files.length > 0) {
+        // Upload the new image file
+        formData.append("ProfilePictureDetails", fileInput.files[0]);
+    }
     $("#btnSave").val("Please Wait");
     $('#btnSave').attr('disabled', 'disabled');
     $.ajax({
         type: "POST",
         url: "/ManageUserRoles/AddEdit",
-        data: _frmUserRoles,
+        data: formData,
+        contentType: false,
+        processData: false,
         success: function (result) {
             Swal.fire({
                 title: result,
@@ -73,4 +112,10 @@ var Delete = function (id) {
             });
         }
     });
+};
+
+var ViewImage = function (imageURL, Title) {
+    $('#titleImageViewModal').html(Title);
+    $("#UserImage").attr("src", imageURL);
+    $("#ImageViewModal").modal("show");
 };

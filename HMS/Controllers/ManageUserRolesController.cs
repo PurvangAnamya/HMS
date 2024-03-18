@@ -82,18 +82,24 @@ namespace HMS.Controllers
                 throw;
             }
         }
-
+   
         private IQueryable<ManageUserRolesCRUDViewModel> GetGridItem()
         {
             try
             {
-                return (from _ManageRole in _context.ManageUserRoles
+                return (from _ManageRole in _context.ManageUserRoles join _UserImages in _context.UserImages
+                        on _ManageRole.ImageId equals _UserImages.Id  into userImageGroup 
+                        from userImage in userImageGroup.DefaultIfEmpty() // leftjoin
                         where _ManageRole.Cancelled == false
                         select new ManageUserRolesCRUDViewModel
                         {
                             Id = _ManageRole.Id,
                             Name = _ManageRole.Name,
                             Description = _ManageRole.Description,
+                            ImageId = _ManageRole.ImageId,
+                            DashboardImageId = _ManageRole.DashboardImageId,
+                            ProfilePicture = _context.UserImages.FirstOrDefault(x => x.Id == _ManageRole.ImageId).ImagePath ?? "/upload/blank-person.png",
+                            DashboardPicture = _context.UserImages.FirstOrDefault(x => x.Id == _ManageRole.DashboardImageId).ImagePath ?? "/upload/blank-person.png",
                             CreatedDate = _ManageRole.CreatedDate,
                             ModifiedDate = _ManageRole.ModifiedDate,
                             CreatedBy = _ManageRole.CreatedBy,
@@ -110,6 +116,16 @@ namespace HMS.Controllers
         {
             ManageUserRolesCRUDViewModel vm = await _context.ManageUserRoles.FirstOrDefaultAsync(m => m.Id == id);
             vm.listManageUserRolesDetails = await _iCommon.GetManageRoleDetailsList(id);
+            var userImage = await _context.UserImages.Where(x => x.Id == vm.ImageId).SingleOrDefaultAsync();
+            if (userImage != null)
+            {
+                vm.ProfilePicture = userImage.ImagePath;
+            }
+            var DashboarduserImage = await _context.UserImages.Where(x => x.Id == vm.DashboardImageId).SingleOrDefaultAsync();
+            if (DashboarduserImage != null)
+            {
+                vm.DashboardPicture = DashboarduserImage.ImagePath;
+            }
             return PartialView("_Info", vm);
         }
         [HttpGet]
@@ -120,6 +136,17 @@ namespace HMS.Controllers
             {
                 vm = await _context.ManageUserRoles.Where(x => x.Id == id).SingleOrDefaultAsync();
                 vm.listManageUserRolesDetails = await _iCommon.GetManageRoleDetailsList(id);
+                var userImage = await _context.UserImages.Where(x => x.Id == vm.ImageId).SingleOrDefaultAsync();
+                if (userImage != null)
+                {
+                    vm.ProfilePicture = userImage.ImagePath;
+                }
+
+                var DashboarduserImage = await _context.UserImages.Where(x => x.Id == vm.DashboardImageId).SingleOrDefaultAsync();
+                if (DashboarduserImage != null)
+                {
+                    vm.DashboardPicture = DashboarduserImage.ImagePath;
+                }
             }
             else
             {
@@ -138,7 +165,9 @@ namespace HMS.Controllers
                 if (vm.Id > 0)
                 {
                     _ManageUserRoles = await _context.ManageUserRoles.FindAsync(vm.Id);
-
+                    
+                    vm.ImageId = _iCommon.GetImageFileDetails(_UserName, vm.ProfilePictureDetails, "LeftMenuImages", vm.ImageId);
+                    vm.DashboardImageId = _iCommon.GetImageFileDetails(_UserName, vm.DashboardPictureDetails, "DashboardImages", vm.DashboardImageId);
                     vm.CreatedDate = _ManageUserRoles.CreatedDate;
                     vm.CreatedBy = _ManageUserRoles.CreatedBy;
                     vm.ModifiedDate = DateTime.Now;
@@ -153,12 +182,13 @@ namespace HMS.Controllers
                         _context.ManageUserRolesDetails.Update(_ManageUserRolesDetails);
                         await _context.SaveChangesAsync();
                     }
-
                     var _AlertMessage = "User Role Updated Successfully. ID: " + _ManageUserRoles.Id;
                     return new JsonResult(_AlertMessage);
                 }
                 else
                 {
+                    vm.ImageId = _iCommon.GetImageFileDetails(_UserName, vm.ProfilePictureDetails, "LeftMenuImages", vm.ImageId);
+                    vm.DashboardImageId = _iCommon.GetImageFileDetails(_UserName, vm.DashboardPictureDetails, "DashboardImages", vm.DashboardImageId);
                     _ManageUserRoles = vm;
                     _ManageUserRoles.CreatedDate = DateTime.Now;
                     _ManageUserRoles.ModifiedDate = DateTime.Now;

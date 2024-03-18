@@ -24,6 +24,7 @@ namespace HMS.Services
     public interface ICommon
     {
         string UploadedFile(IFormFile ProfilePicture);
+        Int64 GetImageFileDetails(String usrName, IFormFile ProfilePicture, string folderName, long? ImageId = 0);
         Task<SMTPEmailSetting> GetSMTPEmailSetting();
         Task<SendGridSetting> GetSendGridEmailSetting();
         UserProfile GetByUserProfile(Int64 id);

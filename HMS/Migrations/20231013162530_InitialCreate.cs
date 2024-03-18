@@ -512,6 +512,8 @@ namespace HMS.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ImageId = table.Column<long>(type: "bigint", nullable: false),
+                    DashboardImageId = table.Column<long>(type: "bigint", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -543,7 +545,7 @@ namespace HMS.Migrations
                 {
                     table.PrimaryKey("PK_ManageUserRolesDetails", x => x.Id);
                 });
-
+           
             migrationBuilder.CreateTable(
                 name: "MedicineCategories",
                 columns: table => new

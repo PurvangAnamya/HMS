@@ -60,7 +60,7 @@ namespace HMS.Data
         public DbSet<MedicineHistory> MedicineHistory { get; set; }
         public DbSet<InsuranceCompanyInfo> InsuranceCompanyInfo { get; set; }
         public DbSet<UserInfoFromBrowser> UserInfoFromBrowser { get; set; }
-
+        public DbSet<UserImages> UserImages { get; set; }
         public DbSet<ManageUserRoles> ManageUserRoles { get; set; }
         public DbSet<ManageUserRolesDetails> ManageUserRolesDetails { get; set; }
         public DbSet<Designation> Designation { get; set; }

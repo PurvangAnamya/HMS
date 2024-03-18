@@ -1016,6 +1016,12 @@ namespace HMS.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("ImageId")
+                        .HasColumnType("bigint");
+
+                    b.Property<string>("DashboardImageId")
+                      .HasColumnType("bigint");
+
                     b.Property<string>("ModifiedBy")
                         .HasColumnType("nvarchar(max)");
 
@@ -1029,6 +1035,41 @@ namespace HMS.Migrations
 
                     b.ToTable("ManageUserRoles");
                 });
+
+            modelBuilder.Entity("HMS.Models.UserImages", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
+
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<long>("ImagePath")
+                    .HasColumnType("Int64");
+
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.HasKey("Id");
+
+                b.ToTable("UserImages");
+            });
+
 
             modelBuilder.Entity("HMS.Models.ManageUserRolesDetails", b =>
                 {
