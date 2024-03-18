@@ -78,7 +78,6 @@ namespace HMS.Controllers
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
                 _logger.LogInformation("Error in getting Successfully.");
-
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }

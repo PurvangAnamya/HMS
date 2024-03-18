@@ -73,7 +73,6 @@ namespace HMS.Controllers
         [AllowAnonymous]
         public async Task<JsonResult> Login(LoginViewModel model, string returnUrl = null)
         {
-            model = null;
             ViewData["ReturnUrl"] = returnUrl;
             JsonResultViewModel _JsonResultViewModel = new();
             try

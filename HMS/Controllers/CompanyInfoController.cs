@@ -18,11 +18,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<CompanyInfoController> _logger;
 
-        public CompanyInfoController(ApplicationDbContext context, ICommon iCommon)
+        public CompanyInfoController(ApplicationDbContext context, ICommon iCommon, ILogger<CompanyInfoController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.CompanyInfo.RoleName)]
@@ -71,6 +73,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError( "Error in Updated Company Info.");
                         throw;
                     }
                 }

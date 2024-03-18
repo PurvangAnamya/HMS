@@ -20,14 +20,16 @@ namespace HMS.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRoles _roles;
+        private readonly ILogger<ManageUserRolesController> _logger;
 
-        public ManageUserRolesController(ApplicationDbContext context, ICommon iCommon, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IRoles roles)
+        public ManageUserRolesController(ApplicationDbContext context, ICommon iCommon, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager, IRoles roles, ILogger<ManageUserRolesController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _userManager = userManager;
             _roleManager = roleManager;
             _roles = roles;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.ManageUserRoles.RoleName)]
@@ -72,13 +74,15 @@ namespace HMS.Controllers
                 }
 
                 resultTotal = _GetGridItem.Count();
-
+                _logger.LogInformation("Error in getting Successfully.");
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting User Role.");
                 throw;
             }
         }
@@ -102,6 +106,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError(ex, "Error in Add User Role.");
                 throw;
             }
         }
@@ -190,6 +195,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update User Role.");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -211,6 +217,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError(ex, "Error in Delete User Role.");
                 throw;
             }
         }
@@ -247,6 +254,7 @@ namespace HMS.Controllers
             {
                 _JsonResultViewModel.IsSuccess = false;
                 _JsonResultViewModel.AlertMessage = ex.Message;
+                _logger.LogError(ex, "Error in Save Update User Role.");
                 return _JsonResultViewModel;
                 throw;
             }

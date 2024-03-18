@@ -25,12 +25,14 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
         private string _hospitalId;
+        private readonly ILogger<LabTestsController> _logger;
 
-        public LabTestsController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public LabTestsController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<LabTestsController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -84,10 +86,12 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Leb Tests.");
                 throw;
             }
         }
@@ -164,6 +168,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Or Update Leb Tests.");
                         throw;
                     }
                 }
@@ -185,8 +190,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_LabTests);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in Add Or Update Leb Tests.");
                 throw;
             }
         }

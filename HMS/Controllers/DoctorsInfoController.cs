@@ -22,14 +22,16 @@ namespace HMS.Controllers
         private readonly IEmailSender _emailSender;
         private readonly ICommon _iCommon;
         private readonly IAccount _iAccount;
+        private readonly ILogger<DoctorsInfoController> _logger;
 
-        public DoctorsInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender, ICommon iCommon, IAccount iAccount)
+        public DoctorsInfoController(ApplicationDbContext context, UserManager<ApplicationUser> userManager, IEmailSender emailSender, ICommon iCommon, IAccount iAccount, ILogger<DoctorsInfoController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iAccount = iAccount;
             _userManager = userManager;
             _emailSender = emailSender;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.DoctorsInfo.RoleName)]
@@ -80,14 +82,15 @@ namespace HMS.Controllers
                 resultTotal = _GetDoctorInfoList.Count();
 
                 var result = _GetDoctorInfoList.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in getting Doctors Info.");
                 throw;
             }
-
         }
 
         public async Task<IActionResult> Details(long? id)
@@ -164,6 +167,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Doctors Info.");
                         throw;
                     }
                 }
@@ -213,6 +217,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Update Doctors Info.");
                         throw;
                     }
                 }
@@ -236,6 +241,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError("Error in Delete DoctorInfo.");
                 throw;
             }
         }

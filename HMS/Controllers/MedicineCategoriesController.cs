@@ -20,11 +20,13 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private readonly ILogger<MedicineCategoriesController> _logger;
 
-        public MedicineCategoriesController(ApplicationDbContext context, ICommon iCommon)
+        public MedicineCategoriesController(ApplicationDbContext context, ICommon iCommon, ILogger<MedicineCategoriesController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -81,11 +83,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Medicine Categories.");
                 throw;
             }
 
@@ -109,8 +113,9 @@ namespace HMS.Controllers
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Medicine Categories.");
                 throw;
             }
         }
@@ -180,6 +185,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError( "Error in Add Or Update Medicine Categories.");
                         throw;
                     }
                 }
@@ -201,8 +207,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_MedicineCategories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Medicine Categories.");
                 throw;
             }
         }

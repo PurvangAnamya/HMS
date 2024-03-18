@@ -17,11 +17,13 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private readonly ILogger<ExpenseCategoriesController> _logger;
 
-        public ExpenseCategoriesController(ApplicationDbContext context, ICommon iCommon)
+        public ExpenseCategoriesController(ApplicationDbContext context, ICommon iCommon, ILogger<ExpenseCategoriesController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -73,11 +75,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Expense Categories.");
                 throw;
             }
 
@@ -100,8 +104,9 @@ namespace HMS.Controllers
                             ModifiedBy = _ExpenseCategories.ModifiedBy,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Expense Categories.");
                 throw;
             }
         }
@@ -171,6 +176,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Or Update Expense Categories.");
                         throw;
                     }
                 }
@@ -192,8 +198,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_ExpenseCategories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in Delete Expense Categories.");
                 throw;
             }
         }

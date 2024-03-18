@@ -16,11 +16,14 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<DepartmentController> _logger;
 
-        public DepartmentController(ApplicationDbContext context, ICommon iCommon)
+
+        public DepartmentController(ApplicationDbContext context, ICommon iCommon, ILogger<DepartmentController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.Department.RoleName)]
@@ -68,11 +71,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in getting Department.");
                 throw;
             }
         }
@@ -91,8 +96,9 @@ namespace HMS.Controllers
                             CreatedDate = _Department.CreatedDate,                           
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in Add Department.");
                 throw;
             }
         }
@@ -150,6 +156,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex,"Error in Add Or Update Department.");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -169,8 +176,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_Department);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in Delete Department.");
                 throw;
             }
         }

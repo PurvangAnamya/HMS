@@ -23,15 +23,16 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IdentityOptions _IdentityOptions;
         private readonly IHttpContextAccessor _accessor;
+        private readonly ILogger<IdentitySettingController> _logger;
 
 
-
-        public IdentitySettingController(ApplicationDbContext context, ICommon iCommon, IOptions<IdentityOptions> iOptions, IHttpContextAccessor accessor)
+        public IdentitySettingController(ApplicationDbContext context, ICommon iCommon, IOptions<IdentityOptions> iOptions, IHttpContextAccessor accessor, ILogger<IdentitySettingController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _IdentityOptions = iOptions.Value;
             _accessor = accessor;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.IdentitySetting.RoleName)]
@@ -82,6 +83,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Update Default Identity Options.");
                         throw;
                     }
                 }
