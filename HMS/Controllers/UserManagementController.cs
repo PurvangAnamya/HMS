@@ -25,13 +25,15 @@ namespace HMS.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IAccount _iAccount;
         private readonly IRoles _roles;
+        private readonly ILogger<UserManagementController> _logger;
 
         public UserManagementController(UserManager<ApplicationUser> userManager,
             ApplicationDbContext context,
             ICommon iCommon,
             IEmailSender emailSender,
             IAccount iAccount,
-            IRoles roles)
+            IRoles roles,
+            ILogger<UserManagementController> logger)
         {
             _context = context;
             _userManager = userManager;
@@ -39,6 +41,7 @@ namespace HMS.Controllers
             _emailSender = emailSender;
             _iAccount = iAccount;
             _roles = roles;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.UserManagement.RoleName)]
@@ -116,10 +119,14 @@ namespace HMS.Controllers
                 resultTotal = _AccountUser.Count();
 
                 var result = _AccountUser.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
-
             }
-            catch (Exception) { throw; }
+
+            catch (Exception ex) {
+                _logger.LogError(ex, "Error in getting User Management.");
+                throw; 
+            }
         }
 
         [HttpGet]
@@ -216,6 +223,7 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update User Management.");
                 _JsonResultViewModel.IsSuccess = false;
                 return new JsonResult(ex.Message);
                 throw;
@@ -259,6 +267,7 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Reset Password.");
                 return new JsonResult("error" + ex.Message);
                 throw;
             }
@@ -267,31 +276,48 @@ namespace HMS.Controllers
         [HttpDelete]
         public async Task<IActionResult> DeleteUserAccount(int id)
         {
-            UserProfile _UserProfile = _iCommon.GetByUserProfile(id);
-            var _ApplicationUser = await _userManager.FindByIdAsync(_UserProfile.ApplicationUserId);
-            var _DeleteAsync = await _userManager.DeleteAsync(_ApplicationUser);
-
-            if (_DeleteAsync.Succeeded)
+            try
             {
-                _UserProfile.Cancelled = true;
-                _UserProfile.ModifiedDate = DateTime.Now;
-                _UserProfile.ModifiedBy = HttpContext.User.Identity.Name;
-                var result2 = _context.UserProfile.Update(_UserProfile);
-                await _context.SaveChangesAsync();
+                UserProfile _UserProfile = _iCommon.GetByUserProfile(id);
+                var _ApplicationUser = await _userManager.FindByIdAsync(_UserProfile.ApplicationUserId);
+                var _DeleteAsync = await _userManager.DeleteAsync(_ApplicationUser);
+
+                if (_DeleteAsync.Succeeded)
+                {
+                    _UserProfile.Cancelled = true;
+                    _UserProfile.ModifiedDate = DateTime.Now;
+                    _UserProfile.ModifiedBy = HttpContext.User.Identity.Name;
+                    var result2 = _context.UserProfile.Update(_UserProfile);
+                    await _context.SaveChangesAsync();
+                }
+                return new JsonResult(_UserProfile);
             }
-            return new JsonResult(_UserProfile);
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in Delete User Account.");
+                throw;
+            }
+          
         }
         private async Task<bool> UpdateUserRole(UserProfileCRUDViewModel vm)
         {
-            var _ManageRoleDetails = await _context.ManageUserRolesDetails.Where(x => x.ManageRoleId == vm.RoleId && x.IsAllowed == true).ToListAsync();
-            var _ApplicationUser = await _userManager.FindByIdAsync(vm.ApplicationUserId);
-            var roles = await _userManager.GetRolesAsync(_ApplicationUser);
-            var result = await _userManager.RemoveFromRolesAsync(_ApplicationUser, roles);
-            foreach (var item in _ManageRoleDetails)
+            try
             {
-                await _userManager.AddToRoleAsync(_ApplicationUser, item.RoleName);
+                var _ManageRoleDetails = await _context.ManageUserRolesDetails.Where(x => x.ManageRoleId == vm.RoleId && x.IsAllowed == true).ToListAsync();
+                var _ApplicationUser = await _userManager.FindByIdAsync(vm.ApplicationUserId);
+                var roles = await _userManager.GetRolesAsync(_ApplicationUser);
+                var result = await _userManager.RemoveFromRolesAsync(_ApplicationUser, roles);
+                foreach (var item in _ManageRoleDetails)
+                {
+                    await _userManager.AddToRoleAsync(_ApplicationUser, item.RoleName);
+                }
+                return true;
             }
-            return true;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Update User Role.");
+                throw;
+            }     
         }
     }
 }

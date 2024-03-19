@@ -20,11 +20,13 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private string _StartDate = null;
         private string _EndDate = null;
+        private readonly ILogger<RptServicePaymentController> _logger;
 
-        public RptServicePaymentController(ApplicationDbContext context, ICommon iCommon)
+        public RptServicePaymentController(ApplicationDbContext context, ICommon iCommon, ILogger<RptServicePaymentController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.Admin.RoleName)]
@@ -102,11 +104,13 @@ namespace HMS.Controllers
 
                 resultTotal = _GetServicePaymentList.Count();
                 var result = _GetServicePaymentList.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Rpt Service Payment.");
                 throw;
             }
 

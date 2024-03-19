@@ -17,13 +17,16 @@ namespace AMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<UserProfileController> _logger;
+
 
         public UserProfileController(UserManager<ApplicationUser> userManager, ICommon iCommon,
-            ApplicationDbContext context)
+            ApplicationDbContext context, ILogger<UserProfileController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [Authorize(Roles = MainMenu.UserProfile.RoleName)]
@@ -39,10 +42,19 @@ namespace AMS.Controllers
         [HttpGet]
         public async Task<IActionResult> ResetPassword(string ApplicationUserId)
         {
-            var _ApplicationUser = await _userManager.FindByIdAsync(ApplicationUserId);
-            ResetPasswordViewModel _ResetPasswordViewModel = new();
-            _ResetPasswordViewModel.ApplicationUserId = _ApplicationUser.Id;
-            return PartialView("_ResetPassword", _ResetPasswordViewModel);
+            try
+            {
+                var _ApplicationUser = await _userManager.FindByIdAsync(ApplicationUserId);
+                ResetPasswordViewModel _ResetPasswordViewModel = new();
+                _ResetPasswordViewModel.ApplicationUserId = _ApplicationUser.Id;
+                return PartialView("_ResetPassword", _ResetPasswordViewModel);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in UserProfile Reset Password.");
+                throw;
+            }
+           
         }
 
         [HttpPost]
@@ -71,6 +83,7 @@ namespace AMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in UserProfile Save Reset Password.");
                 return new JsonResult("error" + ex.Message);
                 throw;
             }

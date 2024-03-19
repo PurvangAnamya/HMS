@@ -19,12 +19,15 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly IRoles _roles;
+        private readonly ILogger<SystemRoleController> _logger;
 
-        public SystemRoleController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, IRoles roles)
+
+        public SystemRoleController(ApplicationDbContext context, RoleManager<IdentityRole> roleManager, IRoles roles, ILogger<SystemRoleController> logger)
         {
             _context = context;
             _roleManager = roleManager;
             _roles = roles;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.SystemRole.RoleName)]
@@ -69,11 +72,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting System Role.");
                 throw;
             }
         }
@@ -97,8 +102,9 @@ namespace HMS.Controllers
                 }
                 return list.AsQueryable();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add System Role.");
                 throw;
             }
         }
@@ -134,6 +140,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error in Save AddNew Role.");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -156,8 +163,9 @@ namespace HMS.Controllers
 
                 return new JsonResult(result);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Role.");
                 throw;
             }
         }
@@ -185,8 +193,9 @@ namespace HMS.Controllers
                 }
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add ManageUserRolesDetails.");
                 throw;
             }
         }

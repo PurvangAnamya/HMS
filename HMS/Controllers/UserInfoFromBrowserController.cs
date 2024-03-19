@@ -17,11 +17,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<UserInfoFromBrowserController> _logger;
 
-        public UserInfoFromBrowserController(ApplicationDbContext context, ICommon iCommon)
+        public UserInfoFromBrowserController(ApplicationDbContext context, ICommon iCommon, ILogger<UserInfoFromBrowserController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.UserInfoFromBrowser.RoleName)]
@@ -73,11 +75,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting User Info From Browser.");
                 throw;
             }
 
@@ -106,8 +110,9 @@ namespace HMS.Controllers
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add User Info From Browser.");
                 throw;
             }
         }
