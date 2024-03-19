@@ -82,14 +82,18 @@ namespace HMS.Controllers
                 throw;
             }
         }
-   
+
         private IQueryable<ManageUserRolesCRUDViewModel> GetGridItem()
         {
             try
             {
-                return (from _ManageRole in _context.ManageUserRoles join _UserImages in _context.UserImages
-                        on _ManageRole.ImageId equals _UserImages.Id  into userImageGroup 
-                        from userImage in userImageGroup.DefaultIfEmpty() // leftjoin
+                return (from _ManageRole in _context.ManageUserRoles
+                        join _UserImages in _context.UserImages
+                        on _ManageRole.ImageId equals _UserImages.Id into userImageGroup
+                        from userImage in userImageGroup.DefaultIfEmpty() // left join
+                        join _DashboardImages in _context.UserImages
+                        on _ManageRole.DashboardImageId equals _DashboardImages.Id into dashboardImageGroup
+                        from dashboardImage in dashboardImageGroup.DefaultIfEmpty() // left join
                         where _ManageRole.Cancelled == false
                         select new ManageUserRolesCRUDViewModel
                         {
@@ -111,6 +115,7 @@ namespace HMS.Controllers
                 throw;
             }
         }
+
         [HttpGet]
         public async Task<IActionResult> Details(Int64 id)
         {
@@ -184,7 +189,7 @@ namespace HMS.Controllers
                     }
                     var _AlertMessage = "User Role Updated Successfully. ID: " + _ManageUserRoles.Id;
                     return new JsonResult(_AlertMessage);
-                }
+                }                     
                 else
                 {
                     vm.ImageId = _iCommon.GetImageFileDetails(_UserName, vm.ProfilePictureDetails, "LeftMenuImages", vm.ImageId);

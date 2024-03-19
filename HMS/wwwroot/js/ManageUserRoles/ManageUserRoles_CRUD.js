@@ -58,8 +58,17 @@ var Save = function () {
 
     if (fileInput.files.length > 0) {
         // Upload the new image file
-        formData.append("ProfilePictureDetails", fileInput.files[0]);
+        formData.append("DashboardPictureDetails", fileInput.files[0]);
     }
+
+    var fileInput = document.getElementById("DashboardPictureDetails");
+    var dashboardPictureElement = document.getElementById("dashboardPicture");
+
+    if (fileInput.files.length > 0) {
+        // Upload the new image file
+        formData.append("DashboardPictureDetails", fileInput.files[0]);
+    }
+
     $("#btnSave").val("Please Wait");
     $('#btnSave').attr('disabled', 'disabled');
     $.ajax({

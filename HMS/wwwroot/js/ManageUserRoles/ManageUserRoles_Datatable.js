@@ -34,14 +34,12 @@ $(document).ready(function () {
             },
             {
                 data: null, render: function (data, type, row) {
-                    let profileImage = "/images/UserIcon/Admin.png";
-                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.ProfilePicture + "','Left Menu Image');><div class='image'><img src='" + row.ProfilePicture + "' class='img-circle elevation-2 imgCustom' alt='Left Menu Image'></div></a>";
+                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.ProfilePicture + "','User_Image');><div class='image'><img src='" + row.ProfilePicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
                 }
             },
             {
                 data: null, render: function (data, type, row) {
-                    let profileImage = "/images/UserIcon/Admin.png";
-                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.DashboardPicture + "','Dashboard Image');><div class='image'><img src='" + row.DashboardPicture + "' class='img-circle elevation-2 imgCustom' alt='Dashboard Picture'></div></a>";
+                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.DashboardPicture + "','User_Image');><div class='image'><img src='" + row.DashboardPicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
                 }
             },
             { "data": "Name", "name": "Name" },
