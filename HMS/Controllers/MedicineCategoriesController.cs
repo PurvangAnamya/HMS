@@ -140,7 +140,8 @@ namespace HMS.Controllers
                                 ModifiedBy = _MedicineCategories.ModifiedBy,
                                 Hospital = string.Empty
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception ex)
             {
@@ -203,7 +204,7 @@ namespace HMS.Controllers
                             {
                                 vm.HospitalId = Convert.ToInt64(_hospitalId);
                             }
-                           // vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            // vm.HospitalId = Convert.ToInt64(_hospitalId);
                             _context.Entry(_MedicineCategories).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "MedicineCategories Updated Successfully. ID: " + _MedicineCategories.Id;
@@ -242,7 +243,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
-                        _logger.LogError( "Error in Add Or Update Medicine Categories.");
+                        _logger.LogError("Error in Add Or Update Medicine Categories.");
                         throw;
                     }
                 }

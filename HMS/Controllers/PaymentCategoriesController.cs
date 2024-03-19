@@ -126,7 +126,8 @@ namespace HMS.Controllers
 
                             }).OrderByDescending(x => x.Id);
                 }
-                else {
+                else
+                {
                     return (from _PaymentCategories in _context.PaymentCategories
                             where _PaymentCategories.Cancelled == false && _PaymentCategories.HospitalId == hospitalId
                             select new PaymentCategoriesGridViewModel
@@ -141,7 +142,8 @@ namespace HMS.Controllers
                                 ModifiedBy = _PaymentCategories.ModifiedBy,
                                 Hospital = string.Empty
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception ex)
             {

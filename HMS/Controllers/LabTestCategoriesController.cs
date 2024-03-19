@@ -132,7 +132,8 @@ namespace HMS.Controllers
                                 ModifiedBy = _LabTestCategories.ModifiedBy,
                                 Hospital = string.Empty
 
-                        }).OrderByDescending(x => x.Id);
+                            }).OrderByDescending(x => x.Id);
+                }
             }
             catch (Exception ex)
             {
