@@ -25,12 +25,14 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
         private string _hospitalId;
+        private readonly ILogger<MedicinesController> _logger;
 
-        public MedicinesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public MedicinesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<MedicinesController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -85,11 +87,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Medicine.");
                 throw;
             }
 
@@ -213,6 +217,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError( "Error in Add Or Update Medicine.");
                         throw;
                     }
                 }
@@ -260,6 +265,7 @@ namespace HMS.Controllers
             catch (Exception)
             {
                 TempData["errorAlert"] = "Operation failed.";
+                _logger.LogError("Error in  Update Quantity .");
                 return View("Index");
                 throw;
             }
@@ -281,7 +287,7 @@ namespace HMS.Controllers
                 MedicinesCRUDViewModel _MedicinesCRUDViewModel = _Medicines;
                 MedicineHistoryCRUDViewModel _MedicineHistoryCRUDViewModel = _MedicinesCRUDViewModel;
 
-                _MedicineHistoryCRUDViewModel.Action = "Delete medecine item from current stock-" + _MedicinesCRUDViewModel.MedicineName;
+                _MedicineHistoryCRUDViewModel.Action = "Delete Medicine item from current stock-" + _MedicinesCRUDViewModel.MedicineName;
                 _MedicineHistoryCRUDViewModel.OldQuantity = _Medicines.Quantity;
                 _MedicineHistoryCRUDViewModel.TranQuantity = (int)_Medicines.Quantity;
                 _MedicineHistoryCRUDViewModel.NewQuantity = 0;
@@ -292,6 +298,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError("Error in Delete Medicine.");
                 throw;
             }
         }

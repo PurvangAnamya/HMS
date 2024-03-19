@@ -24,12 +24,14 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
         private string _hospitalId;
+        private readonly ILogger<PaymentCategoriesController> _logger;
 
-        public PaymentCategoriesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public PaymentCategoriesController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<PaymentCategoriesController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
         public override void OnActionExecuting(ActionExecutingContext context)
         {
@@ -82,11 +84,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Payment Categories.");
                 throw;
             }
 
@@ -111,8 +115,9 @@ namespace HMS.Controllers
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Payment Categories.");
                 throw;
             }
         }
@@ -183,6 +188,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Or Update Payment Categories.");
                         throw;
                     }
                 }
@@ -204,8 +210,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_PaymentCategories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Payment Categories.");
                 throw;
             }
         }

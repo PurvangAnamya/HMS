@@ -21,12 +21,14 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private readonly ILogger<PatientTestController> _logger;
 
-        public PatientTestController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public PatientTestController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<PatientTestController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.PatientTest.RoleName)]
@@ -75,10 +77,12 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Patient Test.");
                 throw;
             }
 
@@ -156,6 +160,7 @@ namespace HMS.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 TempData["errorAlert"] = "Operation failed.";
+                _logger.LogError("Error in Add Or Update Patient Test.");
                 if (!IsExists(vm.PatientTestCRUDViewModel.Id))
                     return NotFound();
                 else
@@ -166,24 +171,33 @@ namespace HMS.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePatientTestDetail(PatientTestDetailCRUDViewModel vm)
         {
-            string strCurrentUserName = HttpContext.User.Identity.Name;
-            PatientTestDetail _PatientTestDetail = vm;
-            _PatientTestDetail.CreatedBy = strCurrentUserName;
-            _PatientTestDetail.ModifiedBy = strCurrentUserName;
-            var result = await _iCommon.CreatePatientTestDetail(_PatientTestDetail);
-
-            //Add Payment Details
-            if (result != null)
+            try
             {
-                AddPaymentViewModel _AddPaymentViewModel = new AddPaymentViewModel();
-                var _VisitId = _context.PatientTest.Where(x => x.Id == result.PatientTestId).SingleOrDefault().VisitId;
-                var _PaymentId = _context.Payments.Where(x => x.VisitId == _VisitId).SingleOrDefault().Id;
-                _AddPaymentViewModel.LabTestsId = _PatientTestDetail.LabTestsId;
-                _AddPaymentViewModel.PaymentsId = _PaymentId;
-                await _iDBOperation.CreatePaymentsDetails(_AddPaymentViewModel, PaymentItemType.LabTest, strCurrentUserName);
-            }
+                string strCurrentUserName = HttpContext.User.Identity.Name;
+                PatientTestDetail _PatientTestDetail = vm;
+                _PatientTestDetail.CreatedBy = strCurrentUserName;
+                _PatientTestDetail.ModifiedBy = strCurrentUserName;
+                var result = await _iCommon.CreatePatientTestDetail(_PatientTestDetail);
 
-            return new JsonResult(result);
+                //Add Payment Details
+                if (result != null)
+                {
+                    AddPaymentViewModel _AddPaymentViewModel = new AddPaymentViewModel();
+                    var _VisitId = _context.PatientTest.Where(x => x.Id == result.PatientTestId).SingleOrDefault().VisitId;
+                    var _PaymentId = _context.Payments.Where(x => x.VisitId == _VisitId).SingleOrDefault().Id;
+                    _AddPaymentViewModel.LabTestsId = _PatientTestDetail.LabTestsId;
+                    _AddPaymentViewModel.PaymentsId = _PaymentId;
+                    await _iDBOperation.CreatePaymentsDetails(_AddPaymentViewModel, PaymentItemType.LabTest, strCurrentUserName);
+                }
+
+                return new JsonResult(result);
+            }
+            catch(DbUpdateConcurrencyException)
+            {
+                _logger.LogError( "Error in Save Patient Test Details .");
+                throw;
+            }
+           
         }
         [HttpPost]
         public async Task<IActionResult> UpdatePatientTestDetailDB(PatientTestResultUpdateViewModel vm)
@@ -194,12 +208,21 @@ namespace HMS.Controllers
 
         private async Task<PatientTestDetail> UpdatePatientTestDetail(PatientTestResultUpdateViewModel vm)
         {
-            var _PatientTestDetail = await _context.PatientTestDetail.FindAsync(vm.Id);
-            vm.ModifiedDate = DateTime.Now;
-            vm.ModifiedBy = HttpContext.User.Identity.Name;
-            _context.Entry(_PatientTestDetail).CurrentValues.SetValues(vm);
-            _context.SaveChanges();
-            return _PatientTestDetail;
+            try
+            {
+                var _PatientTestDetail = await _context.PatientTestDetail.FindAsync(vm.Id);
+                vm.ModifiedDate = DateTime.Now;
+                vm.ModifiedBy = HttpContext.User.Identity.Name;
+                _context.Entry(_PatientTestDetail).CurrentValues.SetValues(vm);
+                _context.SaveChanges();
+                return _PatientTestDetail;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Update Patient Test Detail.");
+                throw;
+            }
+           
         }
 
         [HttpPost]
@@ -217,8 +240,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_PatientTestDetail);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Patient Test Detail.");
                 throw;
             }
         }
@@ -237,8 +261,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_PatientTest);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Patient Test.");
                 throw;
             }
         }

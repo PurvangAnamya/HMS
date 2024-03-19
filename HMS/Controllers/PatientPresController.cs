@@ -15,11 +15,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<PatientPresController> _logger;
 
-        public PatientPresController(ApplicationDbContext context, ICommon iCommon)
+        public PatientPresController(ApplicationDbContext context, ICommon iCommon, ILogger<PatientPresController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.PatientPrescriptions.RoleName)]
@@ -44,10 +46,12 @@ namespace HMS.Controllers
                     }
                 }
                 var _Parser = new Parser<CheckupSummaryCRUDViewModel>(Request.Form, listCheckupSummary.AsQueryable());
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(_Parser.Parse());
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Patient Pres.");
                 throw;
             }
         }
