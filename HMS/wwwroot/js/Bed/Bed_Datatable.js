@@ -70,7 +70,7 @@ $(document).ready(function () {
 
         "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]],
         "initComplete": function (settings, json) {
-            var column = this.api().column(5); // Index of the "Hospital" column
+            var column = this.api().column(6); // Index of the "Hospital" column
             var data = column.data().toArray(); // Convert to array
             var isEmpty = data.every(function (value) {
                 return value === null || value.trim() === '';
