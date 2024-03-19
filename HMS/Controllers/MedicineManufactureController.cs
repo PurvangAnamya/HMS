@@ -1,12 +1,15 @@
 using HMS.Data;
 using HMS.Models;
+using HMS.Models.BedCategoriesViewModel;
 using HMS.Models.MedicineManufactureViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
+
 
 namespace HMS.Controllers
 {
@@ -17,6 +20,7 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private string _role;
 
         public MedicineManufactureController(ApplicationDbContext context, ICommon iCommon)
         {
@@ -27,6 +31,7 @@ namespace HMS.Controllers
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _role = HttpContext.Session.GetString("Role");
             base.OnActionExecuting(context);
         }
 
@@ -89,19 +94,45 @@ namespace HMS.Controllers
         {
             try
             {
-                return (from _MedicineManufacture in _context.MedicineManufacture
-                        where _MedicineManufacture.Cancelled == false && _MedicineManufacture.HospitalId == hospitalId
-                        select new MedicineManufactureGridViewModel
-                        {
-                            Id = _MedicineManufacture.Id,
-                            Name = _MedicineManufacture.Name,
-                            Address = _MedicineManufacture.Address,
-                            Description = _MedicineManufacture.Description,
-                            CreatedDate = _MedicineManufacture.CreatedDate,
-                            ModifiedDate = _MedicineManufacture.ModifiedDate,
-                            CreatedBy = _MedicineManufacture.CreatedBy,
+                if (_role == "SuperAdmin")
+                {
+                    return (from _MedicineManufacture in _context.MedicineManufacture
+                            join _hospital in _context.Hospital on _MedicineManufacture.HospitalId equals _hospital.Id
+                            into hospitalGroup
+                            from _hospital in hospitalGroup.DefaultIfEmpty()
+                            where _MedicineManufacture.Cancelled == false
+                            select new MedicineManufactureGridViewModel
 
-                        }).OrderByDescending(x => x.Id);
+                            {
+                                Id = _MedicineManufacture.Id,
+                                Name = _MedicineManufacture.Name,
+                                Address = _MedicineManufacture.Address,
+                                Description = _MedicineManufacture.Description,
+                                CreatedDate = _MedicineManufacture.CreatedDate,
+                                ModifiedDate = _MedicineManufacture.ModifiedDate,
+                                CreatedBy = _MedicineManufacture.CreatedBy,
+                                Hospital = _hospital.HospitalName
+
+                            }).OrderByDescending(x => x.Id);
+                }
+                else
+                {
+                    return (from _MedicineManufacture in _context.MedicineManufacture
+                            where _MedicineManufacture.Cancelled == false && _MedicineManufacture.HospitalId == hospitalId
+                            select new MedicineManufactureGridViewModel
+                            {
+                                Id = _MedicineManufacture.Id,
+                                Name = _MedicineManufacture.Name,
+                                Address = _MedicineManufacture.Address,
+                                Description = _MedicineManufacture.Description,
+                                CreatedDate = _MedicineManufacture.CreatedDate,
+                                ModifiedDate = _MedicineManufacture.ModifiedDate,
+                                CreatedBy = _MedicineManufacture.CreatedBy,
+                                Hospital = string.Empty
+
+                            }).OrderByDescending(x => x.Id);
+
+                }
             }
             catch (Exception)
             {
@@ -119,8 +150,17 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id)
         {
+            
+            ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
+            ViewBag.Role = _role;
             MedicineManufactureCRUDViewModel vm = new MedicineManufactureCRUDViewModel();
-            if (id > 0) vm = await _context.MedicineManufacture.Where(x => x.Id == id).SingleOrDefaultAsync();
+            var data = await _context.MedicineManufacture.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (id > 0)
+                vm = await _context.MedicineManufacture.Where(x => x.Id == id).FirstOrDefaultAsync();
+            if (data != null)
+            {
+                vm.HospitalId = data.HospitalId;
+            }
             return PartialView("_AddEdit", vm);
         }
 
@@ -143,7 +183,15 @@ namespace HMS.Controllers
                             vm.CreatedBy = _MedicineManufacture.CreatedBy;
                             vm.ModifiedDate = DateTime.Now;
                             vm.ModifiedBy = HttpContext.User.Identity.Name;
-                            vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                vm.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                vm.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Entry(_MedicineManufacture).CurrentValues.SetValues(vm);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Medicine Manufacture Updated Successfully. ID: " + _MedicineManufacture.Id;
@@ -156,7 +204,15 @@ namespace HMS.Controllers
                             _MedicineManufacture.ModifiedDate = DateTime.Now;
                             _MedicineManufacture.CreatedBy = HttpContext.User.Identity.Name;
                             _MedicineManufacture.ModifiedBy = HttpContext.User.Identity.Name;
-                            _MedicineManufacture.HospitalId = Convert.ToInt64(_hospitalId);
+                            if (_role == "SuperAdmin")
+                            {
+                                _MedicineManufacture.HospitalId = vm.HospitalId;
+                            }
+                            else
+                            {
+                                _MedicineManufacture.HospitalId = Convert.ToInt64(_hospitalId);
+                            }
+                           
                             _context.Add(_MedicineManufacture);
                             await _context.SaveChangesAsync();
                             TempData["successAlert"] = "Medicine Manufacture Created Successfully. ID: " + _MedicineManufacture.Id;
