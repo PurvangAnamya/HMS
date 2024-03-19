@@ -155,7 +155,7 @@ namespace HMS.Services
                         Name = _Medicines.MedicineName + ", Available Quantity: " + _Medicines.Quantity
                     });
         }
-        public IQueryable<ItemDropdownListViewModel> LoadddlBedNo(BedAllotments _BedAllotments)
+        public IQueryable<ItemDropdownListViewModel> LoadddlBedNo(HMS.Models.BedAllotments _BedAllotments, bool showPrice = false)
         {
             var _GetAvailableBedList = _context.Bed.Where(x => x.Cancelled == false && x.BedCategoryId == _BedAllotments.BedCategoryId).ToList();
 
@@ -175,7 +175,7 @@ namespace HMS.Services
                     select new ItemDropdownListViewModel
                     {
                         Id = _Bed.Id,
-                        Name = _Bed.No + "<>" + _BedCategories.Description,
+                        Name = showPrice ? _Bed.No + "<>" + _BedCategories.Description + " - " + _BedCategories.BedPrice + " INR (Per Day)" : _Bed.No + "<>" + _BedCategories.Description,
                     }).AsQueryable();
         }
         public IQueryable<ItemDropdownListViewModel> LoadddBedCategories()
@@ -187,6 +187,21 @@ namespace HMS.Services
                         Name = _BedCategories.Name
                     });
         }
+        public async Task<List<HMS.Models.BedCategories>> GetBedCategorieslist()
+        {
+            var result = await (from _BedCategories in _context.BedCategories
+                                where _BedCategories.Cancelled == false
+                                orderby _BedCategories.Id
+                                select new HMS.Models.BedCategories
+                                {
+                                    Id = _BedCategories.Id,
+                                    Name = _BedCategories.Name,
+                                    BedPrice = _BedCategories.BedPrice
+                                }).OrderBy(x => x.Name).ToListAsync();
+
+            return result;
+        }
+
         public IQueryable<ItemDropdownListViewModel> LoadddlPatientName()
         {
             return (from _PatientInfo in _context.PatientInfo.Where(x => x.Cancelled == false).OrderBy(x => x.CreatedDate)

@@ -34,6 +34,7 @@ $(document).ready(function () {
                 }
             },
             { "data": "Description", "name": "Description" },
+            { "data": "BedPrice", "name": "BedPrice" },
             { "data": "CreatedBy", "name": "CreatedBy" },
 
             {

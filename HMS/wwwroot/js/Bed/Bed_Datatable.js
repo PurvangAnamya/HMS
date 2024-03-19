@@ -33,6 +33,7 @@ $(document).ready(function () {
                     return "<a href='#' onclick=Details('" + row.Id + "');>" + row.BedCategoryName + "</a>";
                 }
             },
+            { "data": "BedCategoryPrice", "name": "BedCategoryPrice" },
             { "data": "No", "name": "No" },
             { "data": "Description", "name": "Description" },
 
@@ -52,6 +53,9 @@ $(document).ready(function () {
                     return "<a href='#' class='btn btn-info btn-xs' onclick=AddEdit('" + row.Id + "');>Edit</a>";
                 }
             },
+
+
+
             {
                 data: null, render: function (data, type, row) {
                     return "<a href='#' class='btn btn-danger btn-xs' onclick=Delete('" + row.Id + "'); >Delete</a>";

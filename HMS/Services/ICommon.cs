@@ -35,7 +35,9 @@ namespace HMS.Services
         IQueryable<ItemDropdownListViewModel> LoadddlMedicineManufacture();
         IQueryable<ItemDropdownListViewModel> LoadddlMedicines();
         IQueryable<ItemDropdownListViewModel> LoadddBedCategories();
-        IQueryable<ItemDropdownListViewModel> LoadddlBedNo(BedAllotments _BedAllotments);
+        Task<List<BedCategories>> GetBedCategorieslist();
+        IQueryable<ItemDropdownListViewModel> LoadddlBedNo(BedAllotments _BedAllotments, bool showPrice = false);
+
         IQueryable<ItemDropdownListViewModel> LoadddlPatientName();
         IQueryable<ItemDropdownListViewModel> LoadddlDoctorName();
         IQueryable<ItemDropdownListViewModel> LoadddlLabTestCategories();

@@ -64,11 +64,11 @@ namespace HMS.Data
         {
             return new List<BedCategories>
             {
-                new BedCategories { Name = "General", Description = "General Bed"},
-                new BedCategories { Name = "ICU", Description = "ICU Bed"},
-                new BedCategories { Name = "Semi Special", Description = "Semi Special Bed"},
-                new BedCategories { Name = "Special Rooms", Description = "Special Rooms"},
-                new BedCategories { Name = "VIP", Description = "VIP"}
+                new BedCategories { Name = "General", Description = "General Bed",BedPrice= 300},
+                new BedCategories { Name = "ICU", Description = "ICU Bed",BedPrice= 700},
+                new BedCategories { Name = "Semi Special", Description = "Semi Special Bed", BedPrice = 400},
+                new BedCategories { Name = "Special Rooms", Description = "Special Rooms", BedPrice = 1000},
+                new BedCategories { Name = "VIP", Description = "VIP"  , BedPrice = 500},
             };
         }
         public IEnumerable<Bed> GetBedList()
@@ -225,6 +225,20 @@ namespace HMS.Data
                 new ManageUserRoles { Name = "HospitalAdmin", Description = "User Role: HospitalAdmin"},
             };
         }
+
+        //public IEnumerable<SampleChetnaManage> GetSampleChetnaManageList()
+        //{
+        //    return new List<SampleChetnaManage>
+        //    {
+        //        new SampleChetnaManage { Title = "S1", Description = "SampleChetnaManage: New1", DateOfBirth=DateTime.Now},
+        //        new SampleChetnaManage { Title = "S2", Description = "SampleChetnaManage: New2", DateOfBirth=DateTime.Now},
+        //        new SampleChetnaManage { Title = "S3", Description = "SampleChetnaManage: New3", DateOfBirth = DateTime.Now},
+
+        //    };
+
+        //}
+
+
         public IEnumerable<Department> GetDepartmentList()
         {
             return new List<Department>

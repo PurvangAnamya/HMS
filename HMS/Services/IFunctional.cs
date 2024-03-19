@@ -11,6 +11,7 @@ namespace HMS.Services
         Task CreateDefaultSuperAdmin();
         Task CreateDefaultHospital();
 
+        //Task GenerateSmapleChetnaManage();
         Task SendEmailBySendGridAsync(string apiKey,
             string fromEmail,
             string fromFullName,

@@ -1,3 +1,5 @@
+using HMS.Models.BedCategoriesViewModel;
+using HMS.Models.PatientTestDetailViewModel;
 using System;
 using System.ComponentModel.DataAnnotations;
 
@@ -8,14 +10,22 @@ namespace HMS.Models.BedViewModel
         [Display(Name = "SL")]
         [Required]
         public Int64 Id { get; set; }
+
         [Display(Name = "Bed Category")]
         [Required]
         public Int64 BedCategoryId { get; set; }
+
+        [Display(Name = "Bed Category Name")]
+        public string BedCategoryName { get; set; } = string.Empty;
+
+        [Display(Name = "Bed Price")]
+        public double? BedCategoryPrice { get; set; }
+
         [Required]
         public string No { get; set; }
         public string Description { get; set; }
 
-
+        public List<BedCategories> listBedCategories { get; set; }
 
         public static implicit operator BedCRUDViewModel(Bed _Bed)
         {

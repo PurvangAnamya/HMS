@@ -76,6 +76,7 @@ namespace HMS.Controllers
                     _GetGridItem = _GetGridItem.Where(obj => obj.Id.ToString().Contains(searchValue)
                     || obj.BedCategoryId.ToString().Contains(searchValue)
                     || obj.No.ToLower().Contains(searchValue)
+                    || obj.BedCategoryPrice.ToString().Contains(searchValue)
                     || obj.Description.ToLower().Contains(searchValue)
                     || obj.CreatedDate.ToString().ToLower().Contains(searchValue)
                     || obj.ModifiedDate.ToString().ToLower().Contains(searchValue)
@@ -118,6 +119,7 @@ namespace HMS.Controllers
                                 BedCategoryName = _BedCategories.Name,
                                 No = _Bed.No,
                                 Description = _Bed.Description,
+                                BedCategoryPrice = _BedCategories.BedPrice,
                                 CreatedDate = _Bed.CreatedDate,
                                 ModifiedDate = _Bed.ModifiedDate,
                                 CreatedBy = _Bed.CreatedBy,
@@ -137,6 +139,7 @@ namespace HMS.Controllers
                                 BedCategoryName = _BedCategories.Name,
                                 No = _Bed.No,
                                 Description = _Bed.Description,
+                                BedCategoryPrice = _BedCategories.BedPrice,
                                 CreatedDate = _Bed.CreatedDate,
                                 ModifiedDate = _Bed.ModifiedDate,
                                 CreatedBy = _Bed.CreatedBy,
@@ -160,20 +163,66 @@ namespace HMS.Controllers
             return PartialView("_Details", vm);
         }
 
-        public async Task<IActionResult> AddEdit(int id)
+        [HttpGet]
+
+        public async Task<IActionResult> AddEdit(int id, int? categoryId = null)
         {
             ViewBag.ddlBedCategories = new SelectList(_iCommon.LoadddBedCategories(), "Id", "Name");
             ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
             ViewBag.Role = _role;
             BedCRUDViewModel vm = new BedCRUDViewModel();
             var data = await _context.Bed.Where(x => x.Id == id).FirstOrDefaultAsync();
-            if (id > 0) vm = await _context.Bed.Where(x => x.Id == id).SingleOrDefaultAsync();
+            if (id > 0)
+            {
+                vm = await _context.Bed.Where(x => x.Id == id)
+                                       .Select(b => new BedCRUDViewModel
+                                       {
+                                           Id = b.Id,
+                                           BedCategoryId = b.BedCategoryId,
+                                           No = b.No,
+                                           Description = b.Description,
+                                           BedCategoryPrice = _context.BedCategories
+                                                                .Where(bc => bc.Id == b.BedCategoryId)
+                                                                .Select(bc => bc.BedPrice)
+                                                                .FirstOrDefault()
+                                       })
+                                       .SingleOrDefaultAsync();
+            }
             if (data != null)
             {
                 vm.HospitalId = data.HospitalId;
             }
             return PartialView("_AddEdit", vm);
         }
+
+
+
+        [HttpGet]
+        public IActionResult GetBedPrice(int categoryId)
+        {
+            // Retrieve the bed price based on the categoryId
+            double? bedPrice = _context.BedCategories
+                .Where(bc => bc.Id == categoryId)
+                .Select(bc => bc.BedPrice)
+                .FirstOrDefault();
+
+            // Check if the bed price is null
+            if (bedPrice.HasValue)
+            {
+                // Convert the nullable double to string
+                string actualBedPrice = bedPrice.ToString();
+                return Ok(actualBedPrice);
+            }
+            else
+            {
+                // Handle the case where bed price is null
+                // You can return a default value or handle it as per your application logic
+                return NotFound(); // Or you can return BadRequest or any other appropriate status code
+            }
+        }
+
+
+
 
         [HttpPost]
         //[ValidateAntiForgeryToken]

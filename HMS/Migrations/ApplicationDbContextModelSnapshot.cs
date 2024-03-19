@@ -23,2292 +23,2413 @@ namespace HMS.Migrations
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
             modelBuilder.Entity("HMS.Models.ApplicationUser", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<int>("AccessFailedCount")
-                        .HasColumnType("int");
+                b.Property<int>("AccessFailedCount")
+                    .HasColumnType("int");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("Email")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<bool>("EmailConfirmed")
-                        .HasColumnType("bit");
+                b.Property<bool>("EmailConfirmed")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("LockoutEnabled")
-                        .HasColumnType("bit");
+                b.Property<bool>("LockoutEnabled")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTimeOffset?>("LockoutEnd")
-                        .HasColumnType("datetimeoffset");
+                b.Property<DateTimeOffset?>("LockoutEnd")
+                    .HasColumnType("datetimeoffset");
 
-                    b.Property<string>("NormalizedEmail")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("NormalizedEmail")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("NormalizedUserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("NormalizedUserName")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("PasswordHash")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PasswordHash")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("PhoneNumberConfirmed")
-                        .HasColumnType("bit");
+                b.Property<bool>("PhoneNumberConfirmed")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("SecurityStamp")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SecurityStamp")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("TwoFactorEnabled")
-                        .HasColumnType("bit");
+                b.Property<bool>("TwoFactorEnabled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("UserName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("UserName")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("NormalizedEmail")
-                        .HasDatabaseName("EmailIndex");
+                b.HasIndex("NormalizedEmail")
+                    .HasDatabaseName("EmailIndex");
 
-                    b.HasIndex("NormalizedUserName")
-                        .IsUnique()
-                        .HasDatabaseName("UserNameIndex")
-                        .HasFilter("[NormalizedUserName] IS NOT NULL");
+                b.HasIndex("NormalizedUserName")
+                    .IsUnique()
+                    .HasDatabaseName("UserNameIndex")
+                    .HasFilter("[NormalizedUserName] IS NOT NULL");
 
-                    b.ToTable("AspNetUsers", (string)null);
-                });
+                b.ToTable("AspNetUsers", (string)null);
+            });
 
             modelBuilder.Entity("HMS.Models.AuditLogs", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AffectedColumns")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AffectedColumns")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DateTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("DateTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("NewValues")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("NewValues")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OldValues")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("OldValues")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PrimaryKey")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PrimaryKey")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TableName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("TableName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Type")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Type")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("AuditLogs");
-                });
+                b.ToTable("AuditLogs");
+            });
 
             modelBuilder.Entity("HMS.Models.Bed", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<long>("BedCategoryId")
-                        .HasColumnType("bigint");
+                b.Property<long>("BedCategoryId")
+                    .HasColumnType("bigint");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("No")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("No")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Bed");
-                });
+                b.ToTable("Bed");
+            });
 
             modelBuilder.Entity("HMS.Models.BedAllotments", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("AllotmentDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("AllotmentDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("BedCategoryId")
-                        .HasColumnType("bigint");
+                b.Property<long>("BedCategoryId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("BedId")
-                        .HasColumnType("bigint");
+                b.Property<double?>("BedCategoryPrice")
+                  .HasColumnType("float");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<long>("BedId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("DischargeDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsReleased")
-                        .HasColumnType("bit");
+                b.Property<DateTime>("DischargeDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<bool>("IsReleased")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
+                b.Property<string>("Note")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.Property<long>("PatientId")
+                    .HasColumnType("bigint");
 
-                    b.ToTable("BedAllotments");
-                });
+                b.HasKey("Id");
+
+                b.ToTable("BedAllotments");
+            });
 
             modelBuilder.Entity("HMS.Models.BedCategories", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<double?>("BedPrice")
+                   .HasColumnType("float");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("BedCategories");
-                });
+                b.HasKey("Id");
+
+                b.ToTable("BedCategories");
+            });
 
             modelBuilder.Entity("HMS.Models.CheckupMedicineDetails", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsBeforeMeal")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsBeforeMeal")
+                    .HasColumnType("bit");
 
-                    b.Property<long>("MedicineId")
-                        .HasColumnType("bigint");
+                b.Property<long>("MedicineId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("NoofDays")
-                        .HasColumnType("int");
+                b.Property<int>("NoofDays")
+                    .HasColumnType("int");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("WhentoTake")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("WhentoTake")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("CheckupMedicineDetails");
-                });
+                b.ToTable("CheckupMedicineDetails");
+            });
 
             modelBuilder.Entity("HMS.Models.CheckupSummary", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Advice")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Advice")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("BPDiastolic")
-                        .HasColumnType("int");
+                b.Property<int?>("BPDiastolic")
+                    .HasColumnType("int");
 
-                    b.Property<int?>("BPSystolic")
-                        .HasColumnType("int");
+                b.Property<int?>("BPSystolic")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<DateTime>("CheckupDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CheckupDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Comments")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Diagnosis")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Diagnosis")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("DoctorId")
-                        .HasColumnType("bigint");
+                b.Property<long>("DoctorId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("HPI")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("HPI")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("NextVisitDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("NextVisitDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("NursingNotes")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("NursingNotes")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PatientId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PatientType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PatientType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PaymentId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PaymentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PhysicalExamination")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PhysicalExamination")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("RespirationRate")
-                        .HasColumnType("int");
+                b.Property<int?>("RespirationRate")
+                    .HasColumnType("int");
 
-                    b.Property<long>("SerialNo")
-                        .HasColumnType("bigint");
+                b.Property<long>("SerialNo")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("Symptoms")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Symptoms")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Temperature")
-                        .HasColumnType("int");
+                b.Property<int?>("Temperature")
+                    .HasColumnType("int");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("VitalSigns")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VitalSigns")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("CheckupSummary");
-                });
+                b.ToTable("CheckupSummary");
+            });
 
             modelBuilder.Entity("HMS.Models.CommonViewModel.ItemDropdownListViewModel", b =>
-                {
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(max)");
+            {
+                b.Property<string>("ApplicationUserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Code")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                b.Property<long>("Id")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ItemDropdownListViewModel");
-                });
+                b.ToTable("ItemDropdownListViewModel");
+            });
 
             modelBuilder.Entity("HMS.Models.CompanyInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ApplicationTitle")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApplicationTitle")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("City")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("City")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CompanyLogoImagePath")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CompanyLogoImagePath")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Country")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Currency")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Currency")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Fax")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Fax")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Phone")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Website")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Website")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("CompanyInfo");
-                });
+                b.ToTable("CompanyInfo");
+            });
 
             modelBuilder.Entity("HMS.Models.Currency", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Code")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Country")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDefault")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Symbol")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Symbol")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Currency");
-                });
+                b.ToTable("Currency");
+            });
 
             modelBuilder.Entity("HMS.Models.DefaultIdentityOptions", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<string>("AccessDeniedPath")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("AccessDeniedPath")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<double>("CookieExpiration")
-                        .HasColumnType("float");
+                b.Property<double>("CookieExpiration")
+                    .HasColumnType("float");
 
-                    b.Property<double>("CookieExpireTimeSpan")
-                        .HasColumnType("float");
+                b.Property<double>("CookieExpireTimeSpan")
+                    .HasColumnType("float");
 
-                    b.Property<bool>("CookieHttpOnly")
-                        .HasColumnType("bit");
+                b.Property<bool>("CookieHttpOnly")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("LockoutAllowedForNewUsers")
-                        .HasColumnType("bit");
+                b.Property<bool>("LockoutAllowedForNewUsers")
+                    .HasColumnType("bit");
 
-                    b.Property<double>("LockoutDefaultLockoutTimeSpanInMinutes")
-                        .HasColumnType("float");
+                b.Property<double>("LockoutDefaultLockoutTimeSpanInMinutes")
+                    .HasColumnType("float");
 
-                    b.Property<int>("LockoutMaxFailedAccessAttempts")
-                        .HasColumnType("int");
+                b.Property<int>("LockoutMaxFailedAccessAttempts")
+                    .HasColumnType("int");
 
-                    b.Property<string>("LoginPath")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LoginPath")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LogoutPath")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LogoutPath")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("PasswordRequireDigit")
-                        .HasColumnType("bit");
+                b.Property<bool>("PasswordRequireDigit")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("PasswordRequireLowercase")
-                        .HasColumnType("bit");
+                b.Property<bool>("PasswordRequireLowercase")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("PasswordRequireNonAlphanumeric")
-                        .HasColumnType("bit");
+                b.Property<bool>("PasswordRequireNonAlphanumeric")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("PasswordRequireUppercase")
-                        .HasColumnType("bit");
+                b.Property<bool>("PasswordRequireUppercase")
+                    .HasColumnType("bit");
 
-                    b.Property<int>("PasswordRequiredLength")
-                        .HasColumnType("int");
+                b.Property<int>("PasswordRequiredLength")
+                    .HasColumnType("int");
 
-                    b.Property<int>("PasswordRequiredUniqueChars")
-                        .HasColumnType("int");
+                b.Property<int>("PasswordRequiredUniqueChars")
+                    .HasColumnType("int");
 
-                    b.Property<bool>("SignInRequireConfirmedEmail")
-                        .HasColumnType("bit");
+                b.Property<bool>("SignInRequireConfirmedEmail")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("SlidingExpiration")
-                        .HasColumnType("bit");
+                b.Property<bool>("SlidingExpiration")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("UserRequireUniqueEmail")
-                        .HasColumnType("bit");
+                b.Property<bool>("UserRequireUniqueEmail")
+                    .HasColumnType("bit");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("DefaultIdentityOptions");
-                });
+                b.ToTable("DefaultIdentityOptions");
+            });
 
             modelBuilder.Entity("HMS.Models.Department", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Department");
-                });
+                b.ToTable("Department");
+            });
 
             modelBuilder.Entity("HMS.Models.Designation", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Designation");
-                });
+                b.ToTable("Designation");
+            });
 
             modelBuilder.Entity("HMS.Models.DoctorsInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApplicationUserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("DesignationId")
-                        .HasColumnType("bigint");
+                b.Property<long>("DesignationId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double?>("DoctorFee")
-                        .HasColumnType("float");
+                b.Property<double?>("DoctorFee")
+                    .HasColumnType("float");
 
-                    b.Property<string>("DoctorsID")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("DoctorsID")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("RoleId")
+                    .HasColumnType("bigint");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("DoctorsInfo");
-                });
+                b.ToTable("DoctorsInfo");
+            });
 
             modelBuilder.Entity("HMS.Models.ExpenseCategories", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("ExpenseCategories");
-                });
+                b.ToTable("ExpenseCategories");
+            });
 
             modelBuilder.Entity("HMS.Models.Expenses", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<double>("Amount")
-                        .HasColumnType("float");
+                b.Property<double>("Amount")
+                    .HasColumnType("float");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("ExpenseCategoriesId")
-                        .HasColumnType("int");
+                b.Property<int>("ExpenseCategoriesId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Expenses");
-                });
+                b.ToTable("Expenses");
+            });
 
             modelBuilder.Entity("HMS.Models.InsuranceCompanyInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CoverageDetails")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CoverageDetails")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Phone")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("InsuranceCompanyInfo");
-                });
+                b.ToTable("InsuranceCompanyInfo");
+            });
 
             modelBuilder.Entity("HMS.Models.LabTestCategories", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("LabTestCategories");
-                });
+                b.ToTable("LabTestCategories");
+            });
 
             modelBuilder.Entity("HMS.Models.LabTestConfiguration", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("LabTestsId")
-                        .HasColumnType("bigint");
+                b.Property<long>("LabTestsId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("NameOfTest")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("NameOfTest")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("NormalValue")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("NormalValue")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReportGroup")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ReportGroup")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Result")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Result")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("Sorting")
-                        .HasColumnType("int");
+                b.Property<int?>("Sorting")
+                    .HasColumnType("int");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("LabTestConfiguration");
-                });
+                b.ToTable("LabTestConfiguration");
+            });
 
             modelBuilder.Entity("HMS.Models.LabTests", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("LabTestCategoryId")
-                        .HasColumnType("bigint");
+                b.Property<long>("LabTestCategoryId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("LabTestName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LabTestName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentItemCode")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentItemCode")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ReferenceRange")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ReferenceRange")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
+                b.Property<bool>("Status")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Unit")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Unit")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
+                b.Property<double>("UnitPrice")
+                    .HasColumnType("float");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("LabTests");
-                });
+                b.ToTable("LabTests");
+            });
 
             modelBuilder.Entity("HMS.Models.LoginHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Action")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ActionStatus")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ActionStatus")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Browser")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Browser")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Device")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Device")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("Duration")
-                        .HasColumnType("float");
+                b.Property<double>("Duration")
+                    .HasColumnType("float");
 
-                    b.Property<string>("Latitude")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Latitude")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LoginTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("LoginTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("LogoutTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("LogoutTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Longitude")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Longitude")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("OperatingSystem")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("OperatingSystem")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PublicIP")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PublicIP")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UserName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("LoginHistory");
-                });
+                b.ToTable("LoginHistory");
+            });
 
             modelBuilder.Entity("HMS.Models.ManageUserRoles", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.Property<string>("ShortDescription")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("ManageUserRoles");
-                });
+                b.HasKey("Id");
+
+                b.ToTable("ManageUserRoles");
+            });
 
             modelBuilder.Entity("HMS.Models.ManageUserRolesDetails", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("IsAllowed")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsAllowed")
+                    .HasColumnType("bit");
 
-                    b.Property<long>("ManageRoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ManageRoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("RoleId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("RoleName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("ManageUserRolesDetails");
-                });
+                b.ToTable("ManageUserRolesDetails");
+            });
 
             modelBuilder.Entity("HMS.Models.MedicineCategories", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("MedicineCategories");
-                });
+                b.ToTable("MedicineCategories");
+            });
 
             modelBuilder.Entity("HMS.Models.MedicineHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Action")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Action")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Code")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("ManufactureId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ManufactureId")
+                    .HasColumnType("bigint");
 
-                    b.Property<long>("MedicineId")
-                        .HasColumnType("bigint");
+                b.Property<long>("MedicineId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("MedicineName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MedicineName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<double?>("NewQuantity")
-                        .HasColumnType("float");
+                b.Property<double?>("NewQuantity")
+                    .HasColumnType("float");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Note")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("OldQuantity")
-                        .HasColumnType("float");
+                b.Property<double?>("OldQuantity")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("OldSellPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("OldSellPrice")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("OldUnitPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("OldUnitPrice")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("SellPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("SellPrice")
+                    .HasColumnType("float");
 
-                    b.Property<int>("TranQuantity")
-                        .HasColumnType("int");
+                b.Property<int>("TranQuantity")
+                    .HasColumnType("int");
 
-                    b.Property<long>("UnitId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UnitId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double?>("UnitPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("UnitPrice")
+                    .HasColumnType("float");
 
-                    b.Property<string>("UpdateQntNote")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UpdateQntNote")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdateQntType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UpdateQntType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("MedicineHistory");
-                });
+                b.ToTable("MedicineHistory");
+            });
 
             modelBuilder.Entity("HMS.Models.MedicineManufacture", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("MedicineManufacture");
-                });
+                b.ToTable("MedicineManufacture");
+            });
 
             modelBuilder.Entity("HMS.Models.Medicines", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Code")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Code")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ExpiryDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ExpiryDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("ManufactureId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ManufactureId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("MedicineCategoryId")
-                        .HasColumnType("int");
+                b.Property<int>("MedicineCategoryId")
+                    .HasColumnType("int");
 
-                    b.Property<string>("MedicineName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MedicineName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<double?>("OldSellPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("OldSellPrice")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("OldUnitPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("OldUnitPrice")
+                    .HasColumnType("float");
 
-                    b.Property<string>("PaymentItemCode")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentItemCode")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("Quantity")
-                        .HasColumnType("float");
+                b.Property<double?>("Quantity")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("SellPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("SellPrice")
+                    .HasColumnType("float");
 
-                    b.Property<string>("StockKeepingUnit")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("StockKeepingUnit")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("UnitId")
-                        .HasColumnType("bigint");
+                b.Property<long>("UnitId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double?>("UnitPrice")
-                        .HasColumnType("float");
+                b.Property<double?>("UnitPrice")
+                    .HasColumnType("float");
 
-                    b.Property<string>("UpdateQntNote")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UpdateQntNote")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UpdateQntType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UpdateQntType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Medicines");
-                });
+                b.ToTable("Medicines");
+            });
 
             modelBuilder.Entity("HMS.Models.PatientAppointment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("AppointmentDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("AppointmentTime")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("AppointmentTime")
+                    .HasColumnType("datetime2");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("DoctorId")
-                        .HasColumnType("bigint");
+                b.Property<long>("DoctorId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Note")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Note")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PatientId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PatientType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PatientType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("SerialNo")
-                        .HasColumnType("bigint");
+                b.Property<long>("SerialNo")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PatientAppointment");
-                });
+                b.ToTable("PatientAppointment");
+            });
 
             modelBuilder.Entity("HMS.Models.PatientInfo", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool?>("Agreement")
-                        .HasColumnType("bit");
+                b.Property<bool?>("Agreement")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApplicationUserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BloodGroup")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("BloodGroup")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Country")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime?>("DateOfBirth")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FatherName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FatherName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FirstName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Gender")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Gender")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LastName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("MaritalStatus")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MaritalStatus")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("MotherName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("MotherName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientCode")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PatientCode")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Phone")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfilePicture")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ProfilePicture")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double?>("RegistrationFee")
-                        .HasColumnType("float");
+                b.Property<double?>("RegistrationFee")
+                    .HasColumnType("float");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Remarks")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SpouseName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SpouseName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PatientInfo");
-                });
+                b.ToTable("PatientInfo");
+            });
 
             modelBuilder.Entity("HMS.Models.PatientTest", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApplicationUserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DeliveryDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("DeliveryDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PatientId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PaymentStatus")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentStatus")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("TestDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("TestDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PatientTest");
-                });
+                b.ToTable("PatientTest");
+            });
 
             modelBuilder.Entity("HMS.Models.PatientTestDetail", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("LabTestsId")
-                        .HasColumnType("bigint");
+                b.Property<long>("LabTestsId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("PatientTestId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PatientTestId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Remarks")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Remarks")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Result")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Result")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
+                b.Property<double>("UnitPrice")
+                    .HasColumnType("float");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PatientTestDetail");
-                });
+                b.ToTable("PatientTestDetail");
+            });
 
             modelBuilder.Entity("HMS.Models.PatientVisitPaymentHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("PaymentId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PaymentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PatientVisitPaymentHistory");
-                });
+                b.ToTable("PatientVisitPaymentHistory");
+            });
 
             modelBuilder.Entity("HMS.Models.PaymentCategories", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentItemCode")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentItemCode")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("UnitPrice")
-                        .HasColumnType("float");
+                b.Property<double>("UnitPrice")
+                    .HasColumnType("float");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PaymentCategories");
-                });
+                b.ToTable("PaymentCategories");
+            });
 
             modelBuilder.Entity("HMS.Models.PaymentModeHistory", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<double?>("Amount")
-                        .HasColumnType("float");
+                b.Property<double?>("Amount")
+                    .HasColumnType("float");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ModeOfPayment")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModeOfPayment")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("PaymentId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PaymentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ReferenceNo")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ReferenceNo")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PaymentModeHistory");
-                });
+                b.ToTable("PaymentModeHistory");
+            });
 
             modelBuilder.Entity("HMS.Models.Payments", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<double>("ChangedAmount")
-                        .HasColumnType("float");
+                b.Property<double>("ChangedAmount")
+                    .HasColumnType("float");
 
-                    b.Property<double>("CommonCharge")
-                        .HasColumnType("float");
+                b.Property<double>("CommonCharge")
+                    .HasColumnType("float");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("CurrencyId")
-                        .HasColumnType("bigint");
+                b.Property<long>("CurrencyId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
+                b.Property<double>("Discount")
+                    .HasColumnType("float");
 
-                    b.Property<double>("DiscountAmount")
-                        .HasColumnType("float");
+                b.Property<double>("DiscountAmount")
+                    .HasColumnType("float");
 
-                    b.Property<double>("DueAmount")
-                        .HasColumnType("float");
+                b.Property<double>("DueAmount")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("GrandTotal")
-                        .HasColumnType("float");
+                b.Property<double?>("GrandTotal")
+                    .HasColumnType("float");
 
-                    b.Property<long?>("InsuranceCompanyId")
-                        .HasColumnType("bigint");
+                b.Property<long?>("InsuranceCompanyId")
+                    .HasColumnType("bigint");
 
-                    b.Property<double>("InsuranceCoverage")
-                        .HasColumnType("float");
+                b.Property<double>("InsuranceCoverage")
+                    .HasColumnType("float");
 
-                    b.Property<string>("InsuranceNo")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("InsuranceNo")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("InvoiceNo")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("InvoiceNo")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("MedicineSellState")
-                        .HasColumnType("int");
+                b.Property<int>("MedicineSellState")
+                    .HasColumnType("int");
 
-                    b.Property<string>("ModeOfPayment")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModeOfPayment")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<double>("PaidAmount")
-                        .HasColumnType("float");
+                b.Property<double>("PaidAmount")
+                    .HasColumnType("float");
 
-                    b.Property<long>("PatientId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PatientId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PaymentRefNo")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentRefNo")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PaymentStatus")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentStatus")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("SubTotal")
-                        .HasColumnType("float");
+                b.Property<double>("SubTotal")
+                    .HasColumnType("float");
 
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
+                b.Property<double>("Tax")
+                    .HasColumnType("float");
 
-                    b.Property<double>("TaxAmount")
-                        .HasColumnType("float");
+                b.Property<double>("TaxAmount")
+                    .HasColumnType("float");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Payments");
-                });
+                b.ToTable("Payments");
+            });
 
             modelBuilder.Entity("HMS.Models.PaymentsDetails", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("ItemDetailId")
-                        .HasColumnType("bigint");
+                b.Property<long>("ItemDetailId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("PaymentItemCode")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PaymentItemCode")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("PaymentsId")
-                        .HasColumnType("bigint");
+                b.Property<long>("PaymentsId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
+                b.Property<int>("Quantity")
+                    .HasColumnType("int");
 
-                    b.Property<double?>("TotalAmount")
-                        .HasColumnType("float");
+                b.Property<double?>("TotalAmount")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("UnitPrize")
-                        .HasColumnType("float");
+                b.Property<double?>("UnitPrize")
+                    .HasColumnType("float");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("PaymentsDetails");
-                });
+                b.ToTable("PaymentsDetails");
+            });
 
             modelBuilder.Entity("HMS.Models.PaymentsViewModel.PaymentsGridViewModel", b =>
-                {
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+            {
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<double>("Discount")
-                        .HasColumnType("float");
+                b.Property<double>("Discount")
+                    .HasColumnType("float");
 
-                    b.Property<double?>("GrandTotal")
-                        .HasColumnType("float");
+                b.Property<double?>("GrandTotal")
+                    .HasColumnType("float");
 
-                    b.Property<long>("Id")
-                        .HasColumnType("bigint");
+                b.Property<long>("Id")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("PatientName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PatientName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("PatientType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PatientType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<double>("SubTotal")
-                        .HasColumnType("float");
+                b.Property<double>("SubTotal")
+                    .HasColumnType("float");
 
-                    b.Property<double>("Tax")
-                        .HasColumnType("float");
+                b.Property<double>("Tax")
+                    .HasColumnType("float");
 
-                    b.Property<string>("VisitId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("VisitId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.ToTable("PaymentsGridViewModel");
-                });
+                b.ToTable("PaymentsGridViewModel");
+            });
+
+            modelBuilder.Entity("HMS.Models.SampleChetnaManage", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
+
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<DateTime?>("DateOfBirth")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("ProfilePicture")
+             .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("Title")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("SampleChetnaManage");
+            });
+            modelBuilder.Entity("HMS.Models.UserImages", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
+
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("ImagePath")
+             .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("UserImages");
+            });
+            modelBuilder.Entity("HMS.Models.SampleChetnaManageDetails", b =>
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
+
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<bool>("IsAllowed")
+                    .HasColumnType("bit");
+
+                b.Property<long>("ManageRoleId")
+                    .HasColumnType("bigint");
+
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
+
+                b.Property<string>("RoleId")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("RoleName")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("Id");
+
+                b.ToTable("SampleChetnaManageDetails");
+            });
 
             modelBuilder.Entity("HMS.Models.SendGridSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("FromEmail")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FromEmail")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FromFullName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FromFullName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDefault")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("SendGridKey")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SendGridKey")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("SendGridUser")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("SendGridUser")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("SendGridSetting");
-                });
+                b.ToTable("SendGridSetting");
+            });
 
             modelBuilder.Entity("HMS.Models.SMTPEmailSetting", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("FromEmail")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FromEmail")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FromFullName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FromFullName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Host")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Host")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsDefault")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsDefault")
+                    .HasColumnType("bit");
 
-                    b.Property<bool>("IsSSL")
-                        .HasColumnType("bit");
+                b.Property<bool>("IsSSL")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Password")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("Port")
-                        .HasColumnType("int");
+                b.Property<int>("Port")
+                    .HasColumnType("int");
 
-                    b.Property<string>("UserName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UserName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("SMTPEmailSetting");
-                });
+                b.ToTable("SMTPEmailSetting");
+            });
 
             modelBuilder.Entity("HMS.Models.SubDepartment", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<long>("DepartmentId")
-                        .HasColumnType("bigint");
+                b.Property<long>("DepartmentId")
+                    .HasColumnType("bigint");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("SubDepartment");
-                });
+                b.ToTable("SubDepartment");
+            });
 
             modelBuilder.Entity("HMS.Models.Unit", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Description")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Description")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("Unit");
-                });
+                b.ToTable("Unit");
+            });
 
             modelBuilder.Entity("HMS.Models.UserInfoFromBrowser", b =>
-                {
-                    b.Property<long>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("Id"), 1L, 1);
 
-                    b.Property<string>("BrowserMajor")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("BrowserMajor")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BrowserName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("BrowserName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BrowserUniqueID")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("BrowserUniqueID")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("BrowserVersion")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("BrowserVersion")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CPUArchitecture")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CPUArchitecture")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("DeviceModel")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("DeviceModel")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeviceType")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("DeviceType")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("DeviceVendor")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("DeviceVendor")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EngineName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("EngineName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EngineVersion")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("EngineVersion")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Lat")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Lat")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Long")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Long")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("OSName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("OSName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("OSVersion")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("OSVersion")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("TimeZone")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("TimeZone")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UA")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("UA")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.ToTable("UserInfoFromBrowser");
-                });
+                b.ToTable("UserInfoFromBrowser");
+            });
 
             modelBuilder.Entity("HMS.Models.UserProfile", b =>
-                {
-                    b.Property<long>("UserProfileId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("bigint");
+            {
+                b.Property<long>("UserProfileId")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("bigint");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserProfileId"), 1L, 1);
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<long>("UserProfileId"), 1L, 1);
 
-                    b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Address")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ApplicationUserId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("Cancelled")
-                        .HasColumnType("bit");
+                b.Property<bool>("Cancelled")
+                    .HasColumnType("bit");
 
-                    b.Property<string>("Country")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Country")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("CreatedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("CreatedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("CreatedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("CreatedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("DateOfBirth")
+                    .HasColumnType("datetime2");
 
-                    b.Property<int>("Department")
-                        .HasColumnType("int");
+                b.Property<int>("Department")
+                    .HasColumnType("int");
 
-                    b.Property<int>("Designation")
-                        .HasColumnType("int");
+                b.Property<int>("Designation")
+                    .HasColumnType("int");
 
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("Email")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("EmployeeId")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("EmployeeId")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("FirstName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("FirstName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("JoiningDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("JoiningDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("LastName")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("LeavingDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("LeavingDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("ModifiedBy")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ModifiedBy")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ModifiedDate")
-                        .HasColumnType("datetime2");
+                b.Property<DateTime>("ModifiedDate")
+                    .HasColumnType("datetime2");
 
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("PhoneNumber")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("ProfilePicture")
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ProfilePicture")
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<long>("RoleId")
-                        .HasColumnType("bigint");
+                b.Property<long>("RoleId")
+                    .HasColumnType("bigint");
 
-                    b.Property<int>("SubDepartment")
-                        .HasColumnType("int");
+                b.Property<int>("SubDepartment")
+                    .HasColumnType("int");
 
-                    b.Property<int>("UserType")
-                        .HasColumnType("int");
+                b.Property<int>("UserType")
+                    .HasColumnType("int");
 
-                    b.HasKey("UserProfileId");
+                b.HasKey("UserProfileId");
 
-                    b.ToTable("UserProfile");
-                });
+                b.ToTable("UserProfile");
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
+            {
+                b.Property<string>("Id")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("ConcurrencyStamp")
-                        .IsConcurrencyToken()
-                        .HasColumnType("nvarchar(max)");
+                b.Property<string>("ConcurrencyStamp")
+                    .IsConcurrencyToken()
+                    .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("Name")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("Name")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.Property<string>("NormalizedName")
-                        .HasMaxLength(256)
-                        .HasColumnType("nvarchar(256)");
+                b.Property<string>("NormalizedName")
+                    .HasMaxLength(256)
+                    .HasColumnType("nvarchar(256)");
 
-                    b.HasKey("Id");
+                b.HasKey("Id");
 
-                    b.HasIndex("NormalizedName")
-                        .IsUnique()
-                        .HasDatabaseName("RoleNameIndex")
-                        .HasFilter("[NormalizedName] IS NOT NULL");
+                b.HasIndex("NormalizedName")
+                    .IsUnique()
+                    .HasDatabaseName("RoleNameIndex")
+                    .HasFilter("[NormalizedName] IS NOT NULL");
 
-                    b.ToTable("AspNetRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("RoleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetRoleClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("ClaimType")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ClaimValue")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserClaims", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderKey")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("ProviderDisplayName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("LoginProvider", "ProviderKey");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AspNetUserLogins", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("RoleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("UserId", "RoleId");
-
-                    b.HasIndex("RoleId");
-
-                    b.ToTable("AspNetUserRoles", (string)null);
-                });
-
-            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("LoginProvider")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("Value")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("UserId", "LoginProvider", "Name");
-
-                    b.ToTable("AspNetUserTokens", (string)null);
-                });
+                b.ToTable("AspNetRoles", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("RoleId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("Id");
+
+                b.HasIndex("RoleId");
+
+                b.ToTable("AspNetRoleClaims", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
-                {
-                    b.HasOne("HMS.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.Property<int>("Id")
+                    .ValueGeneratedOnAdd()
+                    .HasColumnType("int");
+
+                SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                b.Property<string>("ClaimType")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("ClaimValue")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("Id");
+
+                b.HasIndex("UserId");
+
+                b.ToTable("AspNetUserClaims", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
-                {
-                    b.HasOne("HMS.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<string>("ProviderKey")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<string>("ProviderDisplayName")
+                    .HasColumnType("nvarchar(max)");
+
+                b.Property<string>("UserId")
+                    .IsRequired()
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("LoginProvider", "ProviderKey");
+
+                b.HasIndex("UserId");
+
+                b.ToTable("AspNetUserLogins", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
-                {
-                    b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
-                        .WithMany()
-                        .HasForeignKey("RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+            {
+                b.Property<string>("UserId")
+                    .HasColumnType("nvarchar(450)");
 
-                    b.HasOne("HMS.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+                b.Property<string>("RoleId")
+                    .HasColumnType("nvarchar(450)");
+
+                b.HasKey("UserId", "RoleId");
+
+                b.HasIndex("RoleId");
+
+                b.ToTable("AspNetUserRoles", (string)null);
+            });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
-                {
-                    b.HasOne("HMS.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
+            {
+                b.Property<string>("UserId")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<string>("LoginProvider")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<string>("Name")
+                    .HasColumnType("nvarchar(450)");
+
+                b.Property<string>("Value")
+                    .HasColumnType("nvarchar(max)");
+
+                b.HasKey("UserId", "LoginProvider", "Name");
+
+                b.ToTable("AspNetUserTokens", (string)null);
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
+            {
+                b.HasOne("HMS.Models.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
+            {
+                b.HasOne("HMS.Models.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<string>", b =>
+            {
+                b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
+                    .WithMany()
+                    .HasForeignKey("RoleId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+
+                b.HasOne("HMS.Models.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserToken<string>", b =>
+            {
+                b.HasOne("HMS.Models.ApplicationUser", null)
+                    .WithMany()
+                    .HasForeignKey("UserId")
+                    .OnDelete(DeleteBehavior.Cascade)
+                    .IsRequired();
+            });
 #pragma warning restore 612, 618
         }
     }
