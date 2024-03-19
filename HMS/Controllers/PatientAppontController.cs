@@ -21,12 +21,14 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private readonly ILogger<PatientAppointmentController> _logger;
 
-        public PatientAppointmentController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public PatientAppointmentController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<PatientAppointmentController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.PatientAppointment.RoleName)]
@@ -97,11 +99,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Patient Appointment.");
                 throw;
             }
 
@@ -233,6 +237,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError( "Error in Add Or Update Patient Appointment.");
                         throw;
                     }
                 }
@@ -276,8 +281,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_PatientAppointment);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Patient Appointment.");
                 throw;
             }
         }

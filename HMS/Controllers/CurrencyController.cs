@@ -16,11 +16,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<CurrencyController> _logger;
 
-        public CurrencyController(ApplicationDbContext context, ICommon iCommon)
+        public CurrencyController(ApplicationDbContext context, ICommon iCommon, ILogger<CurrencyController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.Currency.RoleName)]
@@ -71,11 +73,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Currency succesfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Currency.");
                 throw;
             }
 
@@ -101,6 +105,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError("Error in Add Currency.");
                 throw;
             }
         }
@@ -162,6 +167,7 @@ namespace HMS.Controllers
                 }
                 catch (Exception ex)
                 {
+                    _logger.LogError(ex, "Error in Add Or Update Currency.");
                     return new JsonResult(ex.Message);
                     throw;
                 }
@@ -201,8 +207,9 @@ namespace HMS.Controllers
                 TempData["successAlert"] = "Default Currency Setup Successfully. Currency ID: " + vm.Id;
                 return RedirectToAction("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in SetDefaultCurrency.");
                 throw;
             }
         }
@@ -221,8 +228,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_Currency);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Currency.");
                 throw;
             }
         }

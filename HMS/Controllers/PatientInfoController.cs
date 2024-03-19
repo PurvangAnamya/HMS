@@ -22,13 +22,15 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private readonly IAccount _iAccount;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<PatientInfoController> _logger;
 
-        public PatientInfoController(ApplicationDbContext context, ICommon iCommon, IAccount iAccount, UserManager<ApplicationUser> userManager)
+        public PatientInfoController(ApplicationDbContext context, ICommon iCommon, IAccount iAccount, UserManager<ApplicationUser> userManager, ILogger<PatientInfoController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iAccount = iAccount;
             _userManager = userManager;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.PatientInfo.RoleName)]
@@ -78,11 +80,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
-            {
+            catch (Exception ex)
+            { 
+                _logger.LogError(ex, "Error in getting Patient Info.");
                 throw;
             }
 
@@ -164,6 +168,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update Patient Info.");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -196,8 +201,9 @@ namespace HMS.Controllers
 
                 return new JsonResult(_PatientInfo);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Patient Info.");
                 throw;
             }
         }

@@ -22,12 +22,14 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private readonly ILogger<PaymentsController> _logger;
 
-        public PaymentsController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public PaymentsController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<PaymentsController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
         [Authorize(Roles = Pages.MainMenu.Payments.RoleName)]
         public IActionResult PaymentsList()
@@ -91,11 +93,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Payment.");
                 throw;
             }
 
@@ -112,8 +116,9 @@ namespace HMS.Controllers
                 where A.Cancelled=0");
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Payment Grid.");
                 throw;
             }
         }
@@ -239,6 +244,7 @@ namespace HMS.Controllers
             catch (DbUpdateConcurrencyException)
             {
                 TempData["errorAlert"] = "Operation failed.";
+                _logger.LogError("Error in Add Or Update Payment.");
                 if (!IsExists(vm.PaymentsCRUDViewModel.Id))
                     return NotFound();
                 else
@@ -249,17 +255,35 @@ namespace HMS.Controllers
         [HttpPost]
         public async Task<IActionResult> SavePaymentsDetails(ManagePaymentsViewModel vm)
         {
-            var _SavePaymentsDetails = await CreatePaymentsDetails(vm.PaymentsDetailsCRUDViewModel);
-            await UpdatePayments(vm.PaymentsCRUDViewModel);
-            return new JsonResult(_SavePaymentsDetails);
+            try
+            {
+                var _SavePaymentsDetails = await CreatePaymentsDetails(vm.PaymentsDetailsCRUDViewModel);
+                await UpdatePayments(vm.PaymentsCRUDViewModel);
+                return new JsonResult(_SavePaymentsDetails);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex, "Error in Save Payment Details.");
+                throw;
+            }
+          
         }
 
 
         [HttpPost]
         public async Task<IActionResult> UpdatePaymentsDetailsDB(PaymentsDetailsCRUDViewModel vm)
         {
-            var _PaymentsDetails = await UpdatePaymentsDetails(vm);
-            return new JsonResult(_PaymentsDetails);
+            try
+            {
+                var _PaymentsDetails = await UpdatePaymentsDetails(vm);
+                return new JsonResult(_PaymentsDetails);
+            }
+            catch(Exception ex)
+            {
+                _logger.LogError(ex,"Error in Update Payment Details.");
+                throw;
+            }
+          
         }
         [HttpPost]
         public async Task<IActionResult> DeletePaymentsDetails(ManagePaymentsViewModel vm)
@@ -287,8 +311,9 @@ namespace HMS.Controllers
                 }
                 return new JsonResult(_PaymentsDetails);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Payment Details.");
                 throw;
             }
         }

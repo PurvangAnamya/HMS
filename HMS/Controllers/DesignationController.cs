@@ -16,11 +16,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<DesignationController> _logger;
 
-        public DesignationController(ApplicationDbContext context, ICommon iCommon)
+        public DesignationController(ApplicationDbContext context, ICommon iCommon, ILogger<DesignationController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = MainMenu.Designation.RoleName)]
@@ -65,13 +67,16 @@ namespace HMS.Controllers
                 }
 
                 resultTotal = _GetGridItem.Count();
+                _logger.LogInformation("Error in getting Successfully.");
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in getting Designation.");
                 throw;
             }
 
@@ -95,8 +100,9 @@ namespace HMS.Controllers
 
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Designation.");
                 throw;
             }
         }
@@ -151,6 +157,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update Designation.");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -170,8 +177,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_Designation);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Designation.");
                 throw;
             }
         }

@@ -19,11 +19,13 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
+        private readonly ILogger<MedicineLabelController> _logger;
 
-        public MedicineLabelController(ApplicationDbContext context, ICommon iCommon)
+        public MedicineLabelController(ApplicationDbContext context, ICommon iCommon, ILogger<MedicineLabelController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.MedicineLabel.RoleName)]
@@ -71,11 +73,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Vital Signs.");
                 throw;
             }
 
@@ -135,8 +139,9 @@ namespace HMS.Controllers
                 TempData["errorAlert"] = "Operation failed.";
                 return View("Index");
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update Vital Signs.");
                 throw;
             }
         }

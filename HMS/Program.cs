@@ -10,6 +10,7 @@ using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Serialization;
 using Microsoft.AspNetCore.Server.IISIntegration;
 using Rotativa.AspNetCore;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -59,6 +60,25 @@ else
     AddIdentityOptions.SetOptions(builder.Services, _DefaultIdentityOptions);
 }
 
+
+var logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .Enrich.FromLogContext()
+    .CreateLogger();
+builder.Logging.ClearProviders();
+builder.Logging.AddSerilog(logger);
+
+builder.Host.UseSerilog((HostBuilderContext context, IServiceProvider services, LoggerConfiguration loggerConfiguration) =>
+{
+    loggerConfiguration
+    .ReadFrom.Configuration(context.Configuration) //read configuration settings from built-in IConfiguration
+    .ReadFrom.Services(services); //read out current app's services and make them available to serilog
+});
+
+builder.Services.AddHttpLogging(options =>
+{
+    options.LoggingFields = Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.RequestProperties | Microsoft.AspNetCore.HttpLogging.HttpLoggingFields.ResponsePropertiesAndHeaders;
+});
 
 
 // Get Super Admin Default options
@@ -115,6 +135,8 @@ else
     app.UseExceptionHandler("/Home/Error");
     app.UseHsts();
 }
+app.UseHttpLogging();
+
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseSession();

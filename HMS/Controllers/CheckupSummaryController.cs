@@ -26,12 +26,14 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly IDBOperation _iDBOperation;
+        private readonly ILogger<CheckupSummaryController> _logger;
 
-        public CheckupSummaryController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation)
+        public CheckupSummaryController(ApplicationDbContext context, ICommon iCommon, IDBOperation iDBOperation, ILogger<CheckupSummaryController> logger)
         {
             _context = context;
             _iCommon = iCommon;
             _iDBOperation = iDBOperation;
+            _logger = logger;
         }
         [Authorize(Roles = Pages.MainMenu.Checkup.RoleName)]
         public IActionResult Index()
@@ -103,11 +105,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Checkup Successfully .");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Checkup .");
                 throw;
             }
 
@@ -269,6 +273,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException ex)
             {
+                _logger.LogError(ex, "Error in Add Or Update Checkup .");
                 return new JsonResult(ex.Message);
                 throw;
             }
@@ -336,32 +341,51 @@ namespace HMS.Controllers
 
                 return new JsonResult(_CheckupMedicineDetails);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete CheckupMedicineDetails.");
                 throw;
             }
         }
         private async Task<CheckupSummaryCRUDViewModel> UpdateCheckupSummary(CheckupSummaryCRUDViewModel vm)
         {
-            var _CheckupSummary = await _context.CheckupSummary.FindAsync(vm.Id);
-            vm.CreatedDate = _CheckupSummary.CreatedDate;
-            vm.CreatedBy = _CheckupSummary.CreatedBy;
-            vm.ModifiedDate = DateTime.Now;
-            vm.ModifiedBy = HttpContext.User.Identity.Name;
-            _context.Entry(_CheckupSummary).CurrentValues.SetValues(vm);
-            await _context.SaveChangesAsync();
-            return vm;
+            try
+            {
+
+                var _CheckupSummary = await _context.CheckupSummary.FindAsync(vm.Id);
+                vm.CreatedDate = _CheckupSummary.CreatedDate;
+                vm.CreatedBy = _CheckupSummary.CreatedBy;
+                vm.ModifiedDate = DateTime.Now;
+                vm.ModifiedBy = HttpContext.User.Identity.Name;
+                _context.Entry(_CheckupSummary).CurrentValues.SetValues(vm);
+                await _context.SaveChangesAsync();
+                return vm;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Update UpdateCheckupSummary.");
+                throw;
+            }
         }
 
         private async Task<CheckupMedicineDetails> CreateCheckupMedicineDetails(CheckupMedicineDetails _CheckupMedicineDetails)
         {
-            _CheckupMedicineDetails.CreatedDate = DateTime.Now;
-            _CheckupMedicineDetails.ModifiedDate = DateTime.Now;
-            _CheckupMedicineDetails.CreatedBy = HttpContext.User.Identity.Name;
-            _CheckupMedicineDetails.ModifiedBy = HttpContext.User.Identity.Name;
-            _context.Add(_CheckupMedicineDetails);
-            await _context.SaveChangesAsync();
-            return _CheckupMedicineDetails;
+            try
+            {
+
+                _CheckupMedicineDetails.CreatedDate = DateTime.Now;
+                _CheckupMedicineDetails.ModifiedDate = DateTime.Now;
+                _CheckupMedicineDetails.CreatedBy = HttpContext.User.Identity.Name;
+                _CheckupMedicineDetails.ModifiedBy = HttpContext.User.Identity.Name;
+                _context.Add(_CheckupMedicineDetails);
+                await _context.SaveChangesAsync();
+                return _CheckupMedicineDetails;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error in Create CheckupMedicineDetails.");
+                throw;
+            }
         }
 
         [HttpPost]
@@ -378,8 +402,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_CheckupSummary);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Checkup.");
                 throw;
             }
         }

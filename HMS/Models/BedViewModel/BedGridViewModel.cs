@@ -9,5 +9,6 @@ namespace HMS.Models.BedViewModel
         public string BedCategoryName { get; set; }
         public string No { get; set; }
         public string Description { get; set; }
+        public string Hospital { get; set; }
     }
 }

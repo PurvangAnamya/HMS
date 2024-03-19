@@ -27,12 +27,12 @@ namespace HMS.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ApplicationDbContext _context;
         private readonly IEmailSender _emailSender;
-        private readonly ILogger _logger;
         private readonly ICommon _iCommon;
         private readonly IRoles _roles;
         private readonly IConfiguration _configuration;
         private readonly IAccount _iAccount;
         private readonly SuperAdminDefaultOptions _superAdminDefaultOptions;
+        private readonly ILogger<AccountController> _logger;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
@@ -115,10 +115,10 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Login");
                 _JsonResultViewModel.IsSuccess = false;
                 _JsonResultViewModel.AlertMessage = ex.Message;
                 return new JsonResult(_JsonResultViewModel);
-                throw;
             }
         }
         private async Task JWTHandle(LoginViewModel model)
@@ -147,9 +147,9 @@ namespace HMS.Controllers
                 });
                 */
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                _logger.LogError(ex, "Error in JWTHandle");
             }
         }
 
@@ -328,10 +328,10 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Register user.");
                 _JsonResultViewModel.IsSuccess = false;
                 _JsonResultViewModel.AlertMessage = ex.Message;
                 return new JsonResult(_JsonResultViewModel);
-                throw;
             }
         }
         [HttpPost]
@@ -527,9 +527,9 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in reset password.");
                 _JsonResultViewModel.IsSuccess = false;
                 return new JsonResult(ex.Message);
-                throw;
             }
         }
 

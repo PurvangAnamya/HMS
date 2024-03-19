@@ -23,12 +23,14 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private string _hospitalId;
+        private readonly ILogger<InsuranceCompanyInfoController> _logger;
         private string _role;
 
-        public InsuranceCompanyInfoController(ApplicationDbContext context, ICommon iCommon)
+        public InsuranceCompanyInfoController(ApplicationDbContext context, ICommon iCommon, ILogger<InsuranceCompanyInfoController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
@@ -85,11 +87,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Insurance Company.");
                 throw;
             }
 
@@ -136,8 +140,9 @@ namespace HMS.Controllers
                             }).OrderByDescending(x => x.Id);
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Insurance Company.");
                 throw;
             }
         }
@@ -232,6 +237,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Or Update Insurance Company.");
                         throw;
                     }
                 }
@@ -255,6 +261,7 @@ namespace HMS.Controllers
             }
             catch (Exception)
             {
+                _logger.LogError("Error in Delete Insurance Company.");
                 throw;
             }
         }

@@ -1,7 +1,6 @@
 using HMS.Data;
 using HMS.Models;
 using HMS.Models.BedCategoriesViewModel;
-using HMS.Models.DoctorsInfoViewModel;
 using HMS.Pages;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
@@ -21,9 +20,14 @@ namespace HMS.Controllers
         private readonly ICommon _iCommon;
         private string _hospitalId;
         private string _role;
+        private readonly ILogger<BedCategoriesController> _logger;
 
-        public BedCategoriesController(ApplicationDbContext context, ICommon iCommon)
+
+
+
+        public BedCategoriesController(ApplicationDbContext context, ICommon iCommon, ILogger<BedCategoriesController> logger)
         {
+            _logger = logger;
             _context = context;
             _iCommon = iCommon;
         }
@@ -85,11 +89,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Bed Categories.");
                 throw;
             }
 
@@ -139,6 +145,7 @@ namespace HMS.Controllers
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Add Bed Categories.");
                 throw;
             }
         }
@@ -232,6 +239,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add or Update Bed Categories.");
                         throw;
                     }
                 }
@@ -253,8 +261,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_BedCategories);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Bed Categories.");
                 throw;
             }
         }

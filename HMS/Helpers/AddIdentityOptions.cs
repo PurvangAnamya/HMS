@@ -43,7 +43,7 @@ namespace HMS.Helpers
                     options.SlidingExpiration = _DefaultIdentityOptions.SlidingExpiration;
                 });
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 throw;
             }

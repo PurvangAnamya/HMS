@@ -14,9 +14,13 @@ namespace HMS.Controllers
     public class EmailSettingController : Controller
     {
         private readonly ApplicationDbContext _context;
-        public EmailSettingController(ApplicationDbContext context)
+        private readonly ILogger<EmailSettingController> _logger;
+
+
+        public EmailSettingController(ApplicationDbContext context, ILogger<EmailSettingController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
 
@@ -70,46 +74,64 @@ namespace HMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (vm.Id > 0)
+                try
                 {
-                    SMTPEmailSetting _SMTPEmailSetting = await _context.SMTPEmailSetting.FindAsync(vm.Id);
+                    if (ModelState.IsValid)
+                    {
+                        if (vm.Id > 0)
+                        {
+                            SMTPEmailSetting _SMTPEmailSetting = await _context.SMTPEmailSetting.FindAsync(vm.Id);
 
-                    vm.CreatedDate = _SMTPEmailSetting.CreatedDate;
-                    vm.CreatedBy = _SMTPEmailSetting.CreatedBy;
-                    vm.ModifiedDate = DateTime.Now;
-                    vm.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.Entry(_SMTPEmailSetting).CurrentValues.SetValues(vm);
-                    await _context.SaveChangesAsync();
-                    TempData["successAlert"] = "SMTP Info Updated Successfully. User Name: " + _SMTPEmailSetting.UserName;
+                            vm.CreatedDate = _SMTPEmailSetting.CreatedDate;
+                            vm.CreatedBy = _SMTPEmailSetting.CreatedBy;
+                            vm.ModifiedDate = DateTime.Now;
+                            vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            _context.Entry(_SMTPEmailSetting).CurrentValues.SetValues(vm);
+                            await _context.SaveChangesAsync();
+                            TempData["successAlert"] = "SMTP Info Updated Successfully. User Name: " + _SMTPEmailSetting.UserName;
 
-                    SendGridSetting _SendGridSetting = await _context.SendGridSetting.FindAsync(vm.Id);
-                    if (vm.IsDefault)
-                        _SendGridSetting.IsDefault = false;
-                    else
-                        _SendGridSetting.IsDefault = true;
+                            SendGridSetting _SendGridSetting = await _context.SendGridSetting.FindAsync(vm.Id);
+                            if (vm.IsDefault)
+                                _SendGridSetting.IsDefault = false;
+                            else
+                                _SendGridSetting.IsDefault = true;
 
-                    _SendGridSetting.ModifiedDate = DateTime.Now;
-                    _SendGridSetting.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.SendGridSetting.Update(_SendGridSetting);
-                    await _context.SaveChangesAsync();
-                    return RedirectToAction(nameof(Index));
+                            _SendGridSetting.ModifiedDate = DateTime.Now;
+                            _SendGridSetting.ModifiedBy = HttpContext.User.Identity.Name;
+                            _context.SendGridSetting.Update(_SendGridSetting);
+                            await _context.SaveChangesAsync();
+                            return RedirectToAction(nameof(Index));
+                        }
+                        else
+                        {
+                            vm.CreatedDate = DateTime.Now;
+                            vm.ModifiedDate = DateTime.Now;
+                            vm.CreatedBy = HttpContext.User.Identity.Name;
+                            vm.ModifiedBy = HttpContext.User.Identity.Name;
+                            _context.Add(vm);
+                            await _context.SaveChangesAsync();
+                            TempData["successAlert"] = "SMTP Info Created Successfully. User Name: " + vm.UserName;
+                            return RedirectToAction(nameof(Index));
+                        }
+                    }
+                    TempData["errorAlert"] = "Operation failed.";
+                    return View("Index");
                 }
-                else
+                 catch (DbUpdateConcurrencyException)
                 {
-                    vm.CreatedDate = DateTime.Now;
-                    vm.ModifiedDate = DateTime.Now;
-                    vm.CreatedBy = HttpContext.User.Identity.Name;
-                    vm.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.Add(vm);
-                    await _context.SaveChangesAsync();
-                    TempData["successAlert"] = "SMTP Info Created Successfully. User Name: " + vm.UserName;
-                    return RedirectToAction(nameof(Index));
+                    if (!IsExists(vm.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        _logger.LogError("Error in Add or Update SMTP Info.");
+                        throw;
+                    }
                 }
             }
-            TempData["errorAlert"] = "Operation failed.";
-            return View("Index");
+            return View(vm);
         }
-
 
         public async Task<IActionResult> SendGridSettingDetails(int? id)
         {
@@ -145,45 +167,70 @@ namespace HMS.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (vm.Id > 0)
+                try
                 {
-                    SendGridSetting _SendGridSetting = await _context.SendGridSetting.FindAsync(vm.Id);
+                    if (ModelState.IsValid)
+                    {
+                        if (vm.Id > 0)
+                    {
+                        SendGridSetting _SendGridSetting = await _context.SendGridSetting.FindAsync(vm.Id);
 
-                    vm.CreatedDate = _SendGridSetting.CreatedDate;
-                    vm.CreatedBy = _SendGridSetting.CreatedBy;
-                    vm.ModifiedDate = DateTime.Now;
-                    vm.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.Entry(_SendGridSetting).CurrentValues.SetValues(vm);
-                    await _context.SaveChangesAsync();
-                    TempData["successAlert"] = "SendGrid Info Updated Successfully. User Name: " + _SendGridSetting.FromEmail;
+                        vm.CreatedDate = _SendGridSetting.CreatedDate;
+                        vm.CreatedBy = _SendGridSetting.CreatedBy;
+                        vm.ModifiedDate = DateTime.Now;
+                        vm.ModifiedBy = HttpContext.User.Identity.Name;
+                        _context.Entry(_SendGridSetting).CurrentValues.SetValues(vm);
+                        await _context.SaveChangesAsync();
+                        TempData["successAlert"] = "SendGrid Info Updated Successfully. User Name: " + _SendGridSetting.FromEmail;
 
-                    SMTPEmailSetting _SMTPEmailSetting = await _context.SMTPEmailSetting.FindAsync(vm.Id);
-                    if (vm.IsDefault)
-                        _SMTPEmailSetting.IsDefault = false;
+                        SMTPEmailSetting _SMTPEmailSetting = await _context.SMTPEmailSetting.FindAsync(vm.Id);
+                        if (vm.IsDefault)
+                            _SMTPEmailSetting.IsDefault = false;
+                        else
+                            _SMTPEmailSetting.IsDefault = true;
+
+                        _SMTPEmailSetting.ModifiedDate = DateTime.Now;
+                        _SMTPEmailSetting.ModifiedBy = HttpContext.User.Identity.Name;
+                        _context.SMTPEmailSetting.Update(_SMTPEmailSetting);
+                        await _context.SaveChangesAsync();
+
+                        return RedirectToAction(nameof(Index));
+                    }
                     else
-                        _SMTPEmailSetting.IsDefault = true;
-
-                    _SMTPEmailSetting.ModifiedDate = DateTime.Now;
-                    _SMTPEmailSetting.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.SMTPEmailSetting.Update(_SMTPEmailSetting);
-                    await _context.SaveChangesAsync();
-
-                    return RedirectToAction(nameof(Index));
+                    {
+                        vm.CreatedDate = DateTime.Now;
+                        vm.ModifiedDate = DateTime.Now;
+                        vm.CreatedBy = HttpContext.User.Identity.Name;
+                        vm.ModifiedBy = HttpContext.User.Identity.Name;
+                        _context.Add(vm);
+                        await _context.SaveChangesAsync();
+                        TempData["successAlert"] = "SendGrid Info Created Successfully. User Name: " + vm.FromEmail;
+                        return RedirectToAction(nameof(Index));
+                    }
                 }
-                else
+                    TempData["errorAlert"] = "Operation failed.";
+                    return View("Index");
+                }
+                catch (DbUpdateConcurrencyException)
                 {
-                    vm.CreatedDate = DateTime.Now;
-                    vm.ModifiedDate = DateTime.Now;
-                    vm.CreatedBy = HttpContext.User.Identity.Name;
-                    vm.ModifiedBy = HttpContext.User.Identity.Name;
-                    _context.Add(vm);
-                    await _context.SaveChangesAsync();
-                    TempData["successAlert"] = "SendGrid Info Created Successfully. User Name: " + vm.FromEmail;
-                    return RedirectToAction(nameof(Index));
+                    if (!IsExists(vm.Id))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        _logger.LogError("Error in Add or Update SendGrid Info.");
+                        throw;
+                    }
                 }
             }
-            TempData["errorAlert"] = "Operation failed.";
-            return View("Index");
+            return View(vm);
+        }
+
+
+        private bool IsExists(long id)
+        {
+            return _context.SMTPEmailSetting.Any(e => e.Id == id);
         }
     }
 }

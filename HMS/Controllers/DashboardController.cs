@@ -14,10 +14,12 @@ namespace HMS.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
-        public DashboardController(ApplicationDbContext context, ICommon iCommon)
+        private readonly ILogger<DashboardController> _logger;
+        public DashboardController(ApplicationDbContext context, ICommon iCommon, ILogger<DashboardController> logger)
         {
             _context = context;
             _iCommon = iCommon;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.Dashboard.RoleName)]
@@ -45,8 +47,9 @@ namespace HMS.Controllers
                 _DashboardDataViewModel.listCheckupSummaryCRUDViewModel = _iCommon.GetCheckupGridItem().Take(10).ToList();
                 return View(_DashboardDataViewModel);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in getting Dashboard.");
                 throw;
             }
         }

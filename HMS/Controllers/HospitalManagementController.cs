@@ -20,12 +20,14 @@ namespace HMS.Controllers
         private readonly IEmailSender _emailSender;
         private readonly IAccount _iAccount;
         private readonly IRoles _roles;
+        private readonly ILogger<HospitalManagementController> _logger;
         public HospitalManagementController(UserManager<ApplicationUser> userManager,
            ApplicationDbContext context,
            ICommon iCommon,
            IEmailSender emailSender,
            IAccount iAccount,
-           IRoles roles)
+           IRoles roles,
+           ILogger<HospitalManagementController> logger)
         {
             _context = context;
             _userManager = userManager;
@@ -33,6 +35,7 @@ namespace HMS.Controllers
             _emailSender = emailSender;
             _iAccount = iAccount;
             _roles = roles;
+            _logger = logger;
         }
 
         [Authorize(Roles = Pages.MainMenu.HospitalManagement.RoleName)]
@@ -83,11 +86,13 @@ namespace HMS.Controllers
                 resultTotal = _GetGridItem.Count();
 
                 var result = _GetGridItem.Skip(skip).Take(pageSize).ToList();
+                _logger.LogInformation("Error in getting Successfully.");
                 return Json(new { draw = draw, recordsFiltered = resultTotal, recordsTotal = resultTotal, data = result });
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex,"Error in getting Hospital.");
                 throw;
             }
         }
@@ -170,7 +175,7 @@ namespace HMS.Controllers
                             _hospital.ModifiedBy = HttpContext.User.Identity.Name;
                             _context.Add(_hospital);
                             await _context.SaveChangesAsync();
-                            TempData["successAlert"] = "Bed Categories Created Successfully. ID: " + _hospital.Id;
+                            TempData["successAlert"] = "Hospital Created Successfully. ID: " + _hospital.Id;
                             TempData["hospitalId"] = _hospital.Id;
                             await AddHospitalintoMasterTables(_hospital.Id);
                             return RedirectToAction(nameof(Index));
@@ -187,6 +192,7 @@ namespace HMS.Controllers
                     }
                     else
                     {
+                        _logger.LogError("Error in Add Or Update Hospital.");
                         throw;
                     }
                 }
@@ -324,6 +330,7 @@ namespace HMS.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
+                _logger.LogError("Error in Add HospitalintoMasterTables.");
                 throw;
             }
         }
@@ -341,8 +348,9 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_hospital);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error in Delete Hospital.");
                 throw;
             }
         }

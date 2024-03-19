@@ -14,11 +14,14 @@ namespace HMS.Services
     {
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly ILogger<Roles> _logger;
         public Roles(RoleManager<IdentityRole> roleManager,
-            UserManager<ApplicationUser> userManager)
+            UserManager<ApplicationUser> userManager,
+            ILogger<Roles> logger)
         {
             _roleManager = roleManager;
             _userManager = userManager;
+            _logger = logger;
         }
         public async Task GenerateRolesFromPageList()
         {
@@ -76,8 +79,9 @@ namespace HMS.Services
                 }
                 return _MainMenuViewModel;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Load Menu Based On Role.");
                 throw;
             }
         }
@@ -170,10 +174,10 @@ namespace HMS.Services
             }
             catch (Exception ex)
             {
+                _logger.LogError(ex, "Error into Update User Roles.");
                 _JsonResultViewModel.IsSuccess = false;
                 _JsonResultViewModel.AlertMessage = ex.Message;
                 return _JsonResultViewModel;
-                throw;
             }
         }
         private string ProcessRoleName(string RoleName)
