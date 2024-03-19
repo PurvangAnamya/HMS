@@ -104,7 +104,7 @@ namespace HMS.Controllers
                             ModifiedBy = _ManageRole.ModifiedBy,
                         }).OrderByDescending(x => x.Id);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Add User Role.");
                 throw;
@@ -215,7 +215,7 @@ namespace HMS.Controllers
                 await _context.SaveChangesAsync();
                 return new JsonResult(_ManageUserRoles);
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, "Error in Delete User Role.");
                 throw;

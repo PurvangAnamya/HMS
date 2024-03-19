@@ -1,6 +1,8 @@
 @model HMS.Models.BedViewModel.BedCRUDViewModel
 
-@{ ViewData["Title"] = "Create"; }
+@{
+    ViewData["Title"] = "Create";
+}
 
 <div>
     <div class="row">
@@ -10,6 +12,19 @@
                 <input type="hidden" asp-for="Id" />
                 <input type="hidden" asp-for="CreatedDate" />
                 <input type="hidden" asp-for="CreatedBy" />
+                @if (ViewBag.Role == "SuperAdmin")
+                {
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Hospital</label>
+                        <div class="col-sm-9">
+                            <select asp-for="HospitalId" asp-items="@ViewBag.ddlHospital" id="HospitalId"
+                                    class="form-control" style="width:100%;">
+                                <option disabled selected>--- SELECT ---</option>
+                            </select>
+                            <span asp-validation-for="HospitalId" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
                 <div class="form-group">
                     <label asp-for="BedCategoryId" class="control-label"></label>
                     <select asp-for="BedCategoryId" asp-items="@ViewBag.ddlBedCategories" id="BedCategoryId" class="form-control">
@@ -36,3 +51,10 @@
     </div>
 </div>
 <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
+<script>
+    $('#CurrentURL').val(window.location.pathname);
+    $(document).ready(function () {
+        $("#HospitalId").select2();
+    });
+</script>
+
