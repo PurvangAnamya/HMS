@@ -5,16 +5,39 @@ var Details = function (id) {
 };
 
 
+
 var AddEdit = function (id) {
     var url = "/Bed/AddEdit?id=" + id;
     if (id > 0) {
         $('#titleMediumModal').html("Edit Bed");
+        // Set the value of the BedCategoryPrice textbox based on the selected category
+        var selectedCategoryId = $('#BedCategoryId').val();
+        console.log("AddEdit Function selectedCategoryId :" + selectedCategoryId);
+        LoadBedPrice(selectedCategoryId); // Call the function to load bed price
     }
     else {
         $('#titleMediumModal').html("Add Bed");
     }
+
     loadMediumModal(url);
 };
+
+// Function to load bed price based on Edit Loading
+function LoadBedPrice(selectedCategoryId) {
+    $.ajax({
+        url: '/Bed/GetBedPrice',
+        type: 'GET',
+        data: { categoryId: selectedCategoryId },
+        success: function (data) {
+            $('#BedCategoryPrice').val(data);
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
+        }
+    });
+}
+
+
 
 var SaveData = function () {
     var _frmVaidate = $('#frmBed');
@@ -33,7 +56,7 @@ var SaveData = function () {
             dataType: "json",
             success: function (result) {
                 if (result == "Success") {
-                    //document.location.href = "/";
+
                     window.location.reload();
                 }
                 else {
@@ -74,9 +97,7 @@ var Delete = function (id) {
 
             axios.post("/Bed/Delete?id=" + id)
                 .then(function (response) {
-                    //$("#orderNumber").val(response.data.number);
-                    //$("#salesOrderId").val(response.data.salesOrderId);
-                    //initPosLine();
+
                     toastr.success("Bed has been deleted successfully. Bed ID: " + response.data.Id, 'Success');
                     var _tblBed = $('#tblBed').DataTable();
                     _tblBed.ajax.reload();
@@ -89,20 +110,7 @@ var Delete = function (id) {
                 });
             return false;
 
-            //$.ajax({
-            //    type: "POST",
-            //    url: "/Bed/Delete?id=" + id,
-            //    success: function (result) {
-            //        var message = "Bed has been deleted successfully. Bed ID: " + result.Id;
-            //        Swal.fire({
-            //            title: message,
-            //            text: 'Deleted!',
-            //            onAfterClose: () => {
-            //                location.reload();
-            //            }
-            //        });
-            //    }
-            //});
+
         }
     });
 };

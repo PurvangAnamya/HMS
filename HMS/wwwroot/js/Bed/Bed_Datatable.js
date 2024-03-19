@@ -33,6 +33,7 @@ $(document).ready(function () {
                     return "<a href='#' onclick=Details('" + row.Id + "');>" + row.BedCategoryName + "</a>";
                 }
             },
+            { "data": "BedCategoryPrice", "name": "BedCategoryPrice" },
             { "data": "No", "name": "No" },
             { "data": "Description", "name": "Description" },
 
@@ -52,6 +53,9 @@ $(document).ready(function () {
                     return "<a href='#' class='btn btn-info btn-xs' onclick=AddEdit('" + row.Id + "');>Edit</a>";
                 }
             },
+
+
+
             {
                 data: null, render: function (data, type, row) {
                     return "<a href='#' class='btn btn-danger btn-xs' onclick=Delete('" + row.Id + "'); >Delete</a>";
@@ -66,7 +70,7 @@ $(document).ready(function () {
 
         "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]],
         "initComplete": function (settings, json) {
-            var column = this.api().column(5); // Index of the "Hospital" column
+            var column = this.api().column(6); // Index of the "Hospital" column
             var data = column.data().toArray(); // Convert to array
             var isEmpty = data.every(function (value) {
                 return value === null || value.trim() === '';

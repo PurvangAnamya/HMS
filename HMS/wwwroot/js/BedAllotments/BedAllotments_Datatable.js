@@ -34,6 +34,7 @@ $(document).ready(function () {
                     return "<a href='#' onclick=Details('" + row.Id + "');>" + row.BedCategoryName + "</a>";
                 }
             },
+            { "data": "BedCategoryPrice", "name": "BedCategoryPrice" },
             { "data": "BedNo", "name": "BedNo" },
             { "data": "AllotmentDateDisplay", "name": "AllotmentDateDisplay" },
             { "data": "DischargeDateDisplay", "name": "DischargeDateDisplay" },

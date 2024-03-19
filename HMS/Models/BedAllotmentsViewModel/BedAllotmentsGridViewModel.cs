@@ -10,6 +10,7 @@ namespace HMS.Models.BedAllotmentsViewModel
         public string PatientCode { get; set; }
         public string PatientName { get; set; }
         public Int64 BedId { get; set; }
+        public double? BedCategoryPrice { get; set; }
         public string BedNo { get; set; }
         public bool IsReleased { get; set; }
         public string ReleasedStatus { get; set; }

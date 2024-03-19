@@ -26,19 +26,24 @@
                     </div>
                 }
                 <div class="form-group">
-                    <label asp-for="BedCategoryId" class="control-label"></label>
-                    <select asp-for="BedCategoryId" asp-items="@ViewBag.ddlBedCategories" id="BedCategoryId" class="form-control">
+                    <label asp-for="BedCategoryId" class="control-label">Bed Category</label>
+                    <select asp-for="BedCategoryId" asp-items="@ViewBag.ddlBedCategories" id="BedCategoryId" onchange="LoadBedPrice()" class="form-control">
                         <option disabled selected>--- SELECT ---</option>
                     </select>
                     <span asp-validation-for="BedCategoryId" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="No" class="control-label"></label>
+                    <label asp-for="BedCategoryPrice" class="control-label">Bed Price</label>
+                    <input asp-for="BedCategoryPrice" id="BedCategoryPrice" class="form-control" readonly />
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="No" class="control-label">No</label>
                     <input asp-for="No" class="form-control" />
                     <span asp-validation-for="No" class="text-danger"></span>
                 </div>
                 <div class="form-group">
-                    <label asp-for="Description" class="control-label"></label>
+                    <label asp-for="Description" class="control-label">Description</label>
                     <input asp-for="Description" class="form-control" />
                     <span asp-validation-for="Description" class="text-danger"></span>
                 </div>
@@ -50,6 +55,7 @@
         </div>
     </div>
 </div>
+
 <script src="/lib/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js"></script>
 <script>
     $('#CurrentURL').val(window.location.pathname);

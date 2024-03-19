@@ -1,6 +1,8 @@
 @model HMS.Models.BedAllotmentsViewModel.BedAllotmentsCRUDViewModel
 
-@{ ViewData["Title"] = "Create"; }
+@{
+    ViewData["Title"] = "Create";
+}
 
 <div>
     <div class="row">
@@ -12,17 +14,20 @@
                 <input type="hidden" asp-for="CreatedBy" />
 
 
-                @{ if (Model.Id > 0)
+                @{
+                    if (Model.Id > 0)
                     {
-        <div class="row">
-            <div class="col-sm-3">
-                <span><b>Released</b></span>
-            </div>
-            <div class="col-sm-9 fa-pull-left">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <span><b>Released</b></span>
+                            </div>
+                            <div class="col-sm-9 fa-pull-left">
 
-                <input asp-for="IsReleased" class="form-control" type="checkbox" />
-            </div>
-        </div> } }
+                                <input asp-for="IsReleased" class="form-control" type="checkbox" />
+                            </div>
+                        </div>
+                    }
+                }
 
                 <div class="form-group">
                     <label asp-for="PatientId" class="control-label"></label>
@@ -46,6 +51,18 @@
                         <option disabled selected>--- SELECT ---</option>
                     </select>
                     <span asp-validation-for="BedId" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="OldBedCategoryPrice" class="control-label">Bed Price PerDay</label>
+                    @if (ViewBag._IsInAdminRole)
+                    {
+                        <input asp-for="BedCategoryPrice" id="BedCategoryPrice" class="form-control" />
+                    }
+                    else
+                    {
+
+                        <input asp-for="OldBedCategoryPrice" id="BedCategoryPrice" class="form-control" readonly />
+                    }
                 </div>
                 <div class="form-group">
                     <label asp-for="AllotmentDate" class="control-label"></label>
@@ -76,4 +93,22 @@
     $(document).ready(function () {
         $("#PatientId").select2();
     });
+
+    // Function to load bed price based on selected category
+    function LoadBedPrice() {
+        var selectedCategoryId = $('#BedCategoryId').val();
+        console.log("LoadBedPrice - selectedCategoryId :" + selectedCategoryId);
+        $.ajax({
+            url: '/Bed/GetBedPrice', // Corrected URL
+            type: 'GET',
+            data: { categoryId: selectedCategoryId },
+            success: function (data) {
+                $('#BedCategoryPrice').val(data);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
+
 </script>
