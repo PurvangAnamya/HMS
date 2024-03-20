@@ -169,7 +169,7 @@ var DataTableCustomSearchBox = function (width, placeholder) {
 };
 
 var ViewImage = function (imageURL, Title) {
-    $('#titleImageViewModal').html(Title);
+    $('#titleImageViewModal').html(Title.replace(/_/g,' '));
     $("#UserImage").attr("src", imageURL);
     $("#ImageViewModal").modal("show");
 };

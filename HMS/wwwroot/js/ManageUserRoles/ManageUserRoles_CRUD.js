@@ -58,7 +58,7 @@ var Save = function () {
 
     if (fileInput.files.length > 0) {
         // Upload the new image file
-        formData.append("DashboardPictureDetails", fileInput.files[0]);
+        formData.append("ProfilePictureDetails", fileInput.files[0]);
     }
 
     var fileInput = document.getElementById("DashboardPictureDetails");
@@ -121,10 +121,4 @@ var Delete = function (id) {
             });
         }
     });
-};
-
-var ViewImage = function (imageURL, Title) {
-    $('#titleImageViewModal').html(Title);
-    $("#UserImage").attr("src", imageURL);
-    $("#ImageViewModal").modal("show");
 };

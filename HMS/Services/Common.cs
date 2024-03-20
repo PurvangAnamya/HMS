@@ -65,7 +65,7 @@ namespace HMS.Services
                 }
 
                 // Generate a unique file name
-                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ProfilePicture.FileName);
+                string uniqueFileName = Guid.NewGuid().ToString() + "_" + Path.GetFileName(ProfilePicture.FileName).Replace(" ","_");
                 string filePath = Path.Combine(uploadsFolder, uniqueFileName);
 
                 // Save the uploaded file to the specified folder
@@ -94,7 +94,7 @@ namespace HMS.Services
 
                         // Update existing image record with new details
                         existingImage.Name = uniqueFileName;
-                        existingImage.ImagePath = relativePath;
+                        existingImage.ImagePath = relativePath.Replace("\\","/");
                         existingImage.ModifiedDate = DateTime.Now;
                         existingImage.ModifiedBy = userName;
 

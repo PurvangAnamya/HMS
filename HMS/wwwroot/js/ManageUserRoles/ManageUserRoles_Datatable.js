@@ -33,18 +33,17 @@ $(document).ready(function () {
                 }
             },
             {
-                data: null, render: function (data, type, row) {
-                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.ProfilePicture + "','User_Image');><div class='image'><img src='" + row.ProfilePicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
+                data: null, "sortable": false, render: function (data, type, row) {
+                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.ProfilePicture + "','Left_Menu_Image');><div class='image'><img src='" + row.ProfilePicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
                 }
-            },
+            }, 
             {
-                data: null, render: function (data, type, row) {
-                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.DashboardPicture + "','User_Image');><div class='image'><img src='" + row.DashboardPicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
+                data: null, "sortable": false, render: function (data, type, row) {
+                    return "<a href='#' class='d-block' onclick=ViewImage('" + row.DashboardPicture + "','Dashboard_Image');><div class='image'><img src='" + row.DashboardPicture + "' class='img50px img-circle elevation-2' alt='Asset Image'></div></a>";
                 }
             },
             { "data": "Name", "name": "Name" },
             { "data": "Description", "name": "Description" },
-
             {
                 "data": "CreatedDate",
                 "name": "CreatedDate",
@@ -74,5 +73,4 @@ $(document).ready(function () {
 
         "lengthMenu": [[20, 10, 15, 25, 50, 100, 200], [20, 10, 15, 25, 50, 100, 200]]
     });
-
 });
