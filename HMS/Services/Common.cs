@@ -18,6 +18,7 @@ using HMS.Models.PaymentsDetailsViewModel;
 using HMS.Models.PaymentsViewModel;
 using HMS.Models.ReportViewModel;
 using HMS.Models.UserProfileViewModel;
+
 using Microsoft.EntityFrameworkCore;
 using UAParser;
 
@@ -30,12 +31,14 @@ namespace HMS.Services
         private readonly IWebHostEnvironment _iHostingEnvironment;
         private readonly ApplicationDbContext _context;
         private readonly ILogger<Common> _logger;
+       
         public Common(IWebHostEnvironment iHostingEnvironment, ApplicationDbContext context, ILogger<Common> logger)
         {
             _iHostingEnvironment = iHostingEnvironment;
             _context = context;
             _logger = logger;
         }
+       
         public string UploadedFile(IFormFile ProfilePicture)
         {
             string ProfilePictureFileName = null;
@@ -157,8 +160,37 @@ namespace HMS.Services
                         Name = _Medicines.MedicineName + ", Available Quantity: " + _Medicines.Quantity
                     });
         }
-        public IQueryable<ItemDropdownListViewModel> LoadddlBedNo(HMS.Models.BedAllotments _BedAllotments, bool showPrice = false)
+        public IQueryable<ItemDropdownListViewModel> LoadddlBedNo(string? role, string? hospitalId, HMS.Models.BedAllotments _BedAllotments, bool showPrice = false)
         {
+            if (role == "HospitalAdmin")
+            {
+                long HospitalId = Convert.ToInt64(hospitalId);            
+
+                var _AvailableBedList = _context.Bed.Where(x => x.Cancelled == false 
+                && x.BedCategoryId == _BedAllotments.BedCategoryId
+                && x.HospitalId == HospitalId).ToList();
+
+                var _BookedAllBedList = _context.BedAllotments.Where(x => x.Cancelled == false
+                            && x.BedCategoryId == _BedAllotments.BedCategoryId && x.IsReleased == false
+                           && x.HospitalId == HospitalId).ToList();
+
+                foreach (var item in _BookedAllBedList)
+                {
+                    var itemToRemove = _AvailableBedList.Where(x => x.Id == item.BedId && x.HospitalId == HospitalId).SingleOrDefault();
+                    if (itemToRemove != null && itemToRemove.Id != _BedAllotments.BedId)
+                        _AvailableBedList.Remove(itemToRemove);
+                }
+
+                return (from _Bed in _AvailableBedList.OrderBy(x => x.Id)
+                        join _BedCategories in _context.BedCategories on _Bed.BedCategoryId equals _BedCategories.Id
+                        where _Bed.Cancelled == false && _Bed.HospitalId == HospitalId 
+                        select new ItemDropdownListViewModel
+                        {
+                            Id = _Bed.Id,
+                            Name = showPrice ? _Bed.No + "<>" + _BedCategories.Description + " - " + _BedCategories.BedPrice + " INR (Per Day)" : _Bed.No + "<>" + _BedCategories.Description,
+                        }).AsQueryable();
+            }
+
             var _GetAvailableBedList = _context.Bed.Where(x => x.Cancelled == false && x.BedCategoryId == _BedAllotments.BedCategoryId).ToList();
 
             var _BookedBedList = _context.BedAllotments.Where(x => x.Cancelled == false
@@ -180,14 +212,32 @@ namespace HMS.Services
                         Name = showPrice ? _Bed.No + "<>" + _BedCategories.Description + " - " + _BedCategories.BedPrice + " INR (Per Day)" : _Bed.No + "<>" + _BedCategories.Description,
                     }).AsQueryable();
         }
-        public IQueryable<ItemDropdownListViewModel> LoadddBedCategories()
-        {
+        public IQueryable<ItemDropdownListViewModel> LoadddBedCategories(string? role, string? hospitalId)
+        {         
+            
+             if (role == "HospitalAdmin")
+            {
+                long HospitalId = Convert.ToInt64(hospitalId);
+
+                return (from _BedCategories in _context.BedCategories.Where(x => x.Cancelled == false &&  x.HospitalId==HospitalId).OrderBy(x => x.CreatedDate)
+                        select new ItemDropdownListViewModel
+                        {
+                            Id = _BedCategories.Id,
+                            Name = _BedCategories.Name,
+
+
+                        });
+            }
+
             return (from _BedCategories in _context.BedCategories.Where(x => x.Cancelled == false).OrderBy(x => x.CreatedDate)
                     select new ItemDropdownListViewModel
                     {
                         Id = _BedCategories.Id,
-                        Name = _BedCategories.Name
+                        Name = _BedCategories.Name,
+
+
                     });
+
         }
         public async Task<List<HMS.Models.BedCategories>> GetBedCategorieslist()
         {
@@ -198,7 +248,7 @@ namespace HMS.Services
                                 {
                                     Id = _BedCategories.Id,
                                     Name = _BedCategories.Name,
-                                    BedPrice = _BedCategories.BedPrice
+                                    BedPrice = _BedCategories.BedPrice,                                  
                                 }).OrderBy(x => x.Name).ToListAsync();
 
             return result;

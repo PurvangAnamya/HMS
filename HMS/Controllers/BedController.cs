@@ -3,6 +3,7 @@ using HMS.Models;
 using HMS.Models.BedViewModel;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -21,6 +22,8 @@ namespace HMS.Controllers
         private readonly ILogger<BedController> _logger;
         private string _hospitalId;
         private string _role;
+        private string _currentUser;
+        
 
         public BedController(ApplicationDbContext context, ICommon iCommon, ILogger<BedController> logger)
         {
@@ -33,6 +36,7 @@ namespace HMS.Controllers
         {
             _hospitalId = HttpContext.Session.GetString("HospitalId");
             _role = HttpContext.Session.GetString("Role");
+            _currentUser = HttpContext.Session.GetString("LoginUserName");
             base.OnActionExecuting(context);
         }
 
@@ -40,6 +44,8 @@ namespace HMS.Controllers
         [Authorize(Roles = Pages.MainMenu.Bed.RoleName)]
         public IActionResult Index()
         {
+            ViewBag.Role = _role;
+            ViewBag._IsInAdminRole = User.IsInRole("Admin");
             return View();
         }
 
@@ -167,10 +173,18 @@ namespace HMS.Controllers
 
         public async Task<IActionResult> AddEdit(int id, int? categoryId = null)
         {
-            ViewBag.ddlBedCategories = new SelectList(_iCommon.LoadddBedCategories(), "Id", "Name");
+            ViewBag._IsInAdminRole = User.IsInRole("Admin"); // AdminRole
+            ViewBag.Role = _role; // SuperAdminRole
+
+            var userRoleId = _context.UserProfile.FirstOrDefault(x=>x.Email == _currentUser).RoleId;
+            var roleName = _context.ManageUserRoles.FirstOrDefault(x=>x.Id == userRoleId).Name;
+            ViewBag.ddlBedCategories = new SelectList(_iCommon.LoadddBedCategories(roleName, _hospitalId), "Id", "Name");
+
             ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
-            ViewBag.Role = _role;
+
             BedCRUDViewModel vm = new BedCRUDViewModel();
+            vm.listBedCategories = await _iCommon.GetBedCategorieslist();
+
             var data = await _context.Bed.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (id > 0)
             {

@@ -54,7 +54,7 @@
                 </div>
                 <div class="form-group">
                     <label asp-for="OldBedCategoryPrice" class="control-label">Bed Price PerDay</label>
-                    @if (ViewBag._IsInAdminRole)
+                    @if (ViewBag._IsInAdminRole == true || ViewBag.Role == "SuperAdmin")
                     {
                         <input asp-for="BedCategoryPrice" id="BedCategoryPrice" class="form-control" />
                     }

@@ -62,5 +62,21 @@
     $(document).ready(function () {
         $("#HospitalId").select2();
     });
+    // Function to load bed price based on selected category
+    function LoadBedPrice() {
+        var selectedCategoryId = $('#BedCategoryId').val();
+        console.log("LoadBedPrice - selectedCategoryId :" + selectedCategoryId);
+        $.ajax({
+            url: '/Bed/GetBedPrice', // Corrected URL
+            type: 'GET',
+            data: { categoryId: selectedCategoryId },
+            success: function (data) {
+                $('#BedCategoryPrice').val(data);
+            },
+            error: function (xhr, status, error) {
+                console.error(error);
+            }
+        });
+    }
 </script>
 

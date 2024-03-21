@@ -1,10 +1,21 @@
+@model HMS.Models.BedCategoriesViewModel.BedCategoriesCRUDViewModel
+
+@{
+    bool isAdmin = ViewBag._IsInAdminRole == true;
+    bool isSuperAdmin = ViewBag.Role == "SuperAdmin";
+}
+
+
 <div class="wrapper">
     <div class="panel panel-hash">
         <div class="panel-heading">
             <div class="row">
-                <div class="col-md-6">
-                    <a class="fa fa-plus-square fa-2x" onclick="AddEdit(0)"></a>
-                </div>
+                @if (isAdmin == true || isSuperAdmin == true)
+                {
+                    <div class="col-md-6">
+                        <a class="fa fa-plus-square fa-2x" onclick="AddEdit(0)"></a>
+                    </div>
+                }
                 <div class="col-md-6 pull-right">
                     <h5 class="pull-right"><b>&nbsp;Bed Categories List</b></h5>
                 </div>
@@ -21,9 +32,9 @@
                         <th>Bed Price</th>
                         <th>Created By</th>
                         <th>Created Date</th>
-                        <th>Hospital</th>
-                        <th></th>
-                        <th></th>
+                        <th class="admin-only">Hospital</th>
+                        <th class="admin-only"></th>
+                        <th class="admin-only"></th>
                     </tr>
                 </thead>
             </table>
@@ -34,7 +45,16 @@
 </div>
 
 <partial name="~/Views/UIComponents/_MediumModal.cshtml" />
+<script>
+    var isAdmin = @(ViewBag._IsInAdminRole == true ? "true" : "false");
+    var isSuperAdmin = @(ViewBag.Role == "SuperAdmin" ? "true" : "false");
 
+    
+</script>
+
+
+<script src="~/js/BedCategories/BedCategories_CRUD.js"></script>
+<script src="~/js/BedCategories/BedCategories_Datatable.js"></script>
 <style>
     .panel-heading {
         padding: 0px 0px 0px 5px;
@@ -50,6 +70,4 @@
     }
 </style>
 
-<script src="~/js/BedCategories/BedCategories_CRUD.js"></script>
-<script src="~/js/BedCategories/BedCategories_Datatable.js"></script>
 

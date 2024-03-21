@@ -22,7 +22,7 @@ namespace HMS.Controllers
         private string _role;
         private readonly ILogger<BedCategoriesController> _logger;
 
-
+       
 
 
         public BedCategoriesController(ApplicationDbContext context, ICommon iCommon, ILogger<BedCategoriesController> logger)
@@ -43,6 +43,8 @@ namespace HMS.Controllers
         [Authorize(Roles = MainMenu.BedCategories.RoleName)]
         public IActionResult Index()
         {
+            ViewBag.Role = _role;
+            ViewBag._IsInAdminRole = User.IsInRole("Admin");
             return View();
         }
 
@@ -165,10 +167,14 @@ namespace HMS.Controllers
         {
             ViewBag.ddlHospital = new SelectList(_iCommon.GetTableData<Hospital>(_context), "Id", "HospitalName");
             ViewBag.Role = _role;
+            ViewBag._IsInAdminRole = User.IsInRole("Admin");
+            
             BedCategoriesCRUDViewModel vm = new BedCategoriesCRUDViewModel();
             var data = await _context.BedCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
             if (id > 0)
+            {
                 vm = await _context.BedCategories.Where(x => x.Id == id).FirstOrDefaultAsync();
+            }
             if (data != null)
             {
                 vm.HospitalId = data.HospitalId;

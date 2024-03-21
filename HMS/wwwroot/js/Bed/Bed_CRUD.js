@@ -28,8 +28,11 @@ function LoadBedPrice(selectedCategoryId) {
         url: '/Bed/GetBedPrice',
         type: 'GET',
         data: { categoryId: selectedCategoryId },
+
         success: function (data) {
             $('#BedCategoryPrice').val(data);
+
+            console.log(" categoryId: " + categoryId + " selectedCategoryId :" + selectedCategoryId);
         },
         error: function (xhr, status, error) {
             console.error(error);

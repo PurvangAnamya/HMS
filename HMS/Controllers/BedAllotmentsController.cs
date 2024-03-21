@@ -7,6 +7,7 @@ using HMS.Pages;
 using HMS.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Dynamic.Core;
@@ -20,7 +21,9 @@ namespace HMS.Controllers
         private readonly ApplicationDbContext _context;
         private readonly ICommon _iCommon;
         private readonly ILogger<BedAllotmentsController> _logger;
-
+        private string _hospitalId;
+        private string _role;
+        private string _currentUser;
         public BedAllotmentsController(ApplicationDbContext context, ICommon iCommon
             , ILogger<BedAllotmentsController> logger)
         {
@@ -28,7 +31,15 @@ namespace HMS.Controllers
             _iCommon = iCommon;
             _logger = logger;
         }
+        public override void OnActionExecuting(ActionExecutingContext context)
+        {
+           
+            _role = HttpContext.Session.GetString("Role");
+            _hospitalId = HttpContext.Session.GetString("HospitalId");
+            _currentUser = HttpContext.Session.GetString("LoginUserName");
+            base.OnActionExecuting(context);
 
+        }
         [Authorize(Roles = MainMenu.BedAllotments.RoleName)]
         public IActionResult Index()
         {
@@ -154,12 +165,21 @@ namespace HMS.Controllers
         }
         public async Task<IActionResult> AddEdit(int id)
         {
+            BedAllotmentsCRUDViewModel vm = new BedAllotmentsCRUDViewModel();
+            ViewBag._IsInAdminRole = User.IsInRole("Admin"); // AdminRole
+            ViewBag.Role = _role; // SuperAdminRole
+
+            var userRoleId = _context.UserProfile.FirstOrDefault(x => x.Email == _currentUser).RoleId;
+
+            var roleName = _context.ManageUserRoles.FirstOrDefault(x => x.Id == userRoleId).Name;
+
+            ViewBag.LoadddBedCategories = new SelectList(_iCommon.LoadddBedCategories(roleName, _hospitalId), "Id", "Name");
+            ViewBag.LoadddlBedNo = new SelectList(_iCommon.LoadddlBedNo(roleName, _hospitalId, vm, true), "Id", "Name");
 
             ViewBag.LoadddlPatientName = new SelectList(_iCommon.LoadddlPatientName(), "Id", "Name");
-            ViewBag.LoadddBedCategories = new SelectList(_iCommon.LoadddBedCategories(), "Id", "Name");
-            ViewBag._IsInAdminRole = User.IsInRole("Admin");
-            BedAllotmentsCRUDViewModel vm = new BedAllotmentsCRUDViewModel();
+           
             vm.listBedCategories = await _iCommon.GetBedCategorieslist();
+
             if (id > 0)
             {
                 vm = await _context.BedAllotments.Where(x => x.Id == id)
@@ -169,16 +189,15 @@ namespace HMS.Controllers
                                           BedCategoryId = b.BedCategoryId,
                                           PatientId = b.PatientId,
                                           BedId = b.BedId,
+                                          HospitalId = b.HospitalId,
                                           BedCategoryPrice = b.BedCategoryPrice,
                                           OldBedCategoryPrice = _context.BedCategories
-                                                               .Where(bc => bc.Id == b.BedCategoryId)
+                                                               .Where(bc => bc.Id == b.BedCategoryId && bc.HospitalId == b.HospitalId)
                                                                .Select(bc => bc.BedPrice)
                                                                .FirstOrDefault()
                                       })
                                       .SingleOrDefaultAsync();
-                ViewBag.LoadddlBedNo = new SelectList(_iCommon.LoadddlBedNo(vm, true), "Id", "Name");
-
-
+                ViewBag.LoadddlBedNo = new SelectList(_iCommon.LoadddlBedNo(roleName, _hospitalId,vm, true), "Id", "Name");
 
             }
 
@@ -201,7 +220,7 @@ namespace HMS.Controllers
                         {
                             _BedAllotments = await _context.BedAllotments.FindAsync(vm.Id);
                             //BedCategoryPrice Change By Admn User
-                            if (User.IsInRole("Admin"))
+                            if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
                             {
                                 _BedAllotments.BedCategoryPrice = vm.BedCategoryPrice;
 
@@ -226,7 +245,7 @@ namespace HMS.Controllers
                         {
                             _BedAllotments = vm;
                             //BedCategoryPrice Change By Admn User
-                            if (User.IsInRole("Admin"))
+                            if (User.IsInRole("Admin") || User.IsInRole("SuperAdmin"))
                             {
                                 _BedAllotments.BedCategoryPrice = vm.BedCategoryPrice;
 

@@ -23,6 +23,7 @@ namespace HMS.Services
 {
     public interface ICommon
     {
+
         string UploadedFile(IFormFile ProfilePicture);
         Task<SMTPEmailSetting> GetSMTPEmailSetting();
         Task<SendGridSetting> GetSendGridEmailSetting();
@@ -34,9 +35,9 @@ namespace HMS.Services
         IQueryable<ItemDropdownListViewModel> LoadddlUnit();
         IQueryable<ItemDropdownListViewModel> LoadddlMedicineManufacture();
         IQueryable<ItemDropdownListViewModel> LoadddlMedicines();
-        IQueryable<ItemDropdownListViewModel> LoadddBedCategories();
+        IQueryable<ItemDropdownListViewModel> LoadddBedCategories(string? role,string? hospitalId);
         Task<List<BedCategories>> GetBedCategorieslist();
-        IQueryable<ItemDropdownListViewModel> LoadddlBedNo(BedAllotments _BedAllotments, bool showPrice = false);
+        IQueryable<ItemDropdownListViewModel> LoadddlBedNo(string? role, string? hospitalId, BedAllotments _BedAllotments, bool showPrice = false);
 
         IQueryable<ItemDropdownListViewModel> LoadddlPatientName();
         IQueryable<ItemDropdownListViewModel> LoadddlDoctorName();
