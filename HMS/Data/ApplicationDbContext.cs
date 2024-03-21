@@ -46,6 +46,7 @@ namespace HMS.Data
         public DbSet<LabTestCategories> LabTestCategories { get; set; }
         public DbSet<PatientTest> PatientTest { get; set; }
         public DbSet<Payments> Payments { get; set; }
+        public DbSet<UserRoleCountsModel> UserRoleCountsModel { get; set; }
         public DbSet<PaymentsDetails> PaymentsDetails { get; set; }
         public DbSet<PaymentModeHistory> PaymentModeHistory { get; set; }
         public DbSet<PatientVisitPaymentHistory> PatientVisitPaymentHistory { get; set; }

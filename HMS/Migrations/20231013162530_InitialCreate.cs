@@ -526,6 +526,30 @@ namespace HMS.Migrations
                 });
 
             migrationBuilder.CreateTable(
+              name: "UserRoleCountsModel",
+              columns: table => new
+              {
+                  Id = table.Column<long>(type: "bigint", nullable: false)
+                      .Annotation("SqlServer:Identity", "1, 1"),
+                  RoleId = table.Column<long>(type: "bigint", nullable: false),
+                  RoleName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                  UserCounts = table.Column<string>(type: "bigint", nullable: true),
+                  ImageId = table.Column<long>(type: "bigint", nullable: false),
+                  DashboardImageId = table.Column<long>(type: "bigint", nullable: false),
+                  LeftMenuImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                  DashboardImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                  CreatedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                  ModifiedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                  CreatedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                  ModifiedBy = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                  Cancelled = table.Column<bool>(type: "bit", nullable: false)
+              },
+              constraints: table =>
+              {
+                  table.PrimaryKey("PK_UserRoleCountsModel", x => x.Id);
+              });
+
+            migrationBuilder.CreateTable(
                 name: "ManageUserRolesDetails",
                 columns: table => new
                 {

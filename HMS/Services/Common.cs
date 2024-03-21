@@ -111,7 +111,7 @@ namespace HMS.Services
                     var userImage = new UserImages
                     {
                         Name = uniqueFileName,
-                        ImagePath = relativePath,
+                        ImagePath = relativePath.Replace("\\", "/"),
                         CreatedBy = userName,
                         CreatedDate = DateTime.Now,
                         ModifiedDate = DateTime.Now,
@@ -559,6 +559,36 @@ namespace HMS.Services
                 throw;
             }
         }
+        public IQueryable<UserRoleCountsModel> GetDashboardDetails()
+        {
+            try
+            {
+                var result = (from _UserRoleCountsModel in _context.UserRoleCountsModel
+                              join _UserImages in _context.UserImages
+                              on _UserRoleCountsModel.ImageId equals _UserImages.Id into userImageGroup
+                              from userImage in userImageGroup.DefaultIfEmpty() // left join
+                              join _DashboardImages in _context.UserImages
+                              on _UserRoleCountsModel.DashboardImageId equals _DashboardImages.Id into dashboardImageGroup
+                              from dashboardImage in dashboardImageGroup.DefaultIfEmpty() // left join
+                              where _UserRoleCountsModel.Cancelled == false
+                              select new UserRoleCountsModel
+                              {
+                                  RoleId = _UserRoleCountsModel.RoleId,
+                                  RoleName = _UserRoleCountsModel.RoleName,
+                                  UserCounts = _UserRoleCountsModel.UserCounts,
+                                  LeftMenuImage = _context.UserImages.FirstOrDefault(x => x.Id == _UserRoleCountsModel.ImageId).ImagePath ?? "/upload/blank-person.png",
+                                  DashboardImage = _context.UserImages.FirstOrDefault(x => x.Id == _UserRoleCountsModel.DashboardImageId).ImagePath ?? "/upload/blank-person.png",
+                                  ModifiedBy = _UserRoleCountsModel.ModifiedBy
+                              }).OrderByDescending(x => x.RoleId); 
+
+                return result;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+
 
         public IQueryable<PaymentsGridViewModel> GetPaymentGridList()
         {

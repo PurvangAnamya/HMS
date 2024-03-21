@@ -56,6 +56,7 @@ namespace HMS.Services
 
         Task<ManagePaymentsViewModel> GetByPaymentsDetails(Int64 id);
         IQueryable<PaymentsCRUDViewModel> GetPaymentDetails();
+        IQueryable<UserRoleCountsModel> GetDashboardDetails();
         IQueryable<PaymentsGridViewModel> GetPaymentGridList();
         IQueryable<PaymentModeReportViewModel> GetPaymentModeReportData();
         IQueryable<PatientPaymentViewModel> GetPatientPaymentsGridItem();

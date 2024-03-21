@@ -30,8 +30,6 @@ namespace HMS.Controllers
             {
                 DashboardDataViewModel _DashboardDataViewModel = new();
                 DashboardSummaryViewModel _DashboardSummaryViewModel = new();
-
-               // List<UserRoleCountsModel> _UserRolesCountsModel = _context.UserRoleCountsModels.Where(x => x.Cancelled == false).ToList();
                 List<ManageUserRoles> _manageUserRoles = _context.ManageUserRoles.Where(x => x.Cancelled == false).ToList();
                 List<UserProfile> _UserProfile = _context.UserProfile.Where(x => x.Cancelled == false).ToList();
                 _DashboardSummaryViewModel.TotalDoctor = _UserProfile.Where(x => x.RoleId == UserType.Doctor).Count();
@@ -44,14 +42,13 @@ namespace HMS.Controllers
                 _DashboardSummaryViewModel.TotalBeds = _context.Bed.Where(x => x.Cancelled == false).Count();
                 _DashboardSummaryViewModel.TotalMedicines = _context.Medicines.Where(x => x.Cancelled == false).Count();
 
-                List<UserRoleCountsModel> _userRoleCountsModel = new List<UserRoleCountsModel>();
                 foreach (var userRole in _manageUserRoles)
                 {
                     if (userRole.Name.ToLower() != "admin")
                     {
                         try
                         {
-                            _userRoleCountsModel.Add(new UserRoleCountsModel()
+                            _DashboardDataViewModel.userRolesCountsModel.Add(new UserRoleCountsModel()
                             {
                                 RoleId = userRole.Id,
                                 RoleName = userRole.Name,

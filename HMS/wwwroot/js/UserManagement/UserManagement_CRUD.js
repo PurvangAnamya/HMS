@@ -191,7 +191,7 @@ var PreparedFormObj = function () {
     _FormData.append('UserProfileId', $("#UserProfileId").val())
     _FormData.append('ApplicationUserId', $("#ApplicationUserId").val())
     _FormData.append('ProfilePictureDetails', $('#ProfilePictureDetails')[0].files[0])
-
+    _FormData.append('UserType', $("#UserType").val())
     _FormData.append('FirstName', $("#FirstName").val())
     _FormData.append('LastName', $("#LastName").val())
     _FormData.append('EmployeeTypeId', $("#EmployeeTypeId").val())
